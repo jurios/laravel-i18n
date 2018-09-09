@@ -24,22 +24,14 @@ class Translation extends Model
     }
 
     /**
+     * Returns the translation of $text in $language language. If it doesn't exists, try to create it for the base language
      * @param $md5
      * @param $language
      * @return mixed|null
      * @throws MissingLanguageException
      */
-    public static function getTranslation($text, $language)
+    public static function getTranslation(string $text, Language $language)
     {
-        if (!$language instanceof Language)
-        {
-            $language = Language::getLanguageFromISO_639_1($language);
-
-            if (is_null($language))
-            {
-                throw new MissingLanguageException("Language reference " . $language . "not found");
-            }
-        }
 
         $md5 = md5($text);
 
@@ -51,7 +43,7 @@ class Translation extends Model
             return $translation->text;
         }
 
-        self::generateBlankTranslation($md5, $text, $language);
+        self::generateTranslation($md5, $text);
 
         return null;
     }
@@ -65,32 +57,65 @@ class Translation extends Model
 
     //scope methods
 
-    private static function generateBlankTranslation($md5, $text, Language $language)
+    /**
+     * Returns whether the translation exists for the language $language
+     * @param $md5
+     * @param Language $language
+     * @return bool
+     */
+    public static function existsTranslation($md5, Language $language)
     {
-        /** @var Language $base_language */
-        $base_language = Language::getBaseLanguage();
+        return !is_null(Translation::where('md5', $md5)->where('language_id', $language->id)->first());
+    }
 
-        if ($base_language->id === $language->id )
+    /**
+     * Stores in database a new translation for the language $language and text $text. If $language is not base language,
+     * the text persisted will be null and a base language translation
+     * will be created with the text.
+     * @param $md5
+     * @param $text
+     * @param Language|null $language
+     * @throws MissingLanguageException
+     */
+    public static function generateTranslation($text, Language $language = null)
+    {
+        $md5 = md5($text);
+
+        if (is_null($language) ||$language->id === Language::getBaseLanguage()->id)
         {
             self::generateBaseLanguageTranslation($md5, $text);
             return;
         }
 
-        Translation::create([
-            'text' => null,
-            'md5' => $md5,
-            'language_id' => $language->id
-        ]);
+        if (!self::existsTranslation($md5, $language))
+        {
+            Translation::create([
+                'text' => null,
+                'md5' => $md5,
+                'language_id' => $language->id
+            ]);
+        }
 
         self::generateBaseLanguageTranslation($md5, $text);
     }
 
+    /**
+     * Stores in database a new translation for the base language.
+     * @param $md5
+     * @param $text
+     * @throws MissingLanguageException
+     */
     private static function generateBaseLanguageTranslation($md5, $text)
     {
-        Translation::create([
-            'text' => $text,
-            'md5' => $md5,
-            'language_id' => Language::getBaseLanguage()->id
-        ]);
+        $base_language = Language::getBaseLanguage();
+
+        if (!self::existsTranslation($md5, $base_language))
+        {
+            Translation::create([
+                'text' => $text,
+                'md5' => $md5,
+                'language_id' => $base_language->id
+            ]);
+        }
     }
 }

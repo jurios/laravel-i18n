@@ -17,6 +17,10 @@ class I18n
     }
 
     /**
+     * Get the stored translation for the text $text using the variable replacement in $replace for the language
+     * reference $locale. If $honestly is false, when translation doesn't exists, it will try to get the default language
+     * translations. If that's not defined too, then base translation is returned.
+     *
      * @param string $text
      * @param array $replace
      * @param null $locale
@@ -83,7 +87,9 @@ class I18n
     }
 
     /**
-     * @param $md5
+     * Return the translation text for $text in $locale language
+     *
+     * @param $text
      * @param $locale
      * @return mixed
      * @throws MissingLanguageException
@@ -102,6 +108,11 @@ class I18n
         }
     }
 
+    /**
+     * Returns the locale for the session. If it's not present, returns de default language (which is the language in use)
+     * @return mixed
+     * @throws MissingLanguageException
+     */
     private function getSessionLocale()
     {
         if(Session::has('locale'))
@@ -113,8 +124,11 @@ class I18n
     }
 
     /**
-     * @param $md5
+     * Retrieve the translation from the database if it exists.
+     *
+     * @param $text
      * @param $locale
+     * @return mixed|null
      * @throws MissingLanguageException
      */
     private function getTranslationFromDataBase($text, $locale)
@@ -128,7 +142,9 @@ class I18n
             );
         }
 
-        return Translation::getTranslation($text, $locale);
+        $language = Language::getLanguageFromISO_639_1($locale);
+
+        return Translation::getTranslation($text, $language);
     }
 
 }

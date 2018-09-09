@@ -28,6 +28,12 @@ class Language extends Model
     }
 
     //static methods
+
+    /**
+     * Returns the default language (it must exists)
+     * @return mixed
+     * @throws MissingLanguageException
+     */
     public static function getDefaultLanguage()
     {
         $default_language = Language::where('default', true)->first();
@@ -40,6 +46,11 @@ class Language extends Model
         return $default_language;
     }
 
+    /**
+     * Returns the base language (it must exists)
+     * @return mixed
+     * @throws MissingLanguageException
+     */
     public static function getBaseLanguage()
     {
         $base_language = Language::where('ISO_639_1', config('app.locale'))->first();
@@ -52,6 +63,11 @@ class Language extends Model
         return $base_language;
     }
 
+    /**
+     * Returns the language whose ISO_639_1 is $iso
+     * @param $iso
+     * @return mixed
+     */
     public static function getLanguageFromISO_639_1($iso)
     {
         return Language::where('ISO_639_1', $iso)->first();
