@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTranslationsTable extends Migration
+class CreateTextsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,13 @@ class CreateTranslationsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('i18n.translation.table'), function (Blueprint $table) {
+        Schema::create(config('i18n.text.table'), function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('md5')->nullable(false);
+            $table->text('text')->nullable(false);
 
-            $table->text('text')->nullable(true);
-
-            $table->unsignedInteger('language_id')->nullable(false);
-            $table->foreign('language_id')->references('id')->on(config('i18n.language.table'))
-                ->onDelete('cascade');
-
-            $table->timestamps();
+            $table->text('paths')->nullable(false);
         });
     }
 

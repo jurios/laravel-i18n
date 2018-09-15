@@ -80,7 +80,13 @@ class Linguist
     /**
      * Transforms the array from getAllTranslatableStringFromFiles() to the next format:
      * [
-     *      md5(text1) => text1,
+     *      md5(text1) => [
+     *          'text' => text1,
+     *          'files' => [
+     *              path/to/file1 => times_in_file1
+     *              path/to/file2 => times_in_file2
+     *          ]
+     *      ],
      *      md5(text2) => text2,
      *      ....
      * ]
@@ -90,22 +96,30 @@ class Linguist
      */
     public function getTranslationsWithMd5(array $translationsByFile)
     {
-        $translations = [];
+        $result = [];
 
-        foreach ($translationsByFile as $file)
+        foreach ($translationsByFile as $file => $translations)
         {
-            foreach ($file as $translation)
+            foreach ($translations as $translation)
             {
                 $md5 = md5($translation);
 
-                if (!isset($translations[$md5]))
+                if (!isset($result[$md5]))
                 {
-                    $translations[$md5] = $translation;
+                    $result[$md5] = [
+                        'text' => $translation,
+                        'files' => [
+                            $file => 1
+                        ]
+                    ];
+                }
+                else {
+                    isset($result[$md5]['files'][$file])? $result[$md5]['files'][$file]++ : $result[$md5]['files'][$file] = 1;
                 }
             }
         }
 
-        return $translations;
+        return $result;
     }
 
     /**
@@ -137,14 +151,64 @@ class Linguist
      */
     public function addNewTranslations(array $translations)
     {
-        $language = Language::getBaseLanguage();
         $count = 0;
 
-        foreach ($translations as $md5 => $text)
+        foreach ($translations as $md5 => $translation)
         {
-            if (!Translation::existsTranslation($md5, $language))
+            if (!Text::existsText($md5))
             {
-                Translation::generateTranslation($text);
+                Text::create([
+                    'md5' => $md5,
+                    'text' => $translation['text'],
+                    'paths' => $translation['files']
+                ]);
+
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * Look for dynamic translations ( uses t($var, ...) ) which can not be created statically
+     *
+     * @param array $translations
+     * @return int
+     */
+    public function countDynamicTranslations()
+    {
+
+        $count = 0;
+
+        /*
+         * This pattern is derived from Barryvdh\TranslationManager by Barry vd. Heuvel <barryvdh@gmail.com>
+         *
+         * https://github.com/barryvdh/laravel-translation-manager/blob/master/src/Manager.php
+         */
+
+        $functions = ['t'];
+
+        $pattern =
+            // See https://regex101.com/r/jS5fX0/4
+            '[^\w]'. // Must not start with any alphanum or _
+            '(?<!->)'. // Must not start with ->
+            '('.implode('|', $functions).')'.// Must start with one of the functions
+            "\(".// Match opening parentheses
+            "[\$]".// Match $
+            '('.// Start a new group to match:
+            '[\s\S]*'.// Must start with group
+            ')'.// Close group
+            "[\),]"  // Close parentheses or new parameter
+        ;
+
+        $allMatches = [];
+
+        /** @var \Symfony\Component\Finder\SplFileInfo $file */
+        foreach ($this->filesystem->allFiles($this->paths) as $file) {
+
+            if (preg_match_all("/$pattern/siU", $file->getContents(), $matches))
+            {
                 $count++;
             }
         }

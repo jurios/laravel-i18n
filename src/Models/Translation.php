@@ -9,12 +9,13 @@ class Translation extends Model
 {
     protected $table;
 
-    protected $fillable = ['text', 'language_id', 'md5'];
+    protected $fillable = ['text', 'language_id', 'md5', 'text_id'];
 
     protected $casts = [
         'md5' => 'string',
         'text' => 'string',
         'language_id' => 'integer',
+        'text_id' => 'integer'
     ];
 
     public function __construct(array $attributes = [])
@@ -53,6 +54,11 @@ class Translation extends Model
     public function language()
     {
         return $this->belongsTo(Language::class, 'language_id');
+    }
+
+    public function text()
+    {
+        return $this->belongsTo(Text::class);
     }
 
     //scope methods
