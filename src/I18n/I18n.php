@@ -144,7 +144,7 @@ class I18n
 
         $language = Language::getLanguageFromISO_639_1($locale);
 
-        return Translation::getTranslation($text, $language);
+        return Translation::getTranslationByText($text, $language);
     }
 
 }

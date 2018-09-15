@@ -20,6 +20,8 @@ class CreateTranslationsTable extends Migration
 
             $table->text('text')->nullable(true);
 
+            $table->boolean('needs_revision')->nullable(false)->default(false);
+
             $table->unsignedInteger('language_id')->nullable(false);
             $table->foreign('language_id')->references('id')->on(config('i18n.language.table'))
                 ->onDelete('cascade');

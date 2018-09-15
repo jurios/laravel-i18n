@@ -9,13 +9,14 @@ class Translation extends Model
 {
     protected $table;
 
-    protected $fillable = ['text', 'language_id', 'md5', 'text_id'];
+    protected $fillable = ['text', 'language_id', 'md5', 'text_id', 'needs_revision'];
 
     protected $casts = [
         'md5' => 'string',
         'text' => 'string',
         'language_id' => 'integer',
-        'text_id' => 'integer'
+        'text_id' => 'integer',
+        'needs_revision' => 'boolean'
     ];
 
     public function __construct(array $attributes = [])
@@ -31,10 +32,16 @@ class Translation extends Model
      * @return mixed|null
      * @throws MissingLanguageException
      */
-    public static function getTranslation(string $text, Language $language)
+    public static function getTranslationByText(string $text, Language $language)
     {
-
         $md5 = md5($text);
+
+        return self::getTranslationByMd5($md5, $language);
+
+    }
+
+    public static function getTranslationByMd5(string $md5, Language $language)
+    {
 
         /** @var Translation $translation */
         $translation = Translation::where('md5', $md5)->where('language_id', $language->id)->first();
@@ -47,6 +54,11 @@ class Translation extends Model
         self::generateTranslation($md5, $text);
 
         return null;
+    }
+
+    public static function getLanguageTranslations(Language $language)
+    {
+        return Translation::where('language_id', $language)->get();
     }
 
     //relationships

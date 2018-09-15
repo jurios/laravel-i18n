@@ -32,7 +32,7 @@
             ],
 
             "aliases": {
-                "I18n": "Kodilab\\LaravelI18n\\Facade"
+                "i18n": "Kodilab\\LaravelI18n\\Facade"
             }
         }
     }

@@ -1,13 +1,7 @@
 <?php
 
-
 namespace Kodilab\LaravelI18n;
 
-
-/**
- * @method static mixed routes()
- *
- */
 class Facade extends \Illuminate\Support\Facades\Facade
 {
     protected static function getFacadeAccessor()
@@ -21,8 +15,32 @@ class Facade extends \Illuminate\Support\Facades\Facade
      * @param  array  $options
      * @return void
      */
-    public static function routes(array $options = [])
+    public static function routes()
     {
-        static::$app->make('router')->post('login_i18n', 'Auth\LoginController@loginWithCallback')->name('login');
+        static::$app->make('router')->prefix('i18n')->group(function() {
+
+            static::$app->make('router')
+                ->get('languages', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@index')
+                ->name('languages');
+
+            static::$app->make('router')
+                ->post('languages/{language}/enable', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@enable')
+                ->name('languages.enable');
+
+            static::$app->make('router')
+                ->post('languages/{language}/disable', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@disable')
+                ->name('languages.disable');
+
+
+
+            static::$app->make('router')
+                ->get('languages/{language}/translations', '\Kodilab\LaravelI18n\Controllers\I18nTranslationsController@index')
+                ->name('languages.translations');
+
+            static::$app->make('router')
+                ->post('languages/{language}/translations/{md5}', '\Kodilab\LaravelI18n\Controllers\I18nTranslationsController@update')
+                ->name('languages.translations.update');
+
+        });
     }
 }

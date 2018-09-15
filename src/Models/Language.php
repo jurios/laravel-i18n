@@ -64,6 +64,21 @@ class Language extends Model
     }
 
     /**
+     * Returns the user configured language. If it's not configured by middleware then base language is used
+     * @return mixed
+     * @throws MissingLanguageException
+     */
+    public static function getUserLanguage()
+    {
+        if (session()->has('locale'))
+        {
+            return Language::where('ISO_639_1', session()->get('locale'))->first();
+        }
+
+        return self::getBaseLanguage();
+    }
+
+    /**
      * Returns the language whose ISO_639_1 is $iso
      * @param $iso
      * @return mixed
@@ -107,5 +122,41 @@ class Language extends Model
     public function scopeEnabled(Builder $query, $value = true)
     {
         return $query->where('enabled', $value);
+    }
+
+    /**
+     * @param string $md5
+     * @param string $text
+     * @throws \Exception
+     */
+    public function setTranslation(string $md5, string $text, bool $needs_revision = false)
+    {
+        $text = Text::where('md5', $md5)->first();
+        $translation = $this->translations()->where('md5', $md5)->first();
+
+        if (is_null($text))
+        {
+            //TODO: Create a custom excepction
+            throw new \Exception('No text found for md5: ' . $md5);
+        }
+
+        if(is_null($translation))
+        {
+            $translation = Translation::create([
+                'text' => $text,
+                'language_id' => $this->id,
+                'md5' => $md5,
+                'text_id' => $text->id,
+                'needs_revision' => $needs_revision
+            ]);
+        }
+        else {
+            $translation->update([
+                'text' => $text,
+                'needs_revision' => $needs_revision
+            ]);
+        }
+
+        return $translation;
     }
 }
