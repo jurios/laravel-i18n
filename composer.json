@@ -29,7 +29,11 @@
         "laravel": {
             "providers": [
                 "Kodilab\\LaravelI18n\\I18nProvider"
-            ]
+            ],
+
+            "aliases": {
+                "I18n": "Kodilab\\LaravelI18n\\Facade"
+            }
         }
     }
 }
