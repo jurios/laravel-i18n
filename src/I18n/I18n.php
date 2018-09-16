@@ -41,7 +41,7 @@ class I18n
 
         if (is_null($translated_line) && $honestly === false)
         {
-            $translated_line = $this->getTranslation($text, Language::getBaseLanguage()->reference);
+            $translated_line = $this->getTranslation($text, Language::getBaseLanguage());
         }
 
         return $this->makeReplacements($translated_line, $replace);
@@ -101,7 +101,7 @@ class I18n
         }
         else
         {
-            $translated_line = $this->getTranslationFromDataBase($text, $language);
+            $translated_line = $this->getTranslationTextFromDataBase($text, $language);
             Cache::add($language->reference . '_' . $md5, $translated_line, 60);
         }
     }
@@ -114,9 +114,16 @@ class I18n
      * @return mixed|null
      * @throws MissingLanguageException
      */
-    private function getTranslationFromDataBase($text, Language $language)
+    private function getTranslationTextFromDataBase($text, Language $language)
     {
-        return Translation::getTranslationByText($text, $language);
+        $translation = Translation::getTranslationByText($text, $language);
+
+        if (!is_null($translation))
+        {
+            return $translation->text;
+        }
+
+        return null;
     }
 
 }

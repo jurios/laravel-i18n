@@ -24,8 +24,8 @@ class I18nProvider extends ServiceProvider
     public function boot()
     {
         $configPath = __DIR__ . '/../config/config.php';
-
-        $assetsPath = __DIR__ . '/../views/assets';
+        $assetsPath = __DIR__ . '/../public/assets';
+        $viewsPath = __DIR__ . '/../views';
 
         $this->publishes([
             $configPath => config_path('i18n.php')
@@ -34,6 +34,8 @@ class I18nProvider extends ServiceProvider
         $this->publishes([
             $assetsPath => public_path('vendor/i18n')
         ], 'public');
+
+        $this->loadViewsFrom($viewsPath, 'i18n');
 
         $this->loadMigrationsFrom(__DIR__. '/../migrations');
 

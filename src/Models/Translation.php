@@ -63,9 +63,10 @@ class Translation extends Model
     public static function generateTranslation($text, Language $language = null)
     {
         $base_language = Language::getBaseLanguage();
-
         $md5 = md5($text);
-
+        $translated_text = $language->id === $base_language->id ? $text : null; // $text contains the base language text
+                                                                                // thus we only use it if the language
+                                                                                // is the base language
         if (is_null($language))
         {
             $language = $base_language;
@@ -73,11 +74,13 @@ class Translation extends Model
 
         if (!self::existsTranslation($md5, $language))
         {
-            Translation::create([
-                'text' => $language->id === $base_language->id ? $text : null, // $text contains the base language text
-                'md5' => $md5,                                                 // thus we only use it if the language
-                'language_id' => $language->id                                 // is the base language
+            $translation = Translation::create([
+                'text' => $translated_text,
+                'md5' => $md5,
+                'language_id' => $language->id
             ]);
+        } else {
+            $translation = $language->getTranslation($md5);
         }
 
         if ($base_language->id !== $language->id)
@@ -85,6 +88,8 @@ class Translation extends Model
             // Create base language translation
             self::generateTranslation($text, $base_language);
         }
+
+        return $translation;
     }
 
     /**
@@ -102,12 +107,10 @@ class Translation extends Model
 
         if(!is_null($translation))
         {
-            return $translation->text;
+            return $translation;
         }
 
-        self::generateTranslation($text, $language);
-
-        return null;
+        return self::generateTranslation($text, $language);
     }
 
     public static function getTranslationByMd5(string $md5, Language $language)
@@ -118,7 +121,7 @@ class Translation extends Model
 
         if(!is_null($translation))
         {
-            return $translation->text;
+            return $translation;
         }
 
         return null;
