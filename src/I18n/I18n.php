@@ -28,23 +28,20 @@ class I18n
      * @return string
      * @throws MissingLanguageException
      */
-    public function getTranslationFromText(string $text, $replace = [], $locale = null, $honestly = false)
+    public function translate(string $text, $replace = [], $locale = null, $honestly = false)
     {
-        if (is_null($locale))
+        $language = is_null($locale) ? Language::getUserLanguage() : Language::getLanguageFromISO_639_1($locale);
+
+        if (is_null($language))
         {
-            $locale = $this->getSessionLocale();
+            throw new MissingLanguageException('Language with reference' . $locale . 'not found when translating');
         }
 
-        $translated_line = $this->getTranslatedLine($text, $locale);
+        $translated_line = $this->getTranslation($text, $language);
 
         if (is_null($translated_line) && $honestly === false)
         {
-            $translated_line = $this->getTranslatedLine($text, Language::getDefaultLanguage()->reference);
-
-            if (is_null($translated_line))
-            {
-                $translated_line = $this->getTranslatedLine($text, Language::getBaseLanguage()->reference);
-            }
+            $translated_line = $this->getTranslation($text, Language::getBaseLanguage()->reference);
         }
 
         return $this->makeReplacements($translated_line, $replace);
@@ -94,33 +91,19 @@ class I18n
      * @return mixed
      * @throws MissingLanguageException
      */
-    private function getTranslatedLine($text, $locale)
+    private function getTranslation($text, Language $language)
     {
         $md5 = md5($text);
-        if (Cache::has($locale . '_' . $md5 ))
+
+        if (Cache::has($language->reference . '_' . $md5 ))
         {
-            return Cache::get($locale . '_' . $md5);
+            return Cache::get($language->reference . '_' . $md5);
         }
         else
         {
-            $translated_line = $this->getTranslationFromDataBase($text, $locale);
-            Cache::add($locale . '_' . $md5, $translated_line, 60);
+            $translated_line = $this->getTranslationFromDataBase($text, $language);
+            Cache::add($language->reference . '_' . $md5, $translated_line, 60);
         }
-    }
-
-    /**
-     * Returns the locale for the session. If it's not present, returns de default language (which is the language in use)
-     * @return mixed
-     * @throws MissingLanguageException
-     */
-    private function getSessionLocale()
-    {
-        if(Session::has('locale'))
-        {
-            return Session::get('locale');
-        }
-
-        return Language::getDefaultLanguage()->reference;
     }
 
     /**
@@ -131,19 +114,8 @@ class I18n
      * @return mixed|null
      * @throws MissingLanguageException
      */
-    private function getTranslationFromDataBase($text, $locale)
+    private function getTranslationFromDataBase($text, Language $language)
     {
-        $language = Language::getLanguageFromISO_639_1($locale);
-
-        if (is_null($language))
-        {
-            throw new MissingLanguageException(
-                'Language with ISO_639_1 = ' . $locale . ' not found in ' . config('i18n.language.table') . ' table'
-            );
-        }
-
-        $language = Language::getLanguageFromISO_639_1($locale);
-
         return Translation::getTranslationByText($text, $language);
     }
 
