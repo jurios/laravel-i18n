@@ -6,6 +6,7 @@ namespace Kodilab\LaravelI18n;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use Kodilab\LaravelI18n\Commands\Sync;
+use \Illuminate\Support\Facades\Blade;
 
 class I18nProvider extends ServiceProvider
 {
@@ -42,6 +43,10 @@ class I18nProvider extends ServiceProvider
         $this->commands([
             Sync::class,
         ]);
+
+        Blade::directive('ajaxmodal', function () {
+            return "data-toggle=\"modal\" data-target=\"#placeholderModal\"";
+        });
     }
 
     /**

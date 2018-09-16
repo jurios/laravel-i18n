@@ -123,11 +123,11 @@
         </div>
     </div>
 
+    @include('i18n::layout.partials.modal.placeholder_modal')
+
     @stack('js')
 
-    <script>
-        @stack('inline-js')
-    </script>
+    @stack('inline-js')
 
 </body>
 </html>

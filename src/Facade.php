@@ -35,6 +35,10 @@ class Facade extends \Illuminate\Support\Facades\Facade
                 ->post('languages/{language}/disable', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@disable')
                 ->name('languages.disable');
 
+            static::$app->make('router')
+                ->get('languages/{language}/disable/dialog', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@disable_dialog')
+                ->name('languages.disable.dialog');
+
 
 
             static::$app->make('router')

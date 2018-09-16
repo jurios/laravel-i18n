@@ -32,6 +32,17 @@ class I18NLanguagesController extends \Illuminate\Routing\Controller
     }
 
     /**
+     * Show disable dialog
+     *
+     * @param Language $language
+     * @return mixed
+     */
+    public function disable_dialog(Language $language)
+    {
+        return view('i18n::languages/modals/disable_language', compact('language'));
+    }
+
+    /**
      * Disable a language.
      *
      * @return \Illuminate\Http\Response
