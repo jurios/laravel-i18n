@@ -32,7 +32,7 @@ class I18nProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            $assetsPath => public_path('vendor/i18n')
+            $assetsPath => public_path('vendor/i18n/assets')
         ], 'public');
 
         $this->loadViewsFrom($viewsPath, 'i18n');

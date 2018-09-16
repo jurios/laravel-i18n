@@ -13,9 +13,9 @@ class I18NLanguagesController extends \Illuminate\Routing\Controller
      */
     public function index()
     {
-        $languages = Language::all();
+        $languages = Language::orderBy('enabled', 'desc')->get();
 
-        //return view('activities.index', compact('activities'));
+        return view('i18n::languages/index', compact('languages'));
     }
 
     /**

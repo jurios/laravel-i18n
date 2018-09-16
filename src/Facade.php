@@ -17,7 +17,11 @@ class Facade extends \Illuminate\Support\Facades\Facade
      */
     public static function routes()
     {
-        static::$app->make('router')->prefix('i18n')->group(function() {
+        static::$app->make('router')->prefix('i18n')->name('i18n.')->group(function() {
+
+            static::$app->make('router')->get('/', function () {
+                    return redirect()->route('i18n.languages');
+                })->name('dashboard');
 
             static::$app->make('router')
                 ->get('languages', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@index')

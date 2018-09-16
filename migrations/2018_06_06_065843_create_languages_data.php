@@ -203,7 +203,7 @@ class CreateLanguagesData extends Migration
         foreach ($languages as $language)
         {
             DB::table(config('i18n.language.table'))->insert([
-                'name' => $language["name"],
+                'name' => mb_convert_case($language["name"], MB_CASE_TITLE, 'UTF-8'),
                 'ISO_639_1' => $language["ISO_639_1"],
                 'enabled' => false,
                 'default' => false
