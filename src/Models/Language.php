@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
 
 class Language extends Model
@@ -53,12 +54,19 @@ class Language extends Model
      */
     public static function getBaseLanguage()
     {
+        if (Cache::has('base_language'))
+        {
+            return Cache::get('base_language');
+        }
+
         $base_language = Language::where('ISO_639_1', config('app.locale'))->first();
 
         if(is_null($base_language))
         {
             throw new MissingLanguageException('Base language (' . config('app.locale') . ') not found');
         }
+
+        Cache::forever('base_language', $base_language);
 
         return $base_language;
     }
@@ -158,5 +166,10 @@ class Language extends Model
         }
 
         return $translation;
+    }
+
+    public function getTranslation(string $md5)
+    {
+        return $this->translations()->where('md5', $md5)->first();
     }
 }
