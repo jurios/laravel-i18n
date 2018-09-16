@@ -25,11 +25,17 @@ class I18nProvider extends ServiceProvider
     {
         $configPath = __DIR__ . '/../config/config.php';
 
+        $assetsPath = __DIR__ . '/../views/assets';
+
         $this->publishes([
-            $configPath => config_path('i18n.php'),
+            $configPath => config_path('i18n.php')
         ]);
 
-        $this->loadMigrationsFrom(__DIR__.'/../migrations');
+        $this->publishes([
+            $assetsPath => public_path('vendor/i18n')
+        ], 'public');
+
+        $this->loadMigrationsFrom(__DIR__. '/../migrations');
 
         $this->commands([
             Sync::class,
