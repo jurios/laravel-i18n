@@ -30,6 +30,6 @@ class CreateTextsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('i18n.translation.table'));
+        Schema::dropIfExists(config('i18n.text.table'));
     }
 }

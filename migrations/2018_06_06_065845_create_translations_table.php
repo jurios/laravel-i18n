@@ -26,7 +26,7 @@ class CreateTranslationsTable extends Migration
             $table->foreign('language_id')->references('id')->on(config('i18n.language.table'))
                 ->onDelete('cascade');
 
-            $table->unsignedInteger('text_id')->nullable(false);
+            $table->unsignedInteger('text_id')->nullable(true)->default(null);
             $table->foreign('text_id')->references('id')->on(config('i18n.text.table'))
                 ->onDelete('cascade');
 

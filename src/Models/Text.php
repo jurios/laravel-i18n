@@ -2,6 +2,7 @@
 
 namespace Kodilab\LaravelI18n;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class Text extends Model
@@ -37,12 +38,27 @@ class Text extends Model
 
             $base_language = Language::getBaseLanguage();
 
-            Translation::create([
-                'md5' => $text->md5,
-                'text' => $text->text,
-                'language_id' => $base_language->id,
-                'text_id' => $text->id
-            ]);
+            /** @var Collection $existingTranslations */
+            $existingTranslations = Translation::where('md5', $text->md5)->get();
+
+            if ($existingTranslations->isEmpty())
+            {
+                Translation::create([
+                    'md5' => $text->md5,
+                    'text' => $text->text,
+                    'language_id' => $base_language->id,
+                    'text_id' => $text->id
+                ]);
+
+                return;
+            }
+
+            foreach ($existingTranslations as $translations)
+            {
+                $translations->update([
+                    'text_id' => $text->id
+                ]);
+            }
         });
     }
 
