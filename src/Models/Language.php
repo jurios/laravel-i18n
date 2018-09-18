@@ -39,12 +39,19 @@ class Language extends Model
      */
     public static function getDefaultLanguage()
     {
+        if (session()->has('default_language'))
+        {
+            return session()->get('default_language');
+        }
+
         $default_language = Language::where('default', true)->first();
 
         if(is_null($default_language))
         {
             throw new MissingLanguageException('Defaut Language not found');
         }
+
+        session()->flash('default_language', $default_language);
 
         return $default_language;
     }
@@ -56,19 +63,19 @@ class Language extends Model
      */
     public static function getBaseLanguage()
     {
-        if (Cache::has('base_language'))
+        if (session()->has('base_language'))
         {
-            return Cache::get('base_language');
+            return session()->get('base_language');
         }
 
-        $base_language = Language::where('ISO_639_1', config('app.locale'))->first();
+        $base_language = Language::with('translations')->where('ISO_639_1', config('app.locale'))->first();
 
         if(is_null($base_language))
         {
             throw new MissingLanguageException('Base language (' . config('app.locale') . ') not found');
         }
 
-        Cache::forever('base_language', $base_language);
+        session()->flash('base_language', $base_language);
 
         return $base_language;
     }
@@ -80,12 +87,21 @@ class Language extends Model
      */
     public static function getUserLanguage()
     {
-        if (session()->has('locale'))
+        if (session()->has('user_language'))
         {
-            return Language::where('ISO_639_1', session()->get('locale'))->first();
+            return session()->get('user_language');
         }
 
-        return self::getBaseLanguage();
+        if (session()->has('locale'))
+        {
+            $user_language = Language::where('ISO_639_1', session()->get('locale'))->first();
+            session()->flash('user_language', $user_language);
+            return $user_language;
+        }
+
+        $user_language = self::getBaseLanguage();
+        session()->flash('user_language', $user_language);
+        return $user_language;
     }
 
     /**
@@ -108,6 +124,16 @@ class Language extends Model
     public function translations()
     {
         return $this->hasMany(Translation::class, 'language_id');
+    }
+
+    public function isDefaultLanguage()
+    {
+        return $this->id === self::getDefaultLanguage()->id;
+    }
+
+    public function isBaseLanguage()
+    {
+        return $this->id === self::getBaseLanguage()->id;
     }
 
     /**
