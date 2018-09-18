@@ -125,6 +125,8 @@
 
     @include('i18n::layout.partials.modals.ajax_dialog.placeholder_modal')
 
+    @stack('help-modals')
+
     @stack('js')
 
     @stack('inline-js')
