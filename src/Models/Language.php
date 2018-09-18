@@ -5,6 +5,8 @@ namespace Kodilab\LaravelI18n;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
 
@@ -131,7 +133,7 @@ class Language extends Model
 
         if ($count_base_translations > 0)
         {
-            return (count($language->translations) * 100) / $count_base_translations;
+            return (count($this->translations) * 100) / $count_base_translations;
         }
 
         return "";
@@ -158,6 +160,24 @@ class Language extends Model
     public function isBaseLanguage()
     {
         return $this->id === self::getBaseLanguage()->id;
+    }
+
+    public function markAsDefault()
+    {
+        try {
+            $default_language = self::getDefaultLanguage();
+            $default_language->default = false;
+            $default_language->save();
+
+            $this->default = true;
+            $this->save();
+        } catch (\Exception $e)
+        {
+            Log::error('Error when changing default language from ' .
+                $default_language->id . ' to ' . $this->id . ': ' . $e->getMessage());
+        }
+
+        session()->forget('default_language');
     }
 
     /**

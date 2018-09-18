@@ -10,6 +10,7 @@
         <th>ISO_639_1</th>
         <td>Progress</td>
         <th>Translations</th>
+        <th>Actions</th>
     </tr>
 @endsection
 
@@ -49,6 +50,21 @@
                 <a href="{{ route('i18n.languages.translations', compact('language')) }}">
                     <i class="fe fe-list"></i> Translations
                 </a>
+            </td>
+            <td>
+                <div class="dropdown">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                        <i class="fe fe-settings"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        @if(!$language->isDefaultLanguage())
+                            <a class="dropdown-item" href="#" @ajaxmodal
+                               data-ajax-url="{{ route('i18n.languages.default.dialog', compact('language')) }}">
+                                Mark as default
+                            </a>
+                        @endif
+                    </div>
+                </div>
             </td>
         </tr>
     @endforeach

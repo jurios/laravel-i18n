@@ -22,7 +22,7 @@
 @endsection
 
 @section('buttons')
-    <button type="submit" class="btn btn-danger">
+    <button type="submit" class="btn btn-warning">
         <i class="fe fe-x"></i> {{ t('Disable') }}
     </button>
     <a href="javascript:;" type="button" class="btn btn-success" data-dismiss="modal">

@@ -18,4 +18,16 @@ class I18NLanguagesController extends \Illuminate\Routing\Controller
 
         return view('i18n::languages/index', compact('languages', 'filters'));
     }
+
+    public function mark_default_dialog(Language $language)
+    {
+        return view('i18n::languages.modals.default_language', compact('language'));
+    }
+
+    public function mark_default(Language $language)
+    {
+        $language->markAsDefault();
+
+        return redirect()->route('i18n.languages.index');
+    }
 }
