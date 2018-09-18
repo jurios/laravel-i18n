@@ -20,19 +20,23 @@ class Facade extends \Illuminate\Support\Facades\Facade
         static::$app->make('router')->prefix('i18n')->name('i18n.')->group(function() {
 
             static::$app->make('router')->get('/', function () {
-                    return redirect()->route('i18n.languages');
+                    return redirect()->route('i18n.languages.index');
                 })->name('dashboard');
 
             static::$app->make('router')
                 ->get('languages', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@index')
-                ->name('languages');
+                ->name('languages.index');
 
             static::$app->make('router')
-                ->post('languages/{language}/enable', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@enable')
+                ->patch('languages/{language}/enable', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@enable')
                 ->name('languages.enable');
 
             static::$app->make('router')
-                ->post('languages/{language}/disable', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@disable')
+                ->get('languages/{language}/enable/dialog', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@enable_dialog')
+                ->name('languages.enable.dialog');
+
+            static::$app->make('router')
+                ->patch('languages/{language}/disable', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@disable')
                 ->name('languages.disable');
 
             static::$app->make('router')

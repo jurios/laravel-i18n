@@ -25,27 +25,32 @@
 
 @push('inline-js')
     <script>
-        $(document).ready(function() {
-            $('#placeholderModal').on('show.bs.modal', function(e) {
-                $source = $(e.relatedTarget);
-                url = $source.data('ajax-url');
+        require(['jquery'], function (jquery) {
 
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function (data) {
-                        $('#placeholderModal .modal-dialog').append(data);
-                        $('#placeholderModal .modal-dialog .modal-content.placeholder').addClass('d-none');
-                    },
+            var $ = jquery;
+
+            $(document).ready(function () {
+                $('#placeholderModal').on('show.bs.modal', function (e) {
+                    $source = $(e.relatedTarget);
+                    url = $source.data('ajax-url');
+
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function (data) {
+                            $('#placeholderModal .modal-dialog').append(data);
+                            $('#placeholderModal .modal-dialog .modal-content.placeholder').addClass('d-none');
+                        },
+                    });
+
+
                 });
 
+                $('#placeholderModal').on('hidden.bs.modal', function (e) {
+                    $('#placeholderModal .modal-dialog .modal-content.ajax').remove();
+                });
 
             });
-
-            $('#placeholderModal').on('hidden.bs.modal', function(e) {
-                $('#placeholderModal .modal-dialog .modal-content.ajax').remove();
-            });
-
         });
     </script>
 

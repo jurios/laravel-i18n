@@ -123,7 +123,7 @@
         </div>
     </div>
 
-    @include('i18n::layout.partials.modal.placeholder_modal')
+    @include('i18n::layout.partials.modals.ajax_dialog.placeholder_modal')
 
     @stack('js')
 

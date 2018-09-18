@@ -20,6 +20,17 @@ class I18NLanguagesController extends \Illuminate\Routing\Controller
     }
 
     /**
+     * Show enable dialog
+     *
+     * @param Language $language
+     * @return mixed
+     */
+    public function enable_dialog(Language $language)
+    {
+        return view('i18n::languages/modals/enable_language', compact('language'));
+    }
+
+    /**
      * Enable a language.
      *
      * @return \Illuminate\Http\Response
@@ -29,7 +40,7 @@ class I18NLanguagesController extends \Illuminate\Routing\Controller
         $language->enabled = true;
         $language->save();
 
-        return response()->json($language);
+        return redirect()->route('i18n.languages.index');
     }
 
     /**
@@ -50,9 +61,9 @@ class I18NLanguagesController extends \Illuminate\Routing\Controller
      */
     public function disable(Language $language)
     {
-        $language->disabled = true;
+        $language->enabled = false;
         $language->save();
 
-        return response()->json($language);
+        return redirect()->route('i18n.languages.index');
     }
 }

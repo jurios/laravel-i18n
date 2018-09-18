@@ -1,4 +1,4 @@
-@extends('i18n::layout.partials.modal.ajax_modal')
+@extends('i18n::layout.partials.modals.ajax_dialog.ajax_modal')
 
 @php($id = generateRandomString())
 

@@ -11,7 +11,7 @@ use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
 class Language extends Model
 {
     use Filterable;
-    
+
     protected $table;
 
     protected $fillable = ['default', 'enabled'];
