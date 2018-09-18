@@ -12,10 +12,10 @@
             <div class="col-lg order-lg-first">
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
                     <li class="nav-item">
-                        <a href="./index.html" class="nav-link active"><i class="fe fe-home"></i> Home</a>
+                        <a href="./index.html" class="nav-link" {{ addClassIfRoutMatch('i18n.languages') }}><i class="fe fe-home"></i> Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="{{ route('i18n.languages.index') }}" class="nav-link">
+                        <a href="{{ route('i18n.languages.index') }}" class="nav-link {{ addClassIfRoutMatch('i18n.languages') }}">
                             <i class="fe fe-flag"></i> Languages
                         </a>
                     </li>

@@ -27,20 +27,22 @@
             </td>
             <td>{{ $language->ISO_639_1 }}</td>
             <td>
-                @php($perc = (count($language->translations) * 100) / count(\Kodilab\LaravelI18n\Language::getBaseLanguage()->translations))
                 <div class="clearfix">
                     <div class="float-left">
-                        <strong>{{ $perc }}%</strong>
+                        <strong>{{ $language->translations_perc }}%</strong>
                     </div>
                     <div class="float-right">
-                        @if(!$language->isBaseLanguage())
-                            <small class="text-muted">
-                                {{ count($language->translations) }} of {{ count(\Kodilab\LaravelI18n\Language::getBaseLanguage()->translations) }}</small>
-                        @endif
+                        <small class="text-muted">
+                            {{ count($language->translations) }} of
+                            {{ count(\Kodilab\LaravelI18n\Language::getBaseLanguage()->translations) }}
+                        </small>
                     </div>
                 </div>
                 <div class="progress progress-xs">
-                    <div class="progress-bar bg-yellow" role="progressbar" style="width: {{$perc}}%" aria-valuenow="{{ $perc }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-yellow" role="progressbar"
+                         style="width: {{ $language->translations_perc }}%"
+                         aria-valuenow="{{ $language->translations_perc }}" aria-valuemin="0" aria-valuemax="100">
+                    </div>
                 </div>
             </td>
             <td>

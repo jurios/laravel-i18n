@@ -14,12 +14,13 @@ class Language extends Model
 
     protected $table;
 
-    protected $fillable = ['default'];
+    protected $fillable = ['default', 'enabled'];
 
     protected $casts = [
         'name' => 'string',
         'ISO_639_1' => 'string',
-        'default' => 'boolean'
+        'default' => 'boolean',
+        'enabled' => 'boolean'
     ];
 
     public $timestamps = false;
@@ -120,12 +121,35 @@ class Language extends Model
         return $this->ISO_639_1;
     }
 
+    public function getTranslationsPercAttribute()
+    {
+        if ($this->isBaseLanguage())
+        {
+            return 100;
+        }
+        $count_base_translations = count(self::getBaseLanguage()->translations);
+
+        if ($count_base_translations > 0)
+        {
+            return (count($language->translations) * 100) / $count_base_translations;
+        }
+
+        return "";
+    }
+
     //relationships
     public function translations()
     {
         return $this->hasMany(Translation::class, 'language_id');
     }
 
+    //scopes
+    public function scopeEnabled(Builder $query, bool  $value = true)
+    {
+        $query->where('enabled', $value);
+    }
+
+    // methods
     public function isDefaultLanguage()
     {
         return $this->id === self::getDefaultLanguage()->id;

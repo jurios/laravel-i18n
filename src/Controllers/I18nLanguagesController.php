@@ -14,7 +14,7 @@ class I18NLanguagesController extends \Illuminate\Routing\Controller
      */
     public function index(LanguageFilter $filters)
     {
-        $languages = Language::with('translations')->filtersResults($filters);
+        $languages = Language::with('translations')->enabled()->filtersResults($filters);
 
         return view('i18n::languages/index', compact('languages', 'filters'));
     }
