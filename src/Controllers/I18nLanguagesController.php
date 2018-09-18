@@ -2,6 +2,7 @@
 
 namespace Kodilab\LaravelI18n\Controllers;
 
+use Kodilab\LaravelI18n\Filters\LanguageFilter;
 use Kodilab\LaravelI18n\Language;
 
 class I18NLanguagesController extends \Illuminate\Routing\Controller
@@ -11,11 +12,11 @@ class I18NLanguagesController extends \Illuminate\Routing\Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(LanguageFilter $filters)
     {
-        $languages = Language::orderBy('enabled', 'desc')->get();
+        $languages = Language::filtersResults($filters);
 
-        return view('i18n::languages/index', compact('languages'));
+        return view('i18n::languages/index', compact('languages', 'filters'));
     }
 
     /**

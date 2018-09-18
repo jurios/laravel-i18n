@@ -5,10 +5,13 @@ namespace Kodilab\LaravelI18n;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
 
 class Language extends Model
 {
+    use Filterable;
+    
     protected $table;
 
     protected $fillable = ['default', 'enabled'];
