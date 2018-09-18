@@ -14,12 +14,11 @@ class Language extends Model
 
     protected $table;
 
-    protected $fillable = ['default', 'enabled'];
+    protected $fillable = ['default'];
 
     protected $casts = [
         'name' => 'string',
         'ISO_639_1' => 'string',
-        'enabled' => 'boolean',
         'default' => 'boolean'
     ];
 
@@ -99,24 +98,6 @@ class Language extends Model
         return Language::where('ISO_639_1', $iso)->first();
     }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        self::saving(function(Language $model){
-
-            if ($model->default === true)
-            {
-                $model->enabled = true;
-            }
-
-            //TODO: We should ensure if the model was default and it's not now, then another language is default.
-            //TODO: We should ensure if the model is the default, then there isn't another default language.
-
-            return $model;
-        });
-    }
-
     //Accessors
     public function getReferenceAttribute()
     {
@@ -127,12 +108,6 @@ class Language extends Model
     public function translations()
     {
         return $this->hasMany(Translation::class, 'language_id');
-    }
-
-    //scope methods
-    public function scopeEnabled(Builder $query, $value = true)
-    {
-        return $query->where('enabled', $value);
     }
 
     /**

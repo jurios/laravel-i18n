@@ -5,8 +5,7 @@
 @endsection
 
 @section('subtitle')
-    {{ count(\Kodilab\LaravelI18n\Language::enabled()->get()) }} enabled
-    of {{ count(\Kodilab\LaravelI18n\Language::all()) }} languages
+    {{ count(\Kodilab\LaravelI18n\Language::all()) }} languages
 @endsection
 
 @section('options')

@@ -8,7 +8,6 @@
     <tr>
         <th>Name</th>
         <th>ISO_639_1</th>
-        <th>Status</th>
         <td>Progress</td>
         <th>Translations</th>
     </tr>
@@ -19,19 +18,6 @@
         <tr>
             <td>{{ $language->name }}</td>
             <td>{{ $language->ISO_639_1 }}</td>
-            <td>
-                @if($language->enabled)
-                    <button type="button" class="btn btn-sm btn-success" @ajaxmodal
-                            data-ajax-url="{{ route('i18n.languages.disable.dialog', compact('language')) }}">
-                        <i class="fe fe-check mr-2"></i>Enabled
-                    </button>
-                @else
-                    <button type="button" class="btn btn-sm btn-warning" @ajaxmodal
-                            data-ajax-url="{{ route('i18n.languages.enable.dialog', compact('language')) }}">
-                        <i class="fe fe-x mr-2"></i>Disabled
-                    </button>
-                @endif
-            </td>
             <td>
                 <div class="clearfix">
                     <div class="float-left">

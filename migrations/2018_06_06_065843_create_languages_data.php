@@ -205,13 +205,11 @@ class CreateLanguagesData extends Migration
             DB::table(config('i18n.language.table'))->insert([
                 'name' => mb_convert_case($language["name"], MB_CASE_TITLE, 'UTF-8'),
                 'ISO_639_1' => $language["ISO_639_1"],
-                'enabled' => false,
                 'default' => false
             ]);
         }
 
         DB::table(config('i18n.language.table'))->where('ISO_639_1', config('app.locale'))->update([
-            'enabled' => true,
             'default'=> true
         ]);
     }

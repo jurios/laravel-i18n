@@ -20,13 +20,9 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-list"></i> Translations</a>
-                        <div class="dropdown-menu dropdown-menu-arrow">
-                            @foreach(\Kodilab\LaravelI18n\Language::enabled()->get() as $enabled_language)
-                                <a href="{{ route('i18n.languages.translations', ['language' => $enabled_language]) }}"
-                                   class="dropdown-item ">{{ $enabled_language->name }}</a>
-                            @endforeach
-                        </div>
+                        <a href="{{ route('i18n.languages.index') }}" class="nav-link">
+                            <i class="fe fe-list"></i> Translations
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('i18n.dashboard') }}" class="nav-link">
