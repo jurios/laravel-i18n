@@ -8,7 +8,7 @@
     <tr>
         <th>Name</th>
         <th>ISO_639_1</th>
-        <td>Progress</td>
+        <th>Progress</th>
         <th>Translations</th>
         <th>Actions</th>
     </tr>

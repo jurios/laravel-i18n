@@ -3,10 +3,14 @@
 namespace Kodilab\LaravelI18n;
 
 use Illuminate\Database\Eloquent\Model;
+use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
 
 class Translation extends Model
 {
+
+    use Filterable;
+
     protected $table;
 
     protected $fillable = ['text', 'language_id', 'md5', 'text_id', 'needs_revision'];

@@ -2,6 +2,8 @@
 
 namespace Kodilab\LaravelI18n\Controllers;
 
+use Kodilab\LaravelI18n\Filters\CompareTranslationFilter;
+use Kodilab\LaravelI18n\Filters\TranslationFilter;
 use Kodilab\LaravelI18n\Language;
 use Kodilab\LaravelI18n\Translation;
 use Illuminate\Http\Request;
@@ -13,13 +15,23 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Language $language)
+    public function index(TranslationFilter $filters, Language $language)
     {
+        $base_language_filters = clone $filters;
+        $language_filters = clone $filters;
+
+        /** @var Language $base_language */
         $base_language = Language::getBaseLanguage();
 
-        $texts = Translation::getLanguageTranslations($base_language);
+        $base_language_translations = $base_language->translations()->filters($base_language_filters)->get()->pluck('id')->toArray();
 
-        //return view('activities.index', compact('language', 'base_language', 'texts'));
+        $language_translations = $language->translations()->filters($language_filters)->get()->pluck('id')->toArray();
+
+        $translatios_ids = array_unique(array_merge($base_language_translations, $language_translations), SORT_REGULAR);
+
+        $lines = Translation::whereIn('id', $translatios_ids)->results($filters, true);
+
+        return view('i18n::translations.index', compact('language', 'base_language', 'lines', 'filters'));
     }
 
     public function update(Request $request, Language $language, string $md5)
