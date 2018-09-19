@@ -3,7 +3,7 @@
 
 <script>
     requirejs.config({
-        baseUrl: '../../vendor/i18n'
+        baseUrl: '{{ \Illuminate\Support\Facades\URL::to('/') }}/vendor/i18n'
     });
 </script>
 

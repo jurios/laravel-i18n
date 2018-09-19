@@ -39,7 +39,23 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
         $text = $request->input('text');
         $needs_revision = $request->has('needs_revision');
 
-        $translation = $language->setTranslation($md5, $text, $needs_revision);
+        $translation = $language->translations()->where('md5', $md5)->first();
+
+        if (!is_null($translation))
+        {
+            $translation->update([
+                'text' => $text,
+                'needs_revision' => $needs_revision
+            ]);
+
+        } else {
+            $translation = Translation::create([
+                'md5' => $md5,
+                'text' => $text,
+                'needs_revision' => $needs_revision,
+                'language_id' => $language->id
+            ]);
+        }
 
         return response()->json($translation);
     }
