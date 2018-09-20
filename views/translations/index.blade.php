@@ -20,6 +20,9 @@
                 </div>
             </div>
             <div class="card-body">
+                <div class="col-lg-4 offset-lg-4 mb-5">
+                    @include('i18n::languages.partials.progress_bar')
+                </div>
                 @include('i18n::translations.partials.table')
             </div>
         </div>

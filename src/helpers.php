@@ -16,7 +16,23 @@ function generateRandomString(int $length = 15)
     return $randomString;
 }
 
-function addClassIfRoutMatch(string $route, $class_name = 'active')
+function addClassIfRouteMatch(string $route, $class_name = 'active')
+{
+    $paths = array();
+    if (!is_array($route)) {
+        array_push($paths, $route);
+    } else {
+        $paths = $route;
+    }
+    foreach ($paths as $path){
+        if (Route::currentRouteName() === $path) {
+            return $class_name;
+        }
+    }
+    return '';
+}
+
+function addClassIfRouteContains(string $route, $class_name = 'active')
 {
     $paths = array();
     if (!is_array($route)) {

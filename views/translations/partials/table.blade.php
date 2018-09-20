@@ -57,9 +57,11 @@
             var $ = jquery;
 
             $(document).ready(function () {
-                $('.line-update-tr :input').on('change', function (){
+                $('.line-update-tr :input').on('input propertychange change', function (){
 
+                    $(this).parents('tr').removeClass('table-success');
                     $(this).parents('tr').addClass('table-warning');
+
                 });
 
                 $('.line-update-form').on('submit', function (e) {
@@ -84,10 +86,7 @@
                         success: function(data) {
                             $tr.removeClass('table-warning');
                             $tr.addClass('table-success');
-                            setTimeout(function() {
-                                $tr.css('transition', 'all 2s');
-                                $tr.removeClass('table-success');
-                            }, 1000);
+                            $tr.css('transition', 'all 2s');
                         }
                     });
 
