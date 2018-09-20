@@ -7,6 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use Kodilab\LaravelI18n\Commands\Sync;
 use \Illuminate\Support\Facades\Blade;
+use Kodilab\LaravelI18n\Middleware\SetLocale;
 
 class I18nProvider extends ServiceProvider
 {
@@ -22,7 +23,7 @@ class I18nProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(\Illuminate\Routing\Router $router)
     {
         $config_path = __DIR__ . '/../config/config.php';
         $assets_path = __DIR__ . '/../public/assets';
@@ -44,6 +45,8 @@ class I18nProvider extends ServiceProvider
         $this->commands([
             Sync::class,
         ]);
+
+        $router->aliasMiddleware('set_locale', SetLocale::class);
 
         Blade::directive('ajaxmodal', function () {
             return "data-toggle=\"modal\" data-target=\"#placeholderModal\"";

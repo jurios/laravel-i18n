@@ -5,7 +5,6 @@ namespace Kodilab\LaravelI18n;
 
 
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Session;
 use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
