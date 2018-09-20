@@ -129,11 +129,12 @@ class Language extends Model
         {
             return 100;
         }
+
         $count_base_translations = count(self::getBaseLanguage()->translations);
 
         if ($count_base_translations > 0)
         {
-            return (count($this->translations) * 100) / $count_base_translations;
+            return number_format((count($this->translations) * 100) / $count_base_translations, 0);
         }
 
         return "";

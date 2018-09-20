@@ -37,7 +37,7 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
     public function update(Request $request, Language $language, string $md5)
     {
         $text = $request->input('text');
-        $needs_revision = $request->has('needs_revision');
+        $needs_revision = $request->input('needs_revision') === 'true' ? true: false;
 
         $translation = $language->translations()->where('md5', $md5)->first();
 
