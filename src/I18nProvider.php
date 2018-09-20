@@ -24,21 +24,22 @@ class I18nProvider extends ServiceProvider
      */
     public function boot()
     {
-        $configPath = __DIR__ . '/../config/config.php';
-        $assetsPath = __DIR__ . '/../public/assets';
-        $viewsPath = __DIR__ . '/../views';
+        $config_path = __DIR__ . '/../config/config.php';
+        $assets_path = __DIR__ . '/../public/assets';
+        $views_path = __DIR__ . '/../views';
+        $migrations_path = __DIR__. '/../migrations';
 
         $this->publishes([
-            $configPath => config_path('i18n.php')
+            $config_path => config_path('i18n.php')
         ]);
 
         $this->publishes([
-            $assetsPath => public_path('vendor/i18n/assets')
+            $assets_path => public_path('vendor/laravel-i18n/assets')
         ], 'public');
 
-        $this->loadViewsFrom($viewsPath, 'i18n');
+        $this->loadViewsFrom($views_path, 'i18n');
 
-        $this->loadMigrationsFrom(__DIR__. '/../migrations');
+        $this->loadMigrationsFrom($migrations_path);
 
         $this->commands([
             Sync::class,
