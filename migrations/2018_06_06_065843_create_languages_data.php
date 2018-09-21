@@ -202,7 +202,7 @@ class CreateLanguagesData extends Migration
 
         foreach ($languages as $language)
         {
-            DB::table(config('i18n.language.table'))->insert([
+            DB::table(config('i18n.tables.languages'))->insert([
                 'name' => mb_convert_case($language["name"], MB_CASE_TITLE, 'UTF-8'),
                 'ISO_639_1' => $language["ISO_639_1"],
                 'enabled' => false,
@@ -210,7 +210,7 @@ class CreateLanguagesData extends Migration
             ]);
         }
 
-        DB::table(config('i18n.language.table'))->where('ISO_639_1', config('app.locale'))->update([
+        DB::table(config('i18n.tables.languages'))->where('ISO_639_1', config('app.locale'))->update([
             'default'=> true,
             'enabled' => true,
         ]);
@@ -223,6 +223,6 @@ class CreateLanguagesData extends Migration
      */
     public function down()
     {
-        DB::table(config('i18n.language.table'))->delete();
+        DB::table(config('i18n.tables.languages'))->delete();
     }
 }

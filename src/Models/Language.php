@@ -32,7 +32,7 @@ class Language extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->table = config('i18n.language.table');
+        $this->table = config('i18n.tables.languages');
     }
 
     //static methods
@@ -97,9 +97,9 @@ class Language extends Model
             return session()->get('user_language');
         }
 
-        if (session()->has('locale'))
+        if (session()->has(config('i18n.session_var_name')))
         {
-            $user_language = Language::where('ISO_639_1', session()->get('locale'))->first();
+            $user_language = Language::where('ISO_639_1', session()->get(config('i18n.session_var_name')))->first();
             session()->flash('user_language', $user_language);
             return $user_language;
         }

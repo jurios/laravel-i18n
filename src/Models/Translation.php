@@ -26,7 +26,7 @@ class Translation extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->table = config('i18n.translation.table');
+        $this->table = config('i18n.tables.translations');
     }
 
     //relationships

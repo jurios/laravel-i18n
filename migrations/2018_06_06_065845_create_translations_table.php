@@ -13,7 +13,7 @@ class CreateTranslationsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('i18n.translation.table'), function (Blueprint $table) {
+        Schema::create(config('i18n.tables.translations'), function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('md5')->nullable(false);
@@ -23,11 +23,11 @@ class CreateTranslationsTable extends Migration
             $table->boolean('needs_revision')->nullable(false)->default(false);
 
             $table->unsignedInteger('language_id')->nullable(false);
-            $table->foreign('language_id')->references('id')->on(config('i18n.language.table'))
+            $table->foreign('language_id')->references('id')->on(config('i18n.tables.languages'))
                 ->onDelete('cascade');
 
             $table->unsignedInteger('text_id')->nullable(true)->default(null);
-            $table->foreign('text_id')->references('id')->on(config('i18n.text.table'))
+            $table->foreign('text_id')->references('id')->on(config('i18n.tables.texts'))
                 ->onDelete('cascade');
 
             $table->timestamps();
@@ -41,6 +41,6 @@ class CreateTranslationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('i18n.translation.table'));
+        Schema::dropIfExists(config('i18n.tables.translations'));
     }
 }

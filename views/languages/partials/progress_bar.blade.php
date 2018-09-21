@@ -31,7 +31,6 @@
             var $ = jquery;
 
             $(document).on('language-updated', function(e, data) {
-                $()
                 $('#progress-bar').replaceWith(data);
             });
         });

@@ -24,12 +24,12 @@ class SetLocale
     {
         $locale = null;
 
-        if (!$request->session()->has('locale'))
+        if (!$request->session()->has(config('i18n.session_var_name')))
         {
             $available_languages = Language::enabled()->get();
 
             $locale = $this->getLocaleFromRequestOrDefaultLanguage($request, $available_languages);
-            $request->session()->put('locale', $locale);
+            $request->session()->put(config('i18n.session_var_name'), $locale);
         }
 
         return $next($request);

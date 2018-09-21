@@ -13,7 +13,7 @@ class CreateTextsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('i18n.text.table'), function (Blueprint $table) {
+        Schema::create(config('i18n.tables.texts'), function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('md5')->nullable(false);
@@ -30,6 +30,6 @@ class CreateTextsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('i18n.text.table'));
+        Schema::dropIfExists(config('i18n.tables.texts'));
     }
 }

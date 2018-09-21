@@ -13,7 +13,7 @@ class CreateLanguagesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('i18n.language.table'), function (Blueprint $table) {
+        Schema::create(config('i18n.tables.languages'), function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('name')->nullable(false);
@@ -31,6 +31,6 @@ class CreateLanguagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('i18n.language.table'));
+        Schema::dropIfExists(config('i18n.tables.languages'));
     }
 }
