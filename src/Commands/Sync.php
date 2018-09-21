@@ -3,6 +3,7 @@
 namespace Kodilab\LaravelI18n\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Session;
 use Kodilab\LaravelI18n\Linguist;
 
 class Sync extends Command
@@ -61,6 +62,7 @@ class Sync extends Command
         $this->output->writeln("\"<fg=green>{$added_count}</>\" new texts were added.");
 
         $this->call('cache:clear');
+        Session::flush();
 
     }
 }

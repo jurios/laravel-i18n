@@ -139,7 +139,7 @@ class Language extends Model
             return (int)number_format((count($this->translations) * 100) / $count_base_translations, 0);
         }
 
-        return "";
+        return 0;
     }
 
     //relationships

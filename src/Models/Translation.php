@@ -83,6 +83,9 @@ class Translation extends Model
                 'md5' => $md5,
                 'language_id' => $language->id
             ]);
+
+            session()->forget('base_language');
+
         } else {
             $translation = $language->getTranslation($md5);
         }
