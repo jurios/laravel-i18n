@@ -36,9 +36,9 @@ class Translation extends Model
         return $this->belongsTo(Language::class, 'language_id');
     }
 
-    public function text()
+    public function meta()
     {
-        return $this->belongsTo(Text::class);
+        return $this->belongsTo(Text::class, 'text_id');
     }
 
     //scope methods

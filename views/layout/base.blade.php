@@ -94,6 +94,7 @@
             @include('i18n::layout.partials.navigation')
             <div class="my-3 my-md-5">
                 <div class="container">
+                    @yield('alerts')
                     <div class="page-header">
                         <h1 class="page-title">
                             @yield('title')

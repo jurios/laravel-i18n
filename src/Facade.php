@@ -43,6 +43,10 @@ class Facade extends \Illuminate\Support\Facades\Facade
                 ->patch('languages/{language}/translations/{md5}', '\Kodilab\LaravelI18n\Controllers\I18nTranslationsController@update')
                 ->name('languages.translations.update');
 
+            static::$app->make('router')
+                ->get('languages/{language}/translations/{md5}/info', '\Kodilab\LaravelI18n\Controllers\I18nTranslationsController@info')
+                ->name('languages.translations.info');
+
         });
     }
 }

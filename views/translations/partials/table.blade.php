@@ -6,10 +6,10 @@
 
 @section('table-head-' . $id)
     <tr>
-        <th>Base language reference</th>
-        <th>{{ $language->name }} translation</th>
-        <th>Needs revision</th>
-        <th>Actions</th>
+        <th class="text-center">Base language reference</th>
+        <th class="text-center">{{ $language->name }} translation</th>
+        <th class="text-center">Needs revision</th>
+        <th class="text-center">Actions</th>
     </tr>
 @endsection
 
@@ -32,7 +32,9 @@
                     <label class="selectgroup-item">
                         <input name="needs_revision" value="true" class="selectgroup-input"
                                {{ $translated_line->needs_revision ? 'checked' : '' }} type="checkbox">
-                        <span class="selectgroup-button">Needs revision</span>
+                        <span class="selectgroup-button selectgroup-button-icon" data-toggle="tooltip" data-placement="bottom" title="Needs revision">
+                            <i class="fe fe-eye"></i>
+                        </span>
                     </label>
                 </div>
             </td>
@@ -41,7 +43,16 @@
                       action="{{ route('i18n.languages.translations.update', ['language' => $language, 'md5' => $line->md5]) }}" method="POST">
                     @csrf
                     <input type="hidden" name="_method" value="PATCH">
-                    <button type="submit" class="btn btn-success btn-sm"><i class="fe fe-upload mr-2"></i>Upload</button>
+                    <div class="btn-group-sm">
+                        <button type="submit" class="btn btn-success btn-sm"><i class="fe fe-upload mr-2"></i>Upload</button>
+
+                        <a href="#" class="btn btn-sm btn-info" @ajaxmodal
+                           data-ajax-url="{{ route('i18n.languages.translations.info', ['language' => $language, 'md5' => $line->md5]) }}">
+                            <i class="fe fe-info"></i>
+                        </a>
+
+                        <a href="#" class="btn btn-sm btn-danger"><i class="fe fe-trash"></i> Remove</a>
+                    </div>
                     <input type="hidden" name="text" value="">
                     <input type="hidden" name="needs_revision" value="">
                 </form>
@@ -84,9 +95,13 @@
                         data: $(this).serialize(),
 
                         success: function(data) {
-                            $tr.removeClass('table-warning');
-                            $tr.addClass('table-success');
-                            $tr.css('transition', 'all 2s');
+                            let $_tr = $tr;
+                            $_tr.removeClass('table-warning');
+                            $_tr.addClass('table-success');
+
+                            setTimeout(function() {
+                                $_tr.removeClass('table-success');
+                            }, 1000);
 
                             $(document).trigger('language-updated', data.progress_bar_html);
                         }
