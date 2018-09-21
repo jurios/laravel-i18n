@@ -3,6 +3,7 @@
 namespace Kodilab\LaravelI18n\Middleware;
 
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -23,9 +24,9 @@ class Callback
     {
         $response = $next($request);
 
-        if ($response instanceof Response)
+        if (!$response instanceof JsonResponse)
         {
-            if ($request->has('_callback'))
+            if ($request->filled('_callback'))
             {
                 return redirect($request->input('_callback'));
             }

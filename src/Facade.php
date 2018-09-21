@@ -36,6 +36,22 @@ class Facade extends \Illuminate\Support\Facades\Facade
                 ->name('languages.default');
 
             static::$app->make('router')
+                ->get('languages/{language}/enable/dialog', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@enable_dialog')
+                ->name('languages.enable.dialog');
+
+            static::$app->make('router')
+                ->patch('languages/{language}/enable', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@enable')
+                ->name('languages.enable');
+
+            static::$app->make('router')
+                ->get('languages/{language}/disable/dialog', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@disable_dialog')
+                ->name('languages.disable.dialog');
+
+            static::$app->make('router')
+                ->patch('languages/{language}/disable', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@disable')
+                ->name('languages.disable');
+
+            static::$app->make('router')
                 ->get('languages/{language}/translations', '\Kodilab\LaravelI18n\Controllers\I18nTranslationsController@index')
                 ->name('languages.translations');
 
@@ -46,6 +62,10 @@ class Facade extends \Illuminate\Support\Facades\Facade
             static::$app->make('router')
                 ->get('languages/{language}/translations/{md5}/info', '\Kodilab\LaravelI18n\Controllers\I18nTranslationsController@info')
                 ->name('languages.translations.info');
+
+            static::$app->make('router')
+                ->get('settings/languages', '\Kodilab\LaravelI18n\Controllers\I18nSettingsController@languages')
+                ->name('settings.languages.index');
 
         });
     }

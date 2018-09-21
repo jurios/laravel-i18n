@@ -183,6 +183,21 @@ class Language extends Model
         session()->forget('default_language');
     }
 
+    public function enable()
+    {
+        $this->enabled = true;
+        $this->save();
+    }
+
+    public function disable()
+    {
+        if(!$this->isDefaultLanguage() && !$this->isBaseLanguage())
+        {
+            $this->enable = false;
+            $this->save();
+        }
+    }
+
     /**
      * @param string $md5
      * @param string $text

@@ -3,7 +3,7 @@
 @php($id = generateRandomString())
 
 @php($form = [
-    "action" => route('i18n.languages.disable', compact('language')),
+    "action" => route('i18n.languages.disable', ['language' => $language, '_callback' => \Illuminate\Support\Facades\Request::input('_mcallback')]),
     'method' => 'PATCH'
 ])
 
@@ -12,20 +12,33 @@
 @endsection
 
 @section('content')
-    <p>
-        Are you sure you want to disable <b>{{ $language->name }}</b> language?
-    </p>
-    <p>
-        If you disable a language, you will be able to add or edit translations. However, this language won't be able to
-        be used in your website.
-    </p>
+    @if($language->isDefaultLanguage() || $language->isBaseLanguage())
+        <div class="alert alert-icon alert-info" role="alert">
+            <i class="fe fe-info mr-2" aria-hidden="true"></i>
+            You can't disable a default language or a base language.
+        </div>
+    @else
+        <p>
+            Are you sure you want to disable <b>{{ $language->name }}</b> language?
+        </p>
+        <p>
+            If you disable a language, you won't be able to add or update translations. However we keep your progress safe
+            in order to resume it if you enable this language again.
+        </p>
+    @endif
 @endsection
 
 @section('buttons')
-    <button type="submit" class="btn btn-warning">
-        <i class="fe fe-x"></i> {{ t('Disable') }}
-    </button>
-    <a href="javascript:;" type="button" class="btn btn-success" data-dismiss="modal">
-        {{ t('Cancelar') }}
-    </a>
+    @if($language->isDefaultLanguage() || $language->isBaseLanguage())
+        <a href="javascript:;" type="button" class="btn btn-success" data-dismiss="modal">
+            {{ t('Aceptar') }}
+        </a>
+    @else
+        <button type="submit" class="btn btn-warning">
+            <i class="fe fe-x"></i> {{ t('Disable') }}
+        </button>
+        <a href="javascript:;" type="button" class="btn btn-success" data-dismiss="modal">
+            {{ t('Cancelar') }}
+        </a>
+    @endif
 @endsection

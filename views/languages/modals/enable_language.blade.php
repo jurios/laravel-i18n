@@ -3,7 +3,7 @@
 @php($id = generateRandomString())
 
 @php($form = [
-    "action" => route('i18n.languages.enable', compact('language')),
+    "action" => route('i18n.languages.enable', ['language' => $language, '_callback' => \Illuminate\Support\Facades\Request::input('_mcallback')]),
     'method' => 'PATCH'
 ])
 
@@ -16,7 +16,7 @@
         Are you sure you want to enable <b>{{ $language->name }}</b> language?
     </p>
     <p>
-        This language will be visible for your website's users and could be chosen as a language to translate your website.
+        This language will be available for translating.
     </p>
 @endsection
 

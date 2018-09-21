@@ -20,6 +20,21 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
+        <div class="modal-content placeholder-error d-none">
+            <div class="modal-header">
+                <h5 class="modal-title" id="placeholderLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-icon alert-danger" role="alert">
+                    <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i>
+                    Something terrible happened when it was loading this modal.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -41,6 +56,10 @@
                             $('#placeholderModal .modal-dialog').append(data);
                             $('#placeholderModal .modal-dialog .modal-content.placeholder').addClass('d-none');
                         },
+                        error: function(data) {
+                            $('#placeholderModal .modal-dialog .modal-content.placeholder').addClass('d-none');
+                            $('#placeholderModal .modal-dialog .modal-content.placeholder-error').removeClass('d-none');
+                        }
                     });
 
 

@@ -25,7 +25,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('i18n.dashboard') }}" class="nav-link">
+                        <a href="{{ route('i18n.settings.languages.index') }}" class="nav-link {{ addClassIfRouteContains('i18n.settings') }}">
                             <i class="fe fe-settings"></i> Settings</a>
                     </li>
                 </ul>
