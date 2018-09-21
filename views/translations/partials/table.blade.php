@@ -17,7 +17,7 @@
     @foreach($lines as $line)
         <tr class="line-update-tr">
             <td>
-                <textarea class="form-control" disabled="">{{ $line->text }}</textarea>
+                <textarea class="form-control" disabled="">{{ $line->translation }}</textarea>
             </td>
             <td>
                 @if(!is_null($language->translations()->where('md5', $line->md5)->first()))
@@ -25,7 +25,7 @@
                 @else
                     @php($translated_line = new \Kodilab\LaravelI18n\Translation())
                 @endif
-                <textarea class="form-control" name="text">{{ $translated_line->text }}</textarea>
+                <textarea class="form-control" name="translation">{{ $translated_line->translation }}</textarea>
             </td>
             <td class="text-center" style="vertical-align: middle;">
                 <div class="selectgroup selectgroup-pills">
@@ -53,7 +53,7 @@
 
                         <a href="#" class="btn btn-sm btn-danger"><i class="fe fe-trash"></i> Remove</a>
                     </div>
-                    <input type="hidden" name="text" value="">
+                    <input type="hidden" name="translation" value="">
                     <input type="hidden" name="needs_revision" value="">
                 </form>
             </td>
@@ -83,10 +83,10 @@
 
                     $tr = $form.parent().parent();
 
-                    $textarea = $tr.find('textarea[name="text"]');
+                    $textarea = $tr.find('textarea[name="translation"]');
                     $needs_revision = $tr.find(':input[name="needs_revision"]');
 
-                    $form.find(':input[name="text"]').val($textarea.val());
+                    $form.find(':input[name="translation"]').val($textarea.val());
                     $form.find(':input[name="needs_revision"]').val($needs_revision.prop('checked'));
 
                     $.ajax({

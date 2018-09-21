@@ -37,7 +37,7 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
 
     public function update(Request $request, Language $language, string $md5)
     {
-        $text = $request->input('text');
+        $translation_text = $request->input('translation');
         $needs_revision = $request->input('needs_revision') === 'true' ? true: false;
 
         $translation = $language->translations()->where('md5', $md5)->first();
@@ -46,7 +46,7 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
         if (!is_null($translation))
         {
             $translation->update([
-                'text' => $text,
+                'translation' => $translation_text,
                 'needs_revision' => $needs_revision,
                 'text_id' => $base_translation->text_id
             ]);
@@ -54,7 +54,7 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
         } else {
             $translation = Translation::create([
                 'md5' => $md5,
-                'text' => $text,
+                'translation' => $translation_text,
                 'needs_revision' => $needs_revision,
                 'language_id' => $language->id,
                 'text_id' => $base_translation->text_id

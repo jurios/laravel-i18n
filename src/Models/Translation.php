@@ -13,11 +13,11 @@ class Translation extends Model
 
     protected $table;
 
-    protected $fillable = ['text', 'language_id', 'md5', 'text_id', 'needs_revision'];
+    protected $fillable = ['translation', 'language_id', 'md5', 'text_id', 'needs_revision'];
 
     protected $casts = [
         'md5' => 'string',
-        'text' => 'string',
+        'translation' => 'string',
         'language_id' => 'integer',
         'text_id' => 'integer',
         'needs_revision' => 'boolean'
@@ -36,7 +36,7 @@ class Translation extends Model
         return $this->belongsTo(Language::class, 'language_id');
     }
 
-    public function meta()
+    public function text()
     {
         return $this->belongsTo(Text::class, 'text_id');
     }
@@ -79,7 +79,7 @@ class Translation extends Model
         if (!self::existsTranslation($md5, $language))
         {
             $translation = Translation::create([
-                'text' => $translated_text,
+                'translation' => $translated_text,
                 'md5' => $md5,
                 'language_id' => $language->id
             ]);

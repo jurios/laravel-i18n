@@ -52,7 +52,7 @@ class Text extends Model
             {
                 Translation::create([
                     'md5' => $text->md5,
-                    'text' => $text->text,
+                    'translation' => $text->text,
                     'language_id' => $base_language->id,
                     'text_id' => $text->id
                 ]);

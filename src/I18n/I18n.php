@@ -119,7 +119,7 @@ class I18n
 
         if (!is_null($translation))
         {
-            return $translation->text;
+            return $translation->translation;
         }
 
         return null;

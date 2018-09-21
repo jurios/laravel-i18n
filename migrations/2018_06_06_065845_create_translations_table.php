@@ -18,7 +18,7 @@ class CreateTranslationsTable extends Migration
 
             $table->string('md5')->nullable(false);
 
-            $table->text('text')->nullable(true);
+            $table->text('translation')->nullable(true);
 
             $table->boolean('needs_revision')->nullable(false)->default(false);
 

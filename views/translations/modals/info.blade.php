@@ -15,6 +15,12 @@
         </div>
     @else
         <div class="form-group">
+            <label class="form-label">Original text (from template)</label>
+            <div class="form-control">
+                {{ $text->text }}
+            </div>
+        </div>
+        <div class="form-group">
             <label class="form-label">Files</label>
             <div class="form-control">
                 @foreach($text->paths as $path => $occurrences)
