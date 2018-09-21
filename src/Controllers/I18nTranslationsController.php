@@ -57,6 +57,11 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
             ]);
         }
 
-        return response()->json($translation);
+        $language->refresh();
+
+        return response()->json([
+            'line' => $translation,
+            'progress_bar_html' => view('i18n::languages.partials.progress_bar', ['language' => $language])->render()
+        ]);
     }
 }

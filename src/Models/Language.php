@@ -25,6 +25,8 @@ class Language extends Model
         'enabled' => 'boolean'
     ];
 
+    protected $appends = [ 'perc' ];
+
     public $timestamps = false;
 
     public function __construct(array $attributes = [])
@@ -123,7 +125,7 @@ class Language extends Model
         return $this->ISO_639_1;
     }
 
-    public function getTranslationsPercAttribute()
+    public function getPercAttribute()
     {
         if ($this->isBaseLanguage())
         {
@@ -134,7 +136,7 @@ class Language extends Model
 
         if ($count_base_translations > 0)
         {
-            return number_format((count($this->translations) * 100) / $count_base_translations, 0);
+            return (int)number_format((count($this->translations) * 100) / $count_base_translations, 0);
         }
 
         return "";

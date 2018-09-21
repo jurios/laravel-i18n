@@ -87,6 +87,8 @@
                             $tr.removeClass('table-warning');
                             $tr.addClass('table-success');
                             $tr.css('transition', 'all 2s');
+
+                            $(document).trigger('language-updated', data.progress_bar_html);
                         }
                     });
 

@@ -1,17 +1,39 @@
-<div class="clearfix">
-    <div class="float-left">
-        <strong>{{ $language->translations_perc }}%</strong>
+<div id="progress-bar">
+    <div class="clearfix">
+        <div class="float-left">
+            <strong>{{ $language->perc }}%</strong>
+        </div>
+        <div class="float-right">
+            <small class="text-muted">
+                {{ count($language->translations) }} of
+                {{ count(\Kodilab\LaravelI18n\Language::getBaseLanguage()->translations) }}
+            </small>
+        </div>
     </div>
-    <div class="float-right">
-        <small class="text-muted">
-            {{ count($language->translations) }} of
-            {{ count(\Kodilab\LaravelI18n\Language::getBaseLanguage()->translations) }}
-        </small>
+    <div class="progress progress-xs">
+        @if($language->perc === 100)
+            @php($color = 'green')
+        @elseif($language->perc > 50)
+            @php($color = 'yellow')
+        @else
+            @php($color = 'red')
+        @endif
+        <div class="progress-bar bg-{{$color}}" role="progressbar"
+             style="width: {{ $language->perc }}%"
+             aria-valuenow="{{ $language->perc }}" aria-valuemin="0" aria-valuemax="100">
+        </div>
     </div>
 </div>
-<div class="progress progress-xs">
-    <div class="progress-bar bg-yellow" role="progressbar"
-         style="width: {{ $language->translations_perc }}%"
-         aria-valuenow="{{ $language->translations_perc }}" aria-valuemin="0" aria-valuemax="100">
-    </div>
-</div>
+
+@push('inline-js')
+    <script>
+        require(['jquery'], function (jquery) {
+            var $ = jquery;
+
+            $(document).on('language-updated', function(e, data) {
+                $()
+                $('#progress-bar').replaceWith(data);
+            });
+        });
+    </script>
+@endpush
