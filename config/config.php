@@ -27,7 +27,22 @@ return [
     | When a text has to be translated, by default Laravel-i18n will try to translate
     | to the Language defined in this session var.
     */
-    'session_var_name' => 'locale'
+    'session_var_name' => 'locale',
 
-
+    /*
+    |--------------------------------------------------------------------------
+    | logout_route
+    |--------------------------------------------------------------------------
+    |
+    | Laravel-i18n can be integrated in your project as much as it can. If you are using an authentication system, you
+    | can provide a logout name route (ex. 'logout' would be the default route in Laravel authentication system)
+    | in order to show a logout button (This button is just a link to this url). The user can
+    | logout directly in laravel-i18n views instead of going back to the project's views.
+    |
+    | If your logout route doesn't work with GET, you can provide a method (GET, POST, PATCH, DELETE)
+    */
+    'logout_route' => [
+        'name' => null,
+        'method' => null
+    ]
 ];
