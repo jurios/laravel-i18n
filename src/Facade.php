@@ -17,7 +17,7 @@ class Facade extends \Illuminate\Support\Facades\Facade
      */
     public static function routes()
     {
-        static::$app->make('router')->prefix('i18n')->name('i18n.')->group(function() {
+        static::$app->make('router')->middleware('callback')->prefix('i18n')->name('i18n.')->group(function() {
 
             static::$app->make('router')->get('/', function () {
                     return redirect()->route('i18n.languages.index');
