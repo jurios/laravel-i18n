@@ -17,8 +17,7 @@ class I18n
 
     /**
      * Get the stored translation for the text $text using the variable replacement in $replace for the language
-     * reference $locale. If $honestly is false, when translation doesn't exists, it will try to get the default language
-     * translations. If that's not defined too, then base translation is returned.
+     * reference $locale.
      *
      * @param string $text
      * @param array $replace
@@ -29,6 +28,7 @@ class I18n
      */
     public function translate(string $text, $replace = [], $locale = null, $honestly = false)
     {
+        /** @var Language $language */
         $language = is_null($locale) ? Language::getUserLanguage() : Language::getLanguageFromISO_639_1($locale);
 
         if (is_null($language))
@@ -36,12 +36,7 @@ class I18n
             throw new MissingLanguageException('Language with reference' . $locale . 'not found when translating');
         }
 
-        $translated_line = $this->getTranslation($text, $language);
-
-        if (is_null($translated_line) && $honestly === false)
-        {
-            $translated_line = $this->getTranslation($text, Language::getBaseLanguage());
-        }
+        $translated_line = $this->getTranslation($text, $language, $honestly);
 
         return $this->makeReplacements($translated_line, $replace);
     }
@@ -83,16 +78,22 @@ class I18n
     }
 
     /**
-     * Return the translation text for $text in $locale language
+     * Return the translation text for $text in $locale language. It fallbacks to the default language and base language
+     * if a translation has not been found.
      *
      * @param $text
      * @param $locale
      * @return mixed
      * @throws MissingLanguageException
      */
-    private function getTranslation($text, Language $language)
+    private function getTranslation($text, Language $language, $honestly)
     {
         $md5 = md5($text);
+
+        if ($honestly)
+        {
+            return $this->getTranslationTextFromDataBase($text, $language);
+        }
 
         if (Cache::has($language->reference . '_' . $md5 ))
         {
@@ -101,8 +102,24 @@ class I18n
         else
         {
             $translated_line = $this->getTranslationTextFromDataBase($text, $language);
+
+            if (is_null($translated_line))
+            {
+                if(!$language->isBaseLanguage() && !$language->isDefaultLanguage())
+                {
+                    $translated_line = $this->getTranslation($text, Language::getDefaultLanguage(), $honestly);
+                }
+
+                if($language->isDefaultLanguage())
+                {
+                    $translated_line = $this->getTranslation($text, Language::getBaseLanguage(), $honestly);
+                }
+            }
+
             Cache::add($language->reference . '_' . $md5, $translated_line, 60);
         }
+
+        return $translated_line;
     }
 
     /**
