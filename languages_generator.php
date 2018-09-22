@@ -189,8 +189,16 @@ EOF;
 
 $lines = explode("\n", $text);
 
+$languages = [];
+
 foreach ($lines as $line)
 {
     $language = explode(" ", $line);
-    echo "[ \"ISO_639_1\" => \"" . $language[0] . "\", \"name\" => \"" . trim($language[1]) . "\" ],\n";
+
+    $languages[] = [
+        'ISO_639_1' => $language[0],
+        'name' => trim($language[1])
+    ];
 }
+
+return $languages;
