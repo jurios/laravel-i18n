@@ -20,7 +20,7 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="{{ route('i18n.languages.index') }}" class="nav-link {{ addClassIfRouteMatch('i18n.languages.translations') }}">
+                        <a href="{{ route('i18n.languages.index') }}" class="nav-link {{ addClassIfRouteMatch('i18n.languages.translations.index') }}">
                             <i class="fe fe-list"></i> Translations
                         </a>
                     </li>

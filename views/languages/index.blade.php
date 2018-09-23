@@ -19,11 +19,6 @@
             It's not necessary but it's a recommendable way to get all your translatable lines with <code>php artisan i18n:sync</code>.
         </div>
     @endif
-    <div class="alert alert-icon alert-primary" role="alert">
-        <i class="fe fe-bell mr-2" aria-hidden="true"></i>
-        This list only shows <b>enabled</b> languages. If you want to add more languages, you can do it in
-        your <b><i class="fe fe-settings"></i> settings </b>.
-    </div>
 @endsection
 
 @section('content')
@@ -35,6 +30,11 @@
                 </div>
             </div>
             <div class="card-body">
+                <div class="alert alert-icon alert-primary" role="alert">
+                    <i class="fe fe-bell mr-2" aria-hidden="true"></i>
+                    This list only shows <b>enabled</b> languages. If you want to add more languages, you can do it in
+                    your <b><i class="fe fe-settings"></i> settings </b>.
+                </div>
                 @include('i18n::languages.partials.table')
             </div>
         </div>

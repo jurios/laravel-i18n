@@ -4,6 +4,32 @@
     @php($id = generateRandomString(10))
 @endif
 
+@php($action = route('i18n.languages.index', compact('language')))
+
+@section('header-filters')
+    @if(hasQueryString('qf-name'))
+        <span class="tag">
+            nombre:'<i>{{getQueryString('qf-name')}}</i>'
+        </span>
+    @endif
+@endsection
+
+@section('filters')
+    <div class="alert alert-icon alert-warning" role="alert">
+        <i class="fe fe-bell mr-2" aria-hidden="true"></i> This is a work in progress. Some filters could not work properly.
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-group">
+                <label class="form-label">Nombre</label>
+                <input class="form-control" name="qf-name" placeholder="Language name" type="text"
+                       value="{{ getQueryString('qf-name', null) }}">
+            </div>
+        </div>
+    </div>
+@endsection
+
 @section('table-head-' . $id)
     <tr>
         <th>Name</th>
@@ -27,7 +53,7 @@
                 @include('i18n::languages.partials.progress_bar')
             </td>
             <td>
-                <a href="{{ route('i18n.languages.translations', compact('language')) }}">
+                <a href="{{ route('i18n.languages.translations.index', compact('language')) }}">
                     <i class="fe fe-list"></i> Translations
                 </a>
             </td>

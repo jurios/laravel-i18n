@@ -4,7 +4,7 @@
     @php($id = generateRandomString(10))
 @endif
 
-@php($action = route('i18n.languages.translations', compact('language')))
+@php($action = route('i18n.languages.translations.index', compact('language')))
 
 @section('header-filters')
     @if(hasQueryString('qf-translation'))
