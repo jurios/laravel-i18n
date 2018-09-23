@@ -96,7 +96,7 @@ then it will try to return a configured `fallback` language translation. We'll s
 
 Well, it's time to replace your texts in your code by calling to `t()` in every text.
 
-#### Automatically translatable texts detection
+#### (semi)Automatically translatable texts detection
 The main reason why I created this package is because I didn't want to deal with translations manually. It's hard to 
 maintain your translations files when you have to add a new entry in your `language.json` when you add a new text (specially 
 when you are developing a project).
@@ -112,16 +112,15 @@ texts. This is really useful specially when you are developing a view and you ar
 Is recommendend calling this function as frequently as you can just because it keeps your translations table up
 to date with no manual work.
 
-Yes, I know that are you thinking. Calling a artisan command doesn't look something automatically. 
-Yes, that's true. But, come on, part of the process is done automatically.
+Yes, I know that are you thinking. Calling a artisan command doesn't look something atomatic. 
+Yes, that's true. You can forget using it sometimes. Because of that, exists another alternative:
 
 ##### Dynamic text detection
 Calling to `php artisan i18n:sync` is something that you can forget some times. In order to fix this, when someone 
-renders a text that it should be translatable but is not added to your translation table, then `laravel-i18n` 
+renders a text that it should be translatable but is not added (because is not synchronized), then `laravel-i18n` 
 do it for you. As a result, you will see this text in the web editor to add translations for each language.
-The down side of this method is that a text has te be rendered before in order to be detected. Thus, texts which are rendered 
-oddly will be unlikely listed. That's why you should use `static text detection` too.
-
+The down side of this method is that a text has to be rendered before in order to be detected. Thus, texts which are rendered 
+oddly will be unlikely listed. That's why you should use `php artisan i18n:sync` as frequently as you can.
 
 ### How it deals with locales
 When the `locale` argument is null when you call to `t()`, it will translate the text to the language which is defined in 
