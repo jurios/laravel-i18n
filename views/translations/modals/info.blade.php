@@ -33,6 +33,6 @@
 
 @section('buttons')
     <a href="javascript:;" type="button" class="btn btn-success" data-dismiss="modal">
-        {{ t('Accept') }}
+        {{ 'Accept' }}
     </a>
 @endsection

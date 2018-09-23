@@ -22,9 +22,9 @@
 
 @section('buttons')
     <button type="submit" class="btn btn-success">
-        <i class="fe fe-check"></i> {{ t('Enable') }}
+        <i class="fe fe-check"></i> {{ 'Enable' }}
     </button>
     <a href="javascript:;" type="button" class="btn btn-danger" data-dismiss="modal">
-        {{ t('Cancelar') }}
+        {{ 'Cancelar' }}
     </a>
 @endsection

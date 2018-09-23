@@ -31,14 +31,14 @@
 @section('buttons')
     @if($language->isFallbackLanguage())
         <a href="javascript:;" type="button" class="btn btn-success" data-dismiss="modal">
-            {{ t('Aceptar') }}
+            {{ 'Aceptar' }}
         </a>
     @else
         <button type="submit" class="btn btn-warning">
-            <i class="fe fe-x"></i> {{ t('Disable') }}
+            <i class="fe fe-x"></i> {{ 'Disable' }}
         </button>
         <a href="javascript:;" type="button" class="btn btn-success" data-dismiss="modal">
-            {{ t('Cancelar') }}
+            {{ 'Cancelar' }}
         </a>
     @endif
 @endsection
