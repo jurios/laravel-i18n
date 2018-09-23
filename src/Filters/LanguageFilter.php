@@ -15,7 +15,7 @@ class LanguageFilter extends QueryFilter
 
         if (!$this->request()->has($this->addPrefix('order_asc')) && !$this->request()->has($this->addPrefix('order_desc')))
         {
-            $this->request->merge([ $this->addPrefix('order_desc') => 'default']);
+            $this->request->merge([ $this->addPrefix('order_desc') => 'enabled']);
         }
 
         $this->paginate = 15;

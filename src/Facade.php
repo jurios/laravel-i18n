@@ -28,14 +28,6 @@ class Facade extends \Illuminate\Support\Facades\Facade
                 ->name('languages.index');
 
             static::$app->make('router')
-                ->get('languages/{language}/default/dialog', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@mark_default_dialog')
-                ->name('languages.default.dialog');
-
-            static::$app->make('router')
-                ->patch('languages/{language}/default', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@mark_default')
-                ->name('languages.default');
-
-            static::$app->make('router')
                 ->get('languages/{language}/enable/dialog', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@enable_dialog')
                 ->name('languages.enable.dialog');
 

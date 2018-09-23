@@ -20,7 +20,6 @@ class CreateLanguagesTable extends Migration
             $table->string('ISO_639_1')->nullable(false);
 
             $table->boolean('enabled')->nullable(false)->default(false);
-            $table->boolean('default')->nullable(false)->default(false);
         });
     }
 

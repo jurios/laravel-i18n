@@ -78,8 +78,8 @@ class I18n
     }
 
     /**
-     * Return the translation text for $text in $locale language. It fallbacks to the default language and base language
-     * if a translation has not been found.
+     * Return the translation text for $text in $locale language. It will use the fallback language
+     * if a translation has not been found in the user language.
      *
      * @param $text
      * @param $locale
@@ -105,12 +105,7 @@ class I18n
 
             if (is_null($translated_line))
             {
-                if(!$language->isBaseLanguage() && !$language->isDefaultLanguage())
-                {
-                    $translated_line = $this->getTranslation($text, Language::getDefaultLanguage(), $honestly);
-                }
-
-                if($language->isDefaultLanguage())
+                if(!$language->isBaseLanguage())
                 {
                     $translated_line = $this->getTranslation($text, Language::getBaseLanguage(), $honestly);
                 }

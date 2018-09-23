@@ -28,14 +28,14 @@ class SetLocale
         {
             $available_languages = Language::enabled()->get();
 
-            $locale = $this->getLocaleFromRequestOrDefaultLanguage($request, $available_languages);
+            $locale = $this->getLocaleFromRequestOrFallbackLanguage($request, $available_languages);
             $request->session()->put(config('i18n.session_var_name'), $locale);
         }
 
         return $next($request);
     }
 
-    private function getLocaleFromRequestOrDefaultLanguage(Request $request, Collection $available_languages)
+    private function getLocaleFromRequestOrFallbackLanguage(Request $request, Collection $available_languages)
     {
         $available_languages_ISO_639_1 = $available_languages->pluck('ISO_639_1')->toArray();
 

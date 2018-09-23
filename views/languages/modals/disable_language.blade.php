@@ -12,10 +12,10 @@
 @endsection
 
 @section('content')
-    @if($language->isDefaultLanguage() || $language->isBaseLanguage())
+    @if($language->isBaseLanguage())
         <div class="alert alert-icon alert-info" role="alert">
             <i class="fe fe-info mr-2" aria-hidden="true"></i>
-            You can't disable a default language or a base language.
+            You can't disable a base language.
         </div>
     @else
         <p>
@@ -29,7 +29,7 @@
 @endsection
 
 @section('buttons')
-    @if($language->isDefaultLanguage() || $language->isBaseLanguage())
+    @if($language->isBaseLanguage())
         <a href="javascript:;" type="button" class="btn btn-success" data-dismiss="modal">
             {{ t('Aceptar') }}
         </a>

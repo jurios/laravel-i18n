@@ -16,12 +16,11 @@ class Language extends Model
 
     protected $table;
 
-    protected $fillable = ['default', 'enabled'];
+    protected $fillable = ['enabled'];
 
     protected $casts = [
         'name' => 'string',
         'ISO_639_1' => 'string',
-        'default' => 'boolean',
         'enabled' => 'boolean'
     ];
 
@@ -36,31 +35,6 @@ class Language extends Model
     }
 
     //static methods
-
-    /**
-     * Returns the default language (it must exists)
-     * @return mixed
-     * @throws MissingLanguageException
-     */
-    public static function getDefaultLanguage()
-    {
-        if (session()->has('default_language'))
-        {
-            return session()->get('default_language');
-        }
-
-        $default_language = Language::where('default', true)->first();
-
-        if(is_null($default_language))
-        {
-            throw new MissingLanguageException('Defaut Language not found');
-        }
-
-        session()->flash('default_language', $default_language);
-
-        return $default_language;
-    }
-
     /**
      * Returns the base language (it must exists)
      * @return mixed
@@ -155,32 +129,9 @@ class Language extends Model
     }
 
     // methods
-    public function isDefaultLanguage()
-    {
-        return $this->id === self::getDefaultLanguage()->id;
-    }
-
     public function isBaseLanguage()
     {
         return $this->id === self::getBaseLanguage()->id;
-    }
-
-    public function markAsDefault()
-    {
-        try {
-            $default_language = self::getDefaultLanguage();
-            $default_language->default = false;
-            $default_language->save();
-
-            $this->default = true;
-            $this->save();
-        } catch (\Exception $e)
-        {
-            Log::error('Error when changing default language from ' .
-                $default_language->id . ' to ' . $this->id . ': ' . $e->getMessage());
-        }
-
-        session()->forget('default_language');
     }
 
     public function enable()
@@ -191,9 +142,9 @@ class Language extends Model
 
     public function disable()
     {
-        if(!$this->isDefaultLanguage() && !$this->isBaseLanguage())
+        if(!$this->isBaseLanguage())
         {
-            $this->enable = false;
+            $this->enabled = false;
             $this->save();
         }
     }

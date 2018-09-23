@@ -22,9 +22,6 @@
                 @if($language->isBaseLanguage())
                     <span class="badge badge-primary">base</span>
                 @endif
-                @if($language->isDefaultLanguage())
-                    <span class="badge badge-info">default</span>
-                @endif
             </td>
             <td>{{ $language->ISO_639_1 }}</td>
             <td>
