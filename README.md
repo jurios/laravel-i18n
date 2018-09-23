@@ -7,137 +7,148 @@ improve the efficiency.
 
 ### Features
 
-#### No files, no keys
-**laravel-i18n** works with the original text in order to find the translated one thus you don't need to use keys like `messages.welcome`. Every text is persisted
-on database thus you don't have to deal with multiple `php` or `json` files.
-So easy like this:
+* Identify your original text when is rendered and looks for the apropiate translation
+* Your translations are persisted in database and uses cache to retrieve it faster
+* Automatically new translatable lines detections statically (parsing php files) and dynamically (when they are going to be rendered)
+* Web platform to manage languages and translations
+* Fallback language when a translation doesn't exists
+* Integrated with Laravel configuration
 
+![Laravel-i18n](image.png)
+
+
+### Installation
 ```
-{{ t('Hi world!') }}
+composer require kodilab/laravel-i18n dev-master
+``` 
 
-// Hola món!
-```
+This will install `laravel-i18n` and `laravel-filters` which is a dependency used. 
 
-What's more, you can ask for a specific translations:
-
-```
-{{ t('Hi world!', 'es') }}
-
-// Hola mundo!
-```
-
-#### Automatically add new translations and remove the deprecated ones
-With `artisan i18n:sync` it will detect all the texts to be translated. Then it
-will add those which doesn't exists on database and remove the deprecated ones
-in order to keep your database synchronized with your project.
-
-
-#### Cached translations to be more efficient
-When a translation is required, it will look for it in cache first. If it doesn't
-exists there, then it look for it in database. When a translation is found, it is
-cached in memory in order to be faster next time.
-
-It uses the cache Laravel system thus it is *Memcached and Redis* compatible.
-
-
-## Getting started
-To start using **laravel-i18n** you can should add this repository to your `composer.json` file:
-
-```
-"repositories": [
-  {
-      "type": "vcs",
-      "url": "https://github.com/jurios/laravel-i18n"
-  }
-],
-```
-
-Then you should require the **laravel-i18n** package:
-
-```
-composer require kodilab/laravel-i18n
-```
-
-It will be discovered to your Laravel project automatically. Just we should
-publish the configuration files with:
+Once you have `laravel-i18n` in your project, you must publish the assets/config files with:
 
 ```
 php artisan vendor:publish --provider="Kodilab\LaravelI18n\I18nProvider"
+php artisan vendor:publish --provider="Kodilab\LaravelFilters\QueryFilterProvider"
 ```
 
-## Configuration
+This will add `i18n.php` and `filters.php` config files to your `config` directory. At this point, ignore `filters.php`
+config file. However, `i18n.php` should be check over it before continue:
 
-### Configuring the tables
-**laravel-i18n** needs two tables in your database:
+#### laravel-i18n configuration
+This config file have very useful comments about the meaning of each variable. As `larave-i18n` create three tables in your
+database, it is recommended checking over the name of the tables in order to avoid conflict.
 
-1. Languages (`I18n_languages`): The languages that **laravel-i18n** supports. It will be filled in by a migration.
+Now that your config it's ready, it's time to migrate your database.
 
-2. Translations (`I18n_translations`): The translations of each language enabled in your project
-
-**laravel-i18n** provides the migrations to create this tables. You can modify the table name editing the configuration file (`configs/i18n.php`).
-
-Once everything is ready, just run this in order to migrate your database:
-
+#### Migrate database
 ```
 php artisan migrate
-```
+``` 
 
-### Configuring your languages
-During request lifecycle, there are 3 roles that a language can take on:
-
-1. Base language: This is the language which has been used in your view texts. This **must** be the same language which is defined in your Laravel configuration file (`config/app.php`) in the key `locale`.
-
-So, for example, if `locale` is `es` my view texts should be written in `Spanish`:
+#### Add the laravel-i18n routes to your `web.php` file
+You can place the `laravel-i18n` routes where you want in your routes. No matters group, prefix... Just add the call to
+the routes with:
 
 ```
-<div>{{ t('Hola mundo') }}
+i18n::routes();
 ```
 
-2. Default language: (Work in progress) If the language request by the user doesn't exists, or it isn't enabled, then **laravel-i18n** will try to translate it using the default language. If it isn't translated too, then base language is used (this will be translated because is the language used in your views).
+This allows you to add middlewares to authorization and authentification befores giving acces to the `laravel-i18n` 
+management pages.
 
-3. Requested language: **larave-i18n** looks into the `session` for the key `locale`.
-If it exists and it's a valid `ISO_639_1` code, then it will use this language for translations. If it isn't a valid or is not defined then default language is used.
+This is an example:
 
-### Start using **laravel-i18n**
-
-** laravel-i18n** can be called in your views with:
-
-```
-{{ t($text, $replace, $locale, $honestly) }}
-```
-The interface is very similar to `_()` function:
-
-1. **$text** is the text to be translated
-2. **$replace** is an array of values to be bound in your text (same way as Laravel)
-3. **$locale (optional)** Language used for translation. If is `null`, requested language is used
-4. **$honestly (optional)** Translation can be perform in two modes:
-
-  * **$honestly = true** If translation doesn't exist for this specific locale, **null** is returned and a blank space is rendered
-  * **$honestly = false** If translation doesn't exist for this specific locale, it looks for the default language translation. If it doesn't exists neither, then it will render the base language translation (it must exist).
-
-  When `$honestly` is not defined, then `$honestly = false`.
-
-This is a real example:
-
-```
-{{ t('Tengo :count manzanas!', ['count' => 3], 'en')}}
-// I have 3 apples!
-
-{{ t('Tengo :count manzanas!', ['count' => 3], 'ca')}}
-// Tinc tres pomes!
-
-// Translation doesn't exists in catalan and my default language is 'en'
-{{ t('Tengo :count manzanas en la nevera!', ['count' => 3], 'ca')}}
-// I have 3 apples!
-
-{{ t('Tengo :count manzanas en la nevera!', ['count' => 3], 'ca', true)}}
-//
+```php
+Route::group(['middleware' => 'somemiddleware'], function() {
+    i18n::routes();
+});
 ```
 
-### Adding new translations lines to the database
-Every time that a translated text is requested using the `t()` function, **laravel-i18n** will look for it in database. If it doesn't exists, it will create a translation using *base language*.
+Now, if you call to `php artisan route:list` will see new routes added to your list that they will be used by `laravel-i18n`.
 
-If you want to **syncronize** your database with the texts used in your views (and `app/` directory), you can use the artisan command `i18n:sync`. This will delete all the translated texts in your database which are not present in your files anymore and add the new ones.
+#### Start using the translation system
 
-## Work in progress
-This is a work in progress. A web editor, for edit your translated texts and add other language's translated texts base on your base language texts is necessary in order to make this package really functional.
+Now, every time your code calls to the function `t()`, the text provided will be a translatable text. It be part of the
+`laravel-i18n` translations and they will be managed through the `laravel-i18n` pages.
+
+So, for example, if in your view has:
+```
+t('Hello world!')
+```
+
+This will be added as a translatable text and you could provide a translation for each language enabled in your platform.
+
+The function `t()` has the a similar signature that laravel localization function `_()`:
+
+```
+function t(string $text, $replace = [], $locale = null, $honestly = false) 
+```
+
+* **$text**: Well, the text that will be translatable
+* **$replace**: Equals as Laravel `_()`, you can use variables in your $text which it will be replaced by the values in 
+$replaces. For example, this call `t('Hi, :name', ['name' => 'Jordi'])` will be translated as `Hi, Jordi` 
+or `Hola, Jordi`....
+* **$locale**: The language to be translated (using the ISO_639_1) When this value is `null`, 
+then this text is translated dynamically depending on the request language.
+* **honestly**: When `honestly` is `true` then `laravel-i18n` will be, well... honest. That means that when a 
+translation can't be found for the request language, then it will return `""`. When `honestly` is `false` then it will 
+try to return a configured `fallback` language translation. We'll se more details about that soon.
+
+Well, it's time to replace your texts in your code by call to `t()`.
+
+#### Automatically translatable texts detection
+The main reason why I created this package is because I didn't want to deal with translations manually. It's hard to 
+maintain your translations when you have to add a new entry in your `language.json` when you add a new text (specially 
+when you are developing a project).
+
+With this package you can automatically detect new texts in your code in order to create language translations. And there
+are two ways to do it (and is recommended using both):
+
+##### Static text detection
+When you call to `php artisan i18n:sync`, it will syncronize your translatable texts in your code with your translations
+in your database. It will delete the entries in your database which correspond to removed texts and it will add the new
+texts. This is really useful specially when you are developing a view and you are modifying your texts frequently
+
+Is recommendend that you call this functions as frequently as you can just because it keeps your translations table up
+to date.
+
+Yes, I know that are you thinking. Calling a artisan command doesn't look something automatically. 
+Yes, that's true. But, come on, part of the process is done automatically.
+
+##### Dynamic text detection
+Calling to `php artisan i18n:sync` is something that you can forget some times. In order to fix this, when someone 
+renders a text that it should be translatable but is not added to your translation table, then `laravel-i18n` 
+do it for you. As a result, you can enter to the manage web page and you'll see this text to translate it. The down side
+of this method is that information about the files where this text appears can't be established. But if you call to 
+`php artisan i18n:sync` after that, this information will be added.
+
+So, using static and dynamic detection you will have your database ready for use always without manual interaction.
+
+### How it deals with locales
+When the `locale` argument is null when you call to `t()`, it will translate the text to the Laravel config locale
+defined in `config/app.php` file.
+
+If your project is multi language website, then you can change this value every request depending in the user configuration
+or browser preferences. For example, a way to deal with this is using this middleware sample (TODO)
+
+This middleware just look for the user's browser language preferences and it tries to look for the corresponding enabled
+language. If it exists, then it changes the Laravel locale to this new value. If it's not, then use the fallback language
+locale.
+
+### Honestly mode
+As it is explained above, when you call `t()` with honestly mode activated it will return a blank text when a
+translation doesn't exists for the `locale` defined.
+
+To avoid having `blank` spaces in your website, by default this mode is desactivated. When it is desactivated, it will
+return the fallback language translation. 
+
+How can I define my `fallback_language`?  Another configuration variable in your Laravel app config (`config/app.php`) 
+is the `fallback_locale`. This is the language that will be used as a `fallback`. The idea here is that your 
+`fallback_locale` setting should be the same language used in your views texts. So, for example, if your code texts 
+are written in English, your `fallback_locale` should be `en` (`en` is the ISO 639-1 for the English language ). 
+`Laravel-i18n` will consider the original text as the translation for the language defined in  `fallback_locale` 
+the first time is detected (you can change the translation after that).
+
+Thats why you will see that your `fallback_locale` language is always 100% translated.
+
+**Be careful!:** your `fallback_locale` should be the ISO 639-1 of an **enabled** language.
