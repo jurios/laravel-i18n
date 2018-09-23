@@ -6,7 +6,7 @@
 
 @section('table-head-' . $id)
     <tr>
-        <th class="text-center">Base language reference</th>
+        <th class="text-center">Fallback language reference</th>
         <th class="text-center">{{ $language->name }} translation</th>
         <th class="text-center">Needs revision</th>
         <th class="text-center">Actions</th>

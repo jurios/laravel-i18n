@@ -19,7 +19,7 @@
             <td>
                 {{ $language->name }}
                 @if($language->isFallbackLanguage())
-                    <span class="badge badge-primary">base</span>
+                    <span class="badge badge-primary">fallback</span>
                 @endif
             </td>
             <td>{{ $language->ISO_639_1 }}</td>
