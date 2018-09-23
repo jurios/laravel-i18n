@@ -79,7 +79,9 @@ class Translation extends Model
         $fallback_language = Language::getFallbackLanguage();
         $md5 = md5($text);
 
-        if (!self::existsTranslation($md5, $fallback_language))
+        $translation = self::getTranslationByMd5($md5, $fallback_language);
+
+        if (is_null($translation))
         {
             $translation = Translation::create([
                 'translation' => $text,
