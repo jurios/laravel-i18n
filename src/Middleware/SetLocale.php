@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Kodilab\LaravelI18n\Language;
+use Illuminate\Support\Facades\App;
 
 class SetLocale
 {
@@ -24,13 +25,18 @@ class SetLocale
     {
         $locale = null;
 
-        if (!$request->session()->has(config('i18n.session_var_name')))
+        if (!$request->session()->has('locale'))
         {
             $available_languages = Language::enabled()->get();
 
             $locale = $this->getLocaleFromRequestOrFallbackLanguage($request, $available_languages);
-            $request->session()->put(config('i18n.session_var_name'), $locale);
+            $request->session()->put('locale', $locale);
         }
+
+        App::setLocale($locale);
+
+        // Set locale for other packages, for example:
+        //Carbon::setLocale($locale);
 
         return $next($request);
     }
@@ -48,6 +54,6 @@ class SetLocale
             }
         }
 
-        return Language::getBaseLanguage()->reference;
+        return Language::getFallbackLanguage()->reference;
     }
 }

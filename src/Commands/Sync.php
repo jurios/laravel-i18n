@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Session;
+use Kodilab\LaravelI18n\Language;
 use Kodilab\LaravelI18n\Linguist;
 
 class Sync extends Command
@@ -20,7 +21,7 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $description = 'Syncronize laravel translations found in php files with base language translations on the database';
+    protected $description = 'Syncronize laravel translations found in php files with fallback language translations on the database';
 
     /** @var Linguist $linguist */
     protected $linguist;
@@ -45,6 +46,15 @@ class Sync extends Command
      */
     public function handle()
     {
+        /** @var Language $result */
+        $result = $this->linguist->syncFallbackLanguage();
+
+        if (!is_null($result))
+        {
+            $this->output->writeln(
+                "\"<fg=green>{$result->reference}</>\" has been enabled because it is the fallback language.");
+        }
+
         $translationsByFile = $this->linguist->getAllTranslatableStringFromFiles();
 
         $translations = $this->linguist->getTranslationsWithMd5($translationsByFile);

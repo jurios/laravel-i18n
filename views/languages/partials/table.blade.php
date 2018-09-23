@@ -18,7 +18,7 @@
         <tr>
             <td>
                 {{ $language->name }}
-                @if($language->isBaseLanguage())
+                @if($language->isFallbackLanguage())
                     <span class="badge badge-primary">base</span>
                 @endif
             </td>

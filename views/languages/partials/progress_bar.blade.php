@@ -6,7 +6,7 @@
         <div class="float-right">
             <small class="text-muted">
                 {{ count($language->translations) }} of
-                {{ count(\Kodilab\LaravelI18n\Language::getBaseLanguage()->translations) }}
+                {{ count(\Kodilab\LaravelI18n\Language::getFallbackLanguage()->translations) }}
             </small>
         </div>
     </div>

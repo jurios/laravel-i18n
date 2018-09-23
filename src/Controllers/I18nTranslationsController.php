@@ -18,21 +18,21 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
      */
     public function index(TranslationFilter $filters, Language $language)
     {
-        $base_language_filters = clone $filters;
+        $fallback_language_filters = clone $filters;
         $language_filters = clone $filters;
 
-        /** @var Language $base_language */
-        $base_language = Language::getBaseLanguage();
+        /** @var Language $fallback_language */
+        $fallback_language = Language::getFallbackLanguage();
 
-        $base_language_translations = $base_language->translations()->filters($base_language_filters)->get()->pluck('id')->toArray();
+        $fallback_language_translations = $fallback_language->translations()->filters($fallback_language_filters)->get()->pluck('id')->toArray();
 
         $language_translations = $language->translations()->filters($language_filters)->get()->pluck('id')->toArray();
 
-        $translatios_ids = array_unique(array_merge($base_language_translations, $language_translations), SORT_REGULAR);
+        $translatios_ids = array_unique(array_merge($fallback_language_translations, $language_translations), SORT_REGULAR);
 
         $lines = Translation::whereIn('id', $translatios_ids)->results($filters, true);
 
-        return view('i18n::translations.index', compact('language', 'base_language', 'lines', 'filters'));
+        return view('i18n::translations.index', compact('language', 'fallback_language', 'lines', 'filters'));
     }
 
     public function update(Request $request, Language $language, string $md5)
@@ -41,14 +41,14 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
         $needs_revision = $request->input('needs_revision') === 'true' ? true: false;
 
         $translation = $language->translations()->where('md5', $md5)->first();
-        $base_translation = Language::getBaseLanguage()->translations()->where('md5', $md5)->first();
+        $fallback_translation = Language::getFallbackLanguage()->translations()->where('md5', $md5)->first();
 
         if (!is_null($translation))
         {
             $translation->update([
                 'translation' => $translation_text,
                 'needs_revision' => $needs_revision,
-                'text_id' => $base_translation->text_id
+                'text_id' => $fallback_translation->text_id
             ]);
 
         } else {
@@ -57,7 +57,7 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
                 'translation' => $translation_text,
                 'needs_revision' => $needs_revision,
                 'language_id' => $language->id,
-                'text_id' => $base_translation->text_id
+                'text_id' => $fallback_translation->text_id
             ]);
         }
 

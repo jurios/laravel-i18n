@@ -36,31 +36,32 @@ class Language extends Model
 
     //static methods
     /**
-     * Returns the base language (it must exists)
+     * Returns the fallback language (it must exists)
      * @return mixed
      * @throws MissingLanguageException
      */
-    public static function getBaseLanguage()
+    public static function getFallbackLanguage()
     {
-        if (session()->has('base_language'))
+        if (session()->has('fallback_language'))
         {
-            return session()->get('base_language');
+            return session()->get('fallback_language');
         }
 
-        $base_language = Language::with('translations')->where('ISO_639_1', config('app.locale'))->first();
+        $fallback_language = Language::with('translations')
+            ->enabled()->where('ISO_639_1', config('app.fallback_locale'))->first();
 
-        if(is_null($base_language))
+        if(is_null($fallback_language))
         {
-            throw new MissingLanguageException('Base language (' . config('app.locale') . ') not found');
+            throw new MissingLanguageException('Enabled fallback language (' . config('app.fallback_locale') . ') not found');
         }
 
-        session()->flash('base_language', $base_language);
+        session()->flash('fallback_language', $fallback_language);
 
-        return $base_language;
+        return $fallback_language;
     }
 
     /**
-     * Returns the user configured language. If it's not configured by middleware then base language is used
+     * Returns the user configured language. If it's not configured by middleware then fallback language is used
      * @return mixed
      * @throws MissingLanguageException
      */
@@ -78,7 +79,7 @@ class Language extends Model
             return $user_language;
         }
 
-        $user_language = self::getBaseLanguage();
+        $user_language = self::getFallbackLanguage();
         session()->flash('user_language', $user_language);
         return $user_language;
     }
@@ -101,16 +102,16 @@ class Language extends Model
 
     public function getPercAttribute()
     {
-        if ($this->isBaseLanguage())
+        if ($this->isFallbackLanguage())
         {
             return 100;
         }
 
-        $count_base_translations = count(self::getBaseLanguage()->translations);
+        $count_fallback_translations = count(self::getFallbackLanguage()->translations);
 
-        if ($count_base_translations > 0)
+        if ($count_fallback_translations > 0)
         {
-            return (int)number_format((count($this->translations) * 100) / $count_base_translations, 0);
+            return (int)number_format((count($this->translations) * 100) / $count_fallback_translations, 0);
         }
 
         return 0;
@@ -129,9 +130,9 @@ class Language extends Model
     }
 
     // methods
-    public function isBaseLanguage()
+    public function isFallbackLanguage()
     {
-        return $this->id === self::getBaseLanguage()->id;
+        return $this->id === self::getFallbackLanguage()->id;
     }
 
     public function enable()
@@ -142,7 +143,7 @@ class Language extends Model
 
     public function disable()
     {
-        if(!$this->isBaseLanguage())
+        if(!$this->isFallbackLanguage())
         {
             $this->enabled = false;
             $this->save();

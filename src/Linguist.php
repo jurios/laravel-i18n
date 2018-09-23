@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
+use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
 
 class Linguist
 {
@@ -214,5 +215,28 @@ class Linguist
         }
 
         return $count;
+    }
+
+    public function syncFallbackLanguage()
+    {
+        $fallback_locale = config('app.fallback_locale');
+
+        $fallback_language = Language::getLanguageFromISO_639_1($fallback_locale);
+
+        if (is_null($fallback_language))
+        {
+            throw new MissingLanguageException(
+                'Can not syncronize the fallback language because language (' . $fallback_locale . ') does not exist');
+        }
+
+        if ($fallback_language->enabled)
+        {
+            return null;
+        }
+
+        $fallback_language->enable();
+
+        return $fallback_language;
+
     }
 }

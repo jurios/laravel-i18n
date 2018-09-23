@@ -43,7 +43,7 @@ class Text extends Model
 
         self::created(function (Text $text) {
 
-            $base_language = Language::getBaseLanguage();
+            $fallback_language = Language::getFallbackLanguage();
 
             /** @var Collection $existingTranslations */
             $existingTranslations = Translation::where('md5', $text->md5)->get();
@@ -53,7 +53,7 @@ class Text extends Model
                 Translation::create([
                     'md5' => $text->md5,
                     'translation' => $text->text,
-                    'language_id' => $base_language->id,
+                    'language_id' => $fallback_language->id,
                     'text_id' => $text->id
                 ]);
 

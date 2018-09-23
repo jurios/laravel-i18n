@@ -68,51 +68,34 @@ class Translation extends Model
     }
 
     /**
-     * Stores in database a new translation for the language $language and text $text. If $language is not base language,
-     * the text persisted will be null and a base language translation
-     * will be created with the text.
+     * Stores in database a new translation text $text for the fallback language.
      * @param $md5
      * @param $text
      * @param Language|null $language
      * @throws MissingLanguageException
      */
-    public static function generateTranslation($text, Language $language = null)
+    public static function generateFallbackTranslation($text)
     {
-        $base_language = Language::getBaseLanguage();
+        $fallback_language = Language::getFallbackLanguage();
         $md5 = md5($text);
-        $translated_text = $language->id === $base_language->id ? $text : null; // $text contains the base language text
-                                                                                // thus we only use it if the language
-                                                                                // is the base language
-        if (is_null($language))
-        {
-            $language = $base_language;
-        }
 
-        if (!self::existsTranslation($md5, $language))
+        if (!self::existsTranslation($md5, $fallback_language))
         {
             $translation = Translation::create([
-                'translation' => $translated_text,
+                'translation' => $text,
                 'md5' => $md5,
-                'language_id' => $language->id
+                'language_id' => $fallback_language->id
             ]);
 
-            session()->forget('base_language');
+            session()->forget('fallback_language');
 
-        } else {
-            $translation = $language->getTranslation($md5);
-        }
-
-        if ($base_language->id !== $language->id)
-        {
-            // Create base language translation
-            self::generateTranslation($text, $base_language);
         }
 
         return $translation;
     }
 
     /**
-     * Returns the translation of $text in $language language. If it doesn't exists, try to create it for the base language
+     * Returns the translation of $text in $language language. If it doesn't exists, try to create it for the fallback language
      * @param $md5
      * @param $language
      * @return mixed|null
@@ -129,7 +112,9 @@ class Translation extends Model
             return $translation;
         }
 
-        return self::generateTranslation($text, $language);
+        self::generateFallbackTranslation($text);
+
+        return null;
     }
 
     public static function getTranslationByMd5(string $md5, Language $language)

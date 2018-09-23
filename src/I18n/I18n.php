@@ -105,9 +105,9 @@ class I18n
 
             if (is_null($translated_line))
             {
-                if(!$language->isBaseLanguage())
+                if(!$language->isFallbackLanguage())
                 {
-                    $translated_line = $this->getTranslation($text, Language::getBaseLanguage(), $honestly);
+                    $translated_line = $this->getTranslation($text, Language::getFallbackLanguage(), $honestly);
                 }
             }
 

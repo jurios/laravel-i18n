@@ -24,7 +24,7 @@ class CreateLanguagesData extends Migration
             ]);
         }
 
-        DB::table(config('i18n.tables.languages'))->where('ISO_639_1', config('app.locale'))->update([
+        DB::table(config('i18n.tables.languages'))->where('ISO_639_1', config('app.fallback_locale'))->update([
             'enabled' => true
         ]);
     }
