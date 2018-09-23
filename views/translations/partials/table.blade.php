@@ -4,6 +4,56 @@
     @php($id = generateRandomString(10))
 @endif
 
+@php($action = route('i18n.languages.translations', compact('language')))
+
+@section('header-filters')
+    @if(hasQueryString('qf-translation'))
+        <span class="tag">
+            text:'<i>{{getQueryString('qf-translation')}}</i>'
+        </span>
+    @endif
+@endsection
+
+@section('filters')
+    <div class="alert alert-icon alert-warning" role="alert">
+        <i class="fe fe-bell mr-2" aria-hidden="true"></i> This is a work in progress. Some filters could not work properly.
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-group">
+                <label class="form-label">Text</label>
+                <input class="form-control" name="qf-translation" placeholder="Translatable text" type="text"
+                       value="{{ getQueryString('qf-translation', null) }}">
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label class="form-label">Translation status</label>
+                <select name="qf-status" id="input-status" class="form-control custom-select">
+                    <option value="all">All</option>
+                    <option value="translated">Translated</option>
+                    <option value="untranslated">Untranslated</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label class="custom-control custom-checkbox custom-control-inline">
+                    <input class="custom-control-input" name="needs_revision" value="true" checked="" type="checkbox">
+                    <span class="custom-control-label">Show <i>needs revision</i> only</span>
+                </label>
+            </div>
+        </div>
+    </div>
+@endsection
+
+
+
 @section('table-head-' . $id)
     <tr>
         <th class="text-center">Fallback language reference</th>
