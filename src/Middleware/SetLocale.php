@@ -31,6 +31,11 @@ class SetLocale
 
             $locale = $this->getLocaleFromRequestOrFallbackLanguage($request, $available_languages);
             $request->session()->put('locale', $locale);
+
+        } else {
+
+            $locale = $request->session()->get('locale');
+
         }
 
         App::setLocale($locale);
