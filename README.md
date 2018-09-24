@@ -7,11 +7,11 @@ improve the efficiency.
 
 ### Features
 
-* Identify your original text when is rendered and looks for the apropiate translation
+* Identify your original text when is rendered and looks for the translation in database/cache
 * Your translations are persisted in database and uses cache to retrieve it faster
-* Automatically new translatable lines detections statically (parsing php files) and dynamically (when they are going to be rendered)
+* Automatically new translatable lines detection statically (parsing php files) and dynamically 
+(when they are going to be rendered)
 * Web editor to manage languages and translations
-* Fallback language when a translation doesn't exists
 
 ![Laravel-i18n](image.png)
 
@@ -36,7 +36,7 @@ it before the next steps:
 
 #### laravel-i18n configuration
 This config file have comments about the meaning of each variable. As `laravel-i18n` create three tables in your
-database, it is recommended checking over the name of the tables in order to avoid conflicts.
+database, it is recommended checking over the names of the tables in order to avoid conflicts.
 
 Now that your config it's ready, it's time to migrate your database.
 
@@ -46,14 +46,14 @@ php artisan migrate
 ``` 
 
 #### Add the laravel-i18n routes to your `web.php` file
-You can place the `laravel-i18n` routes where you want in your `web.php` file in order to make web editor accessible. 
-No matters group, prefix... Just add the the routes with:
+In order to being the editor accessible, you should add the editor's routes in your `web.php` file.
+You can place the `laravel-i18n` routes in the place you want in your routes with:
 
 ```
 i18n::routes();
 ```
 
-This allows you to add middlewares to authorization and authentification befores giving access to the `laravel-i18n` 
+This allows you to add middlewares in order to authorization and authentification befores giving access to the `laravel-i18n` 
 web pages.
 
 This is an example:
@@ -64,7 +64,18 @@ Route::group(['middleware' => 'custom_middleware'], function() {
 });
 ```
 
-Now, if you call to `php artisan route:list` will see new routes added to your list that they will be used by `laravel-i18n`.
+Now, if you call to `php artisan route:list` will see the new routes added to your list that they will be used 
+by `laravel-i18n`.
+
+You can start manage `laravel-i18n` with `/i18n` path.
+
+#### Enabling your languages
+There are 184 languages added which can use in `laravel-i18n`. However, you aren't going to use all of them. That's why
+you need to enable only the languages that will be usable in your project. The disabled languages will be ignored by
+`laravel-i18n`. You enable or disable languages when you want even if they have translations. The translations will keep
+in database although you disable the language.
+
+You can enable or disable languages in `laravel-i18n` settings visiting `i18n/settings/languages`. 
 
 #### Start using the translation system
 
@@ -88,9 +99,10 @@ function t(string $text, $replace = [], $locale = null, $honestly = false)
 * **$replace**: Equals as Laravel `_()`, you can use variables in your $text which it will be replaced by the values in 
 $replaces. For example, this call `t('Hi, :name', ['name' => 'Jordi'])` will be translated as `Hi, Jordi` in English
 or `Hola, Jordi` in Spanish.
-* **$locale**: The language to be translated (using the ISO 639-1) When this value is `null`, this text 
-will be translated dynamically depending on the settings request.
-* **honestly**: When `honestly` is `true` then `laravel-i18n` will be, well... honest. That means that when a 
+* **$locale**: The language to be translated (using the ISO 639-1). You must use **enabled** language locales. 
+Disabled languages will be ignored. When this value is `null`, this text will be translated dynamically depending 
+on the settings. We'll see this on detail soon.
+* **$honestly**: When `honestly` is `true` then `laravel-i18n` will be, well... honest. That means that when a 
 translation can't be found for a specific language, then it will return an empty string `""`. When `honestly` is `false` 
 then it will try to return a configured `fallback` language translation. We'll se more details about that soon.
 
@@ -123,31 +135,50 @@ The down side of this method is that a text has to be rendered before in order t
 oddly will be unlikely listed. That's why you should use `php artisan i18n:sync` as frequently as you can.
 
 ### How it deals with locales
-When the `locale` argument is null when you call to `t()`, it will translate the text to the language which is defined in 
-the Laravel config `locale` in `config/app.php` file.
+Mentioned before, Calling to `t()` with a defined `$locale` will translate the text to the Language's locale. 
 
-If your project is multi language website, then you can change this value every request depending on the user configuration
-or browser preferences. For example, a way to deal with this is using this middleware sample: 
-[setLocale.php](src/Middleware/SetLocale.php)
+```php
+t('Hello world', null, 'es', null);
+//Hola mundo
+```
 
-This middleware just look for the user's browser language preferences and it tries to look for the corresponding enabled
-language in your database. If it exists, then it changes the Laravel locale to this new value. If it's not, 
+However, you can leave the `$locale = null` and `laravel-i18n` will use the Laravel's locale setting defined in your
+`config/app.php` file.
+
+```php
+App::setLocale('es');
+t('Hello world', null, null, null);
+//Hola mundo
+
+App::setLocale('ca');
+t('Hello world', null, null, null);
+//Hola món
+```
+
+If your project is multi language website and every user could use a different language, then you can change 
+this setting every request depending on the variables you consider. For example, a way to deal with this is using 
+this middleware sample: [setLocale.php](src/Middleware/SetLocale.php)
+
+This middleware just look for the user's browser language preferences and it tries to look for the corresponding
+enabled language in your database. If it exists, then it changes the Laravel locale to this new value. If it's not, 
 then use the fallback language locale which is defined in `config/app.php` too.
 
 ### Honestly mode
 As it is explained above, when you call `t()` with honestly mode activated it will return a blank text when a
 translation doesn't exists for the `locale` defined.
 
-This mode is desactivated by default. You have to add a `true` in the honestly argument to activate it. 
-When it is desactivated, it will return the fallback language translation in case that a translation doesn't exist. 
+This mode is deactivated by default. You have to add a `true` in the honestly argument to activate it. 
+When it is deactivated, it will return the fallback language translation in case that a translation doesn't exist. 
 
 As mentioned before, `fallback_locale` can be defined in your `config/app.php` file. This is the language that will 
-be used as a `fallback`. The idea here is that your  `fallback_locale` setting should be the same language used 
+be used as a `fallback`. The idea here is that your `fallback_locale` setting should be the same language used 
 in your views texts. So, for example, if your texts in your views/code are written in English, your `fallback_locale` 
 should be `en` (`en` is the ISO 639-1 for the English language). 
-`Laravel-i18n` will consider the text in your view/code as the translation for the fallback language when is the first 
-time is detected. Then, through the web editor, you can change the fallback language translation for this text.
+`Laravel-i18n` will consider the text in your view/code as the translation for the fallback language when it is detected
+for the first time. Then, through the web editor, you can change the translation for this text.
 
-Thats why you will see that your `fallback_locale` language is always 100% translated.
+That's why you will see that your `fallback_locale` language is always 100% translated.
 
-**Be careful!:** your `fallback_locale` should be the ISO 639-1 of an **enabled** language.
+**Be careful!:** your `fallback_locale` should be the ISO 639-1 of an **enabled** language. If it's not, an exception 
+will be fired. You can call to `php artisan i18n:sync` after modify this value in order to enable it automatically if
+it is necessary.
