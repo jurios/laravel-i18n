@@ -1,7 +1,7 @@
 <div class="header py-4">
     <div class="container">
         <div class="d-flex">
-            <a class="header-brand" href="./index.html">
+            <a class="header-brand" href="{{ route('i18n.languages.index') }}">
                 {{--<img src="./demo/brand/tabler.svg" class="header-brand-img" alt="tabler logo">--}}
                 <h3>Laravel i18n</h3>
             </a>
