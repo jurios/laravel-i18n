@@ -15,10 +15,6 @@
 @endsection
 
 @section('filters')
-    <div class="alert alert-icon alert-warning" role="alert">
-        <i class="fe fe-bell mr-2" aria-hidden="true"></i> This is a work in progress. Some filters could not work properly.
-    </div>
-
     <div class="row">
         <div class="col-lg-8">
             <div class="form-group">

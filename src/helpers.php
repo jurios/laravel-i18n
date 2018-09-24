@@ -68,3 +68,11 @@ if (!function_exists('hasQueryString')) {
          return \Illuminate\Support\Facades\Request::has($query);
     }
 }
+
+if (!function_exists('filledQueryString')) {
+    function filledQueryString(string $query)
+    {
+        return \Illuminate\Support\Facades\Request::filled($query);
+    }
+}
+

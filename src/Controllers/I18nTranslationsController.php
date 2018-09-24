@@ -18,19 +18,12 @@ class I18nTranslationsController extends \Illuminate\Routing\Controller
      */
     public function index(TranslationFilter $filters, Language $language)
     {
-        $fallback_language_filters = clone $filters;
-        $language_filters = clone $filters;
-
         /** @var Language $fallback_language */
         $fallback_language = Language::getFallbackLanguage();
 
-        $fallback_language_translations = $fallback_language->translations()->filters($fallback_language_filters)->get()->pluck('id')->toArray();
+        $filters->setTranslatedLanguage($language);
 
-        $language_translations = $language->translations()->filters($language_filters)->get()->pluck('id')->toArray();
-
-        $translatios_ids = array_unique(array_merge($fallback_language_translations, $language_translations), SORT_REGULAR);
-
-        $lines = Translation::whereIn('id', $translatios_ids)->results($filters, true);
+        $lines = $fallback_language->translations()->filters($filters)->results($filters);
 
         return view('i18n::translations.index', compact('language', 'fallback_language', 'lines', 'filters'));
     }

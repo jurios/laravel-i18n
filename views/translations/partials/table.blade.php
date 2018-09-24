@@ -7,18 +7,26 @@
 @php($action = route('i18n.languages.translations.index', compact('language')))
 
 @section('header-filters')
-    @if(hasQueryString('qf-translation'))
+    @if(filledQueryString('qf-translation'))
         <span class="tag">
             text:'<i>{{getQueryString('qf-translation')}}</i>'
+        </span>
+    @endif
+
+    @if(filledQueryString('qf-status'))
+        <span class="tag">
+            status:'<i>{{getQueryString('qf-status')}}</i>'
+        </span>
+    @endif
+
+    @if(filledQueryString('qf-needs_revision'))
+        <span class="tag">
+            needs_revision:'<i>{{getQueryString('qf-needs_revision')}}</i>'
         </span>
     @endif
 @endsection
 
 @section('filters')
-    <div class="alert alert-icon alert-warning" role="alert">
-        <i class="fe fe-bell mr-2" aria-hidden="true"></i> This is a work in progress. Some filters could not work properly.
-    </div>
-
     <div class="row">
         <div class="col-lg-8">
             <div class="form-group">
@@ -44,7 +52,7 @@
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="custom-control custom-checkbox custom-control-inline">
-                    <input class="custom-control-input" name="needs_revision" value="true" checked="" type="checkbox">
+                    <input class="custom-control-input" name="qf-needs_revision" value="true" {{ filledQueryString('qf-needs_revision') ? 'checked' : '' }} type="checkbox">
                     <span class="custom-control-label">Show <i>needs revision</i> only</span>
                 </label>
             </div>
