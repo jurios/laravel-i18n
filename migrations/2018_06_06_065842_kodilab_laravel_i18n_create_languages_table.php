@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTextsTable extends Migration
+class KodilabLaravelI18nCreateLanguagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateTextsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('i18n.tables.texts'), function (Blueprint $table) {
+        Schema::create(config('i18n.tables.languages'), function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('md5')->nullable(false);
-            $table->text('text')->nullable(false);
+            $table->string('name')->nullable(false);
+            $table->string('ISO_639_1')->nullable(false);
 
-            $table->text('paths')->nullable(false);
+            $table->boolean('enabled')->nullable(false)->default(false);
         });
     }
 
@@ -30,6 +30,6 @@ class CreateTextsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('i18n.tables.texts'));
+        Schema::dropIfExists(config('i18n.tables.languages'));
     }
 }
