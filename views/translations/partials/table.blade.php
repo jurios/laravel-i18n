@@ -109,7 +109,7 @@
                             <i class="fe fe-info"></i>
                         </a>
 
-                        <a href="#" class="btn btn-sm btn-danger"><i class="fe fe-trash"></i> Remove</a>
+                        {{--<a href="#" class="btn btn-sm btn-danger"><i class="fe fe-trash"></i> Remove</a>--}}
                     </div>
                     <input type="hidden" name="translation" value="">
                     <input type="hidden" name="needs_revision" value="">
