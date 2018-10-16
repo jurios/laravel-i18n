@@ -105,6 +105,8 @@ class I18n
 
             if (is_null($translated_line))
             {
+                $translated_line = $text;
+                
                 if(!$language->isFallbackLanguage())
                 {
                     $translated_line = $this->getTranslation($text, Language::getFallbackLanguage(), $honestly);
