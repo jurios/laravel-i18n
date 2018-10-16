@@ -19,6 +19,18 @@ return [
         'translations' => 'i18n_translations'
     ],
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | session_var_name
+    |--------------------------------------------------------------------------
+    |
+    | Laravel-i18n looks for the user locale in the session thus you have to provide here the 'key' where the user locale
+    | is placed. For example, if 'session_var_name' = 'locale', Laravel-i18n will look for the key 'locale' in the session.
+    | If the session value is an enabled ISO_639_1 language, all translatable text will be translated to this language.
+    */
+    'session_var_name' => 'locale',
+
     /*
     |--------------------------------------------------------------------------
     | logout_route
