@@ -2,6 +2,10 @@
 
 namespace Kodilab\LaravelI18n;
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+
+
 class Facade extends \Illuminate\Support\Facades\Facade
 {
     protected static function getFacadeAccessor()
@@ -59,6 +63,26 @@ class Facade extends \Illuminate\Support\Facades\Facade
                 ->get('settings/languages', '\Kodilab\LaravelI18n\Controllers\I18nSettingsController@languages')
                 ->name('settings.languages.index');
 
+        });
+    }
+
+    public static function generateModelI18nTable(string $model, array $translatable_attributes)
+    {
+        Schema::create($model . '_i18n', function (Blueprint $table) use ($model, $translatable_attributes) {
+            $table->increments('id');
+            $table->unsignedInteger('resource_id');
+            $table->unsignedInteger('language_id');
+
+            foreach ($translatable_attributes as $attribute)
+            {
+                $table->string($attribute);
+            }
+
+            $table->foreign('resource_id')->references('id')->on($model)
+                ->onDelete('cascade');
+
+            $table->foreign('language_id')->references('id')->on(config('i18n.tables.languages'))
+                ->onDelete('cascade');
         });
     }
 }
