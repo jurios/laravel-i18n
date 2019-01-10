@@ -46,5 +46,14 @@ return [
     'logout_route' => [
         'name' => null,
         'method' => null
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | show_credits
+    |--------------------------------------------------------------------------
+    |
+    | Show credits in the footer of laravel-i18n views
+    */
+    'show_credits' => true
 ];

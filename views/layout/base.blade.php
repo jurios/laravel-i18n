@@ -35,16 +35,18 @@
                     </div>
                 </div>
             </div>
-            <div class="my-3 my-md-5">
-                <div class="container text-center">
-                    <div class="page-subtitle">
-                        2018 <a href="https://github.com/jurios/laravel-i18n">Laravel-i18n</a>. Theme by <a href="https://tabler.github.io">codecalm.net (tabler)</a>
-                    </div>
-                    <div class="page-subtitle">
-                        <i class="fe fe-code"></i> with <i class="fe fe-heart"></i> by <a href="https://github.com/jurios">Kodilab</a>
+            @if(config('i18n.show_credits'))
+                <div class="my-3 my-md-5">
+                    <div class="container text-center">
+                        <div class="page-subtitle">
+                            2018 <a href="https://github.com/jurios/laravel-i18n">Laravel-i18n</a>. Theme by <a href="https://tabler.github.io">codecalm.net (tabler)</a>
+                        </div>
+                        <div class="page-subtitle">
+                            <i class="fe fe-code"></i> with <i class="fe fe-heart"></i> by <a href="https://github.com/jurios">Kodilab</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 
