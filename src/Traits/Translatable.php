@@ -282,6 +282,6 @@ trait Translatable
      */
     private function getTranslationsTableName()
     {
-        return $this->getTable() . '_i18n';
+        return $this->getTable() . config('i18n.tables.model_translations_suffix', '_i18n');
     }
 }
