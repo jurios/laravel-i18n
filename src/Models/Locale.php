@@ -5,13 +5,21 @@ namespace Kodilab\LaravelI18n;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 
 class Locale extends Model
 {
 
+    protected $table;
+
     protected $fillable = ['language_id', 'fallback', 'created_by_sync'];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = config('i18n.tables.locale', 'i18n_locales');
+    }
+
 
     public function language()
     {
@@ -60,6 +68,7 @@ class Locale extends Model
         $user_locale = self::getFallbackLocale();
 
         session()->put('locale', $user_locale);
+
         return $user_locale;
     }
 
@@ -93,7 +102,7 @@ class Locale extends Model
             return null;
         }
 
-        $query = Locale::enabled()->where('language_id', $language->id)->get();
+        $query = Locale::enabled()->where('language_id', $language->id);
         /** @var Collection $locales_based_on_language */
         $locales = clone $query;
         $locales_based_on_language = $locales->get();

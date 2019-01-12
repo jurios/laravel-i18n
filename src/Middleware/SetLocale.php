@@ -39,7 +39,7 @@ class SetLocale
         }
 
         App::setLocale($locale->getLaravelLocale());
-        Carbon::setLocale($locale->getCarbonLocale());
+        \Carbon\Carbon::setLocale($locale->getCarbonLocale());
 
         // Here you can add other third-party packages that need locale configuration as well.
 
