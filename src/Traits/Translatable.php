@@ -7,6 +7,19 @@ use Illuminate\Support\Facades\Schema;
 
 trait Translatable
 {
+    /**
+     * Loaded translatable column names in memory
+     * @var null
+     */
+    protected $available_translatable_attributes = null;
+
+    /**
+     * Loaded translations in memory
+     *
+     * @var null
+     */
+    protected $translations = null;
+
     public function __get($name)
     {
         if ($this->isTranslatableAttribute($name))
@@ -38,19 +51,22 @@ trait Translatable
      */
     public function getTranslatedAttribute(string $attribute_name, Language $language = null, $honestly = false)
     {
+        $this->loadTranslations();
+
         if (is_null($language))
         {
             $language = Language::getUserLanguage();
         }
 
-        $translation = $this->getTranslationQuery($language)->first([$attribute_name]);
+        $translation = isset($this->translations[$language->id]) &&
+            isset($this->translations[$language->id][$attribute_name]) ? $this->translations[$language->id][$attribute_name] : null;
 
         if (is_null($translation) && $language->id !== Language::getFallbackLanguage() && !$honestly)
         {
             return $this->getTranslatedAttribute($attribute_name, Language::getFallbackLanguage());
         }
 
-        return !is_null($translation) ? $translation->$attribute_name : "";
+        return !is_null($translation) ? $translation : "";
     }
 
     /**
@@ -63,6 +79,8 @@ trait Translatable
      */
     public function updateTranslation(array $attributes, Language $language = null)
     {
+        $this->loadTranslations();
+
         if (is_null($language))
         {
             $language = Language::getFallbackLanguage();
@@ -77,6 +95,11 @@ trait Translatable
         }
 
         $this->getTranslationQuery($language)->update($attributes);
+
+        foreach ($attributes as $attribute => $value)
+        {
+            $this->translations[$language->id][$attribute] = $value;
+        }
     }
 
     /**
@@ -87,6 +110,8 @@ trait Translatable
      */
     public function createTranslation(array $attributes, Language $language = null)
     {
+        $this->loadTranslations();
+
         if (is_null($language))
         {
             $language = Language::getFallbackLanguage();
@@ -107,6 +132,11 @@ trait Translatable
         $attributes['resource_id'] = $this->id;
 
         DB::table($this->getTranslationsTableName())->insert($attributes);
+
+        unset($attributes['language_id']);
+        unset($attributes['resource_id']);
+
+        $this->translations[$language->id] = $attributes;
     }
 
     /**
@@ -117,7 +147,29 @@ trait Translatable
      */
     public function hasTranslation( Language $language)
     {
-        return !is_null($this->getTranslationQuery($language)->get());
+        $this->loadTranslations();
+
+        return isset($this->translations[$language->id]);
+    }
+
+    /**
+     * Load translation from database and keep them in memory
+     */
+    private function loadTranslations()
+    {
+        if (is_null($this->translations))
+        {
+            $stored_translations = $this->getTranslationQuery()->get();
+
+            foreach ($stored_translations as $translation) {
+                $available_attributes = $this->getTranslatableAttributes();
+
+                foreach ($available_attributes as $attribute)
+                {
+                    $this->translations[$translation->language_id][$attribute] = $translation->$attribute;
+                }
+            }
+        }
     }
 
     /**
@@ -125,11 +177,16 @@ trait Translatable
      * @param $language
      * @return \Illuminate\Database\Query\Builder
      */
-    private function getTranslationQuery(Language $language)
+    private function getTranslationQuery(Language $language = null)
     {
-        return DB::table($this->getTranslationsTableName())
-            ->where('language_id', $language->id)
-            ->where('resource_id', $this->id);
+        $query = DB::table($this->getTranslationsTableName())->where('resource_id', $this->id);
+
+        if (!is_null($language))
+        {
+            $query->where('language_id', $language->id);
+        }
+
+        return $query;
     }
 
     /**
@@ -203,17 +260,20 @@ trait Translatable
      */
     private function getTranslatableAttributes()
     {
-        $columns = Schema::getColumnListing($this->getTranslationsTableName());
-
-        foreach ($columns as $key => $name)
+        if (is_null($this->available_translatable_attributes))
         {
-            if ($name === 'language_id' || $name === 'resource_id' || $name === 'id')
-            {
-                unset($columns[$key]);
+            $columns = Schema::getColumnListing($this->getTranslationsTableName());
+
+            foreach ($columns as $key => $name) {
+                if ($name === 'language_id' || $name === 'resource_id' || $name === 'id') {
+                    unset($columns[$key]);
+                }
             }
+
+            $this->available_translatable_attributes = $columns;
         }
 
-        return $columns;
+        return $this->available_translatable_attributes;
     }
 
     /**

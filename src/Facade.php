@@ -68,14 +68,15 @@ class Facade extends \Illuminate\Support\Facades\Facade
 
     public static function generateModelI18nTable(string $model, array $translatable_attributes)
     {
-        Schema::create($model . '_i18n', function (Blueprint $table) use ($model, $translatable_attributes) {
+        Schema::create($model . config('i18n.tables.model_translations_suffix', '_i18n'), function (Blueprint $table)
+        use ($model, $translatable_attributes) {
             $table->increments('id');
             $table->unsignedInteger('resource_id');
             $table->unsignedInteger('language_id');
 
-            foreach ($translatable_attributes as $attribute)
+            foreach ($translatable_attributes as $attribute => $data_type)
             {
-                $table->string($attribute);
+                $table->$data_type($attribute);
             }
 
             $table->foreign('resource_id')->references('id')->on($model)
@@ -84,5 +85,10 @@ class Facade extends \Illuminate\Support\Facades\Facade
             $table->foreign('language_id')->references('id')->on(config('i18n.tables.languages'))
                 ->onDelete('cascade');
         });
+    }
+
+    public static function dropIfExistsModelI18nTable(string $model)
+    {
+        Schema::dropIfExists($model . config('i18n.tables.model_translations_suffix', '_i18n'));
     }
 }

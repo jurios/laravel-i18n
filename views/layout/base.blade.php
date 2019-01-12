@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            @if(config('i18n.show_credits'))
+            @if(config('i18n.show_credits', true))
                 <div class="my-3 my-md-5">
                     <div class="container text-center">
                         <div class="page-subtitle">
