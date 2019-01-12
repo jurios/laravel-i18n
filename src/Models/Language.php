@@ -34,6 +34,16 @@ class Language extends Model
         $this->table = config('i18n.tables.languages');
     }
 
+    public static function __callStatic($method, $parameters)
+    {
+        if (in_array($method, self::all()->pluck('ISO_639_1')->toArray()))
+        {
+            return self::getLanguageFromISO_639_1($method);
+        }
+
+        return parent::__callStatic($method, $parameters);
+    }
+
     //static methods
     /**
      * Returns the fallback language (it must exists)
@@ -117,19 +127,19 @@ class Language extends Model
         return 0;
     }
 
-    //relationships
+    //Relationships
     public function translations()
     {
         return $this->hasMany(Translation::class, 'language_id');
     }
 
-    //scopes
+    //Scopes
     public function scopeEnabled(Builder $query, bool  $value = true)
     {
         $query->where('enabled', $value);
     }
 
-    // methods
+    //Methods
     public function isFallbackLanguage()
     {
         return $this->id === self::getFallbackLanguage()->id;

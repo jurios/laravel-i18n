@@ -88,13 +88,13 @@ In this case the translation retrieved is for the language defined in the sessio
 
 If we need a particular translation, then we can call this:
 ```(php)
-$car->getTranslatedAttribute('model', Language::getLanguageFromISO_639_1('es')); //Retrieve the spanish translation for model
+$car->getTranslatedAttribute('model', Language::es()); //Retrieve the spanish translation for model
 ```
 
 We can update our translations just with this:
 
 ```(php)
-$car->updateTranslation(['model' => 'New text', ...], Language::getLanguageFromISO_639_1('es'));
+$car->updateTranslation(['model' => 'New text', ...], Language::es());
 ```
 
 #### Add the laravel-i18n routes to your `web.php` file
