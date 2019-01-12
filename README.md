@@ -7,7 +7,7 @@ improve the efficiency.
 
 ### Features
 
-* Deal with template translations texts and Model translation attributes as well.
+* Deal with template translations and Model attribute translations as well.
 * Your translations are persisted in database and cached in order to retrieve it faster.
 * Automatically either new or edited translatable texts are detected and included.
 * Web editor to manage languages and translations from your templates.
