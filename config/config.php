@@ -22,6 +22,7 @@ return [
         'languages' => 'i18n_languages',
         'texts' => 'i18n_texts',
         'translations' => 'i18n_translations',
+        'locales' => 'i18n_locales',
 
         'model_translations_suffix' => '_i18n',
     ],

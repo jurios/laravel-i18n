@@ -46,7 +46,7 @@ class Language extends Model
 
     //static methods
     /**
-     * Returns the fallback language (it must exists)
+     * Returns the fallback language (it must exists) which is configured in Laravel
      * @return mixed
      * @throws MissingLanguageException
      */
@@ -71,7 +71,7 @@ class Language extends Model
     }
 
     /**
-     * Returns the user configured language. If it's not configured by middleware then fallback language is used
+     * Returns the user configured language from the locale.
      * @return mixed
      * @throws MissingLanguageException
      */
@@ -82,15 +82,11 @@ class Language extends Model
             return session()->get('user_language');
         }
 
-        if (session()->has(config('i18n.session_var_name')))
-        {
-            $user_language = Language::where('ISO_639_1', session()->get(config('i18n.session_var_name')))->first();
-            session()->flash('user_language', $user_language);
-            return $user_language;
-        }
+        $locale = Locale::getUserLocale();
 
-        $user_language = self::getFallbackLanguage();
+        $user_language = $locale->language;
         session()->flash('user_language', $user_language);
+
         return $user_language;
     }
 

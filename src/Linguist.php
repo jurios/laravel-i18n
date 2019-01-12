@@ -236,6 +236,23 @@ class Linguist
 
         $fallback_language->enable();
 
+        if (Locale::enabled()->where('language_id', $fallback_language->id)->get()->isEmpty())
+        {
+            Locale::create([
+                'language_id' => $fallback_language->id,
+                'fallback' => true,
+                'created_by_sync' => true
+            ]);
+        }
+
+        if (Locale::enabled()->where('fallback', true)->where('language_id', $fallback_language->id)->get()->isEmpty())
+        {
+            $locale = Locale::enabled()->where('language_id', $fallback_language->id)->first();
+
+            $locale->fallback = true;
+            $locale->save();
+        }
+
         return $fallback_language;
 
     }
