@@ -4,9 +4,6 @@ namespace Kodilab\LaravelI18n;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
 use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
 
@@ -54,6 +51,7 @@ class Language extends Model
     {
         if (session()->has('fallback_language'))
         {
+
             return session()->get('fallback_language');
         }
 
@@ -65,29 +63,9 @@ class Language extends Model
             throw new MissingLanguageException('Enabled fallback language (' . config('app.fallback_locale') . ') not found');
         }
 
-        session()->flash('fallback_language', $fallback_language);
+        session()->put('fallback_language', $fallback_language);
 
         return $fallback_language;
-    }
-
-    /**
-     * Returns the user configured language from the locale.
-     * @return mixed
-     * @throws MissingLanguageException
-     */
-    public static function getUserLanguage()
-    {
-        if (session()->has('user_language'))
-        {
-            return session()->get('user_language');
-        }
-
-        $locale = Locale::getUserLocale();
-
-        $user_language = $locale->language;
-        session()->flash('user_language', $user_language);
-
-        return $user_language;
     }
 
     /**

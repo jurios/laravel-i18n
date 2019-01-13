@@ -24,7 +24,7 @@ trait Translatable
     {
         if ($this->isTranslatableAttribute($name))
         {
-            return $this->getTranslatedAttribute($name, Language::getUserLanguage());
+            return $this->getTranslatedAttribute($name, Locale::getUserLocale()->language);
         }
 
         return parent::__get($name);
@@ -55,7 +55,7 @@ trait Translatable
 
         if (is_null($language))
         {
-            $language = Language::getUserLanguage();
+            $language = Locale::getUserLocale()->language;
         }
 
         $translation = isset($this->translations[$language->id]) &&

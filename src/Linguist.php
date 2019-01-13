@@ -3,6 +3,7 @@
 namespace Kodilab\LaravelI18n;
 
 
+use Illuminate\Console\OutputStyle;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
@@ -250,5 +251,86 @@ class Linguist
 
         return $fallback_language;
 
+    }
+
+    /**
+     * Check whether the fallback language defined in laravel configuration is enabled
+     * @param OutputStyle $output
+     * @return mixed
+     */
+    public function isFallbackLanguageEnabled(OutputStyle $output = null)
+    {
+        $iso = config('app.fallback_locale', 'en');
+
+        $enabled = Language::getLanguageFromISO_639_1($iso)->enabled;
+
+        if (!is_null($output))
+        {
+            $enabled ? null :
+                $output->writeln("<fg=red>Fallback language ({$iso}) is disabled. Needs to be enabled.</>");
+        }
+
+        return $enabled;
+    }
+
+    public function enableFallbackLanguage(OutputStyle $output = null)
+    {
+        $iso = config('app.fallback_locale', 'en');
+
+        Language::getLanguageFromISO_639_1($iso)->update([
+            'enabled' => true
+        ]);
+
+        !is_null($output) ? $output->writeln("<fg=green>Fallback language ({$iso}) enabled</>") : null;
+    }
+
+    public function hasFallbackLocale(OutputStyle $output = null)
+    {
+        $fallbackLocale = Locale::enabled()->where('fallback', true)->first();
+
+        if (is_null($fallbackLocale))
+        {
+            if (!is_null($output))
+            {
+                $output->writeln("<fg=red>Fallback locale not found. Needs to create one...</>");
+            }
+            return false;
+        }
+
+        if (!is_null($output))
+        {
+            $output->writeln("<fg=green>Fallback locale found.</>");
+        }
+
+        return true;
+    }
+
+    public function createFallbackLocale(OutputStyle $output = null)
+    {
+        $fallback_language = Language::getFallbackLanguage();
+
+        $fallbackLocale = Locale::create([
+            'language_id' => $fallback_language->id,
+            'fallback' => true,
+            'created_by_sync' => true
+        ]);
+
+        if (!is_null($output))
+        {
+            $output->writeln("\"<fg=green>Fallback locale created.</>\"");
+        }
+    }
+
+    public function checkFallbackLocaleIsValid(OutputStyle $output = null)
+    {
+        $fallback_locale = Locale::getFallbackLocale();
+
+        $fallback_locale->language->enabled = true;
+        $fallback_locale->language->save();
+
+        if (!is_null($output))
+        {
+            $output->writeln("<fg=green>Fallback locale language enabled.</>");
+        }
     }
 }

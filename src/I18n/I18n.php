@@ -29,7 +29,7 @@ class I18n
     public function translate(string $text, $replace = [], Language $language = null, bool $honestly = false)
     {
         /** @var Language $language */
-        $language = is_null($language) ? Language::getUserLanguage() : $language;
+        $language = is_null($language) ? Locale::getUserLocale()->language : $language;
 
         if (is_null($language))
         {

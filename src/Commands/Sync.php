@@ -46,14 +46,18 @@ class Sync extends Command
      */
     public function handle()
     {
-        /** @var Language $result */
-        $result = $this->linguist->syncFallbackLanguage();
-
-        if (!is_null($result))
+        if (!$this->linguist->isFallbackLanguageEnabled($this->output))
         {
-            $this->output->writeln(
-                "\"<fg=green>{$result->reference}</>\" has been enabled because it is the fallback language.");
+            $this->linguist->enableFallbackLanguage($this->output);
         }
+
+        if (!$this->linguist->hasFallbackLocale($this->output))
+        {
+            $this->linguist->createFallbackLocale($this->output);
+        }
+
+        $this->linguist->checkFallbackLocaleIsValid($this->output);
+
 
         $translationsByFile = $this->linguist->getAllTranslatableStringFromFiles();
 
@@ -61,15 +65,15 @@ class Sync extends Command
 
         $deprecated_count = $this->linguist->deleteDeprecatedTranslations($translations);
 
-        $this->output->writeln("\"<fg=red>{$deprecated_count}</>\" deprecated texts were deleted.");
+        $this->output->writeln("<fg=red>{$deprecated_count}</> deprecated texts were deleted.");
 
         $dynamic_count = $this->linguist->countDynamicTranslations();
 
-        $this->output->writeln("\"<fg=yellow>{$dynamic_count}</>\" texts are dynamic and can't be added.");
+        $this->output->writeln("<fg=yellow>{$dynamic_count}</> texts are dynamic and can't be added.");
 
         $added_count = $this->linguist->addNewTranslations($translations);
 
-        $this->output->writeln("\"<fg=green>{$added_count}</>\" new texts were added.");
+        $this->output->writeln("<fg=green>{$added_count}</> new texts were added.");
 
         $this->call('cache:clear');
         Session::flush();

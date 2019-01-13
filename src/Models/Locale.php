@@ -53,6 +53,11 @@ class Locale extends Model
         return $this->getLaravelLocale();
     }
 
+    public function getFallbackLanguageAttribute()
+    {
+        return Language::getFallbackLanguage();
+    }
+
     /**
      * Returns the user configured locale. If it's not configured by middleware then fallback language is used
      * @return mixed
@@ -65,20 +70,15 @@ class Locale extends Model
             return session()->get('locale');
         }
 
-        $user_locale = self::getFallbackLocale();
+        $locale = Locale::getFallbackLocale();
 
-        session()->put('locale', $user_locale);
+        session()->put('locale', $locale);
 
-        return $user_locale;
+        return $locale;
     }
 
     static function getFallbackLocale()
     {
-        if (session()->has('fallback_locale'))
-        {
-            return session()->get('fallback_locale');
-        }
-
         // TODO: Try to load the translation from this locale
         $fallback_locale = Locale::enabled()->where('fallback', true)->first();
 
@@ -87,8 +87,6 @@ class Locale extends Model
             throw new MissingLocaleException(
                 'Enabled fallback locale not found. One fallback locale must exists');
         }
-
-        session()->flash('fallback_language', $fallback_locale);
 
         return $fallback_locale;
     }
