@@ -3,10 +3,9 @@
 namespace Kodilab\LaravelI18n\Middleware;
 
 use Closure;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Kodilab\LaravelI18n\Language;
 use Illuminate\Support\Facades\App;
+use Kodilab\LaravelI18n\Locale;
 
 class SetLocale
 {
@@ -27,38 +26,57 @@ class SetLocale
 
         if (!$request->session()->has('locale'))
         {
-            $available_languages = Language::enabled()->get();
+            /** @var Locale $locale */
+            $locale = $this->getLocaleFromRequestOrFallbackLocale($request);
 
-            $locale = $this->getLocaleFromRequestOrFallbackLanguage($request, $available_languages);
             $request->session()->put('locale', $locale);
 
         } else {
 
+            /** @var Locale $locale */
             $locale = $request->session()->get('locale');
 
         }
 
-        App::setLocale($locale);
+        App::setLocale($locale->getLaravelLocale());
+        \Carbon\Carbon::setLocale($locale->getCarbonLocale());
 
-        // Set locale for other packages, for example:
-        //Carbon::setLocale($locale);
+        // Here you can add other third-party packages that need locale configuration as well.
 
         return $next($request);
     }
 
-    private function getLocaleFromRequestOrFallbackLanguage(Request $request, Collection $available_languages)
+    private function getLocaleFromRequestOrFallbackLocale(Request $request)
     {
-        $available_languages_ISO_639_1 = $available_languages->pluck('ISO_639_1')->toArray();
-
         $request_languages = $request->getLanguages();
 
         foreach ($request_languages as $request_language) {
-            if (in_array($request_language, $available_languages_ISO_639_1))
+
+            $region = $this->getRegionFromLocale($request_language);
+            $language = $this->getLanguageFromLocale($request_language);
+
+            $best_locale = Locale::getBestLocale($language, $region);
+
+            if (!is_null($best_locale))
             {
-                return $request_language;
+                return $best_locale;
             }
         }
 
-        return Language::getFallbackLanguage()->reference;
+        return Locale::getFallbackLocale();
+    }
+
+    private function getRegionFromLocale($locale)
+    {
+        $locale = explode("_", $locale);
+
+        return isset($locale[1]) ? $locale[1] : null;
+    }
+
+    private function getLanguageFromLocale($locale)
+    {
+        $locale = explode("_", $locale);
+
+        return isset($locale[0]) ? $locale[0] : null;
     }
 }

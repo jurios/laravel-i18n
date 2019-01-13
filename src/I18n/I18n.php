@@ -21,19 +21,19 @@ class I18n
      *
      * @param string $text
      * @param array $replace
-     * @param null $locale
+     * @param Language|null $language
      * @param bool $honestly
      * @return string
      * @throws MissingLanguageException
      */
-    public function translate(string $text, $replace = [], $locale = null, $honestly = false)
+    public function translate(string $text, $replace = [], Language $language = null, bool $honestly = false)
     {
         /** @var Language $language */
-        $language = is_null($locale) ? Language::getUserLanguage() : Language::getLanguageFromISO_639_1($locale);
+        $language = is_null($language) ? Language::getUserLanguage() : $language;
 
         if (is_null($language))
         {
-            throw new MissingLanguageException('Language with reference' . $locale . 'not found when translating');
+            throw new MissingLanguageException('Language not found');
         }
 
         $translated_line = $this->getTranslation($text, $language, $honestly);

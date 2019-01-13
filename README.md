@@ -7,11 +7,10 @@ improve the efficiency.
 
 ### Features
 
-* Identify your original text when is rendered and looks for the translation in database/cache
-* Your translations are persisted in database and uses cache to retrieve it faster
-* Automatically new translatable lines detection statically (parsing php files) and dynamically 
-(when they are going to be rendered)
-* Web editor to manage languages and translations
+* Deal with template translations and Model attribute translations as well.
+* Your translations are persisted in database and cached in order to retrieve it faster.
+* Automatically either new or edited translatable texts are detected and included.
+* Web editor to manage languages and translations from your templates.
 
 ![Laravel-i18n](image.png)
 
@@ -21,7 +20,7 @@ improve the efficiency.
 composer require kodilab/laravel-i18n dev-master
 ``` 
 
-This will install `laravel-i18n` and `laravel-filters` which is a dependency. 
+This will install `laravel-i18n` and the dependencies that it needs.
 
 Once you have `laravel-i18n` in your project, you must publish the assets/config files with:
 
@@ -31,19 +30,72 @@ php artisan vendor:publish --provider="Kodilab\LaravelFilters\QueryFilterProvide
 ```
 
 This will add `i18n.php` and `filters.php` config files to your `config` directory and some web editor assets in your 
-`public/` folder. At this point, ignore `filters.php` config file. However, `i18n.php` should be check over 
-it before the next steps:
+`public/` folder. At this point, ignore `filters.php` config file. However, `i18n.php` should be checked over before
+start using Laravel-i18n. As a three tables will be created in your database, check the names of these tables in the
+config file in order to avoid collision names.
 
-#### laravel-i18n configuration
-This config file have comments about the meaning of each variable. As `laravel-i18n` create three tables in your
-database, it is recommended checking over the names of the tables in order to avoid conflicts.
+Laravel-i18n supports template translations and model translations as well. Obviously each one has their own flow thus
+they has to been explained separately:
 
-Now that your config it's ready, it's time to migrate your database.
+### Model Translations
+For model translation, Laravel-i18n will create a specific table for each model which require translation. 
+In this table translations will be persisted.
+For do that, a migration file is the best place where start.
 
-#### Migrate database
+Being `car` a model **existing** in your project (thus, `cars` will be the name of table for this model), you can create
+the translations table just like this:
+
+**Important:** The translatable attributes must be defined in the translation table. If you define them in your model table they will be ignored by Laravel-i18n.
+
+```(php)
+public function up()
+{
+    i18n::generateModelI18nTable('cars', [
+        'model' => 'string',
+        'description' => 'text'
+    ]);
+}
+
+public function down()
+{
+    i18n::dropIfExistsModelI18nTable('properties');
+}
 ```
-php artisan migrate
-``` 
+Here we are defining two attributes of cars -model and description- which they will be translatable. As a result, this migration
+will create `cars_i18n` table with two columns (`model` and `description`). Each row in this table will be a translation in a different language
+of these attributes. All things related with relationships between `cars` and `cars_i18n` has took place automatically.
+
+Now, we have to add the logic needed by translations to our model `Car`. Just open the class `Car` and add the trait `Translatable`:
+
+```(php)
+use Kodilab\LaravelI18n\Translatable;
+
+class Car extends Model
+{
+    ...
+    use Translatable;
+    ...
+}
+```
+
+Now, we can access to the translation attributes as they were attributes of the model.
+
+```
+$car->model // Retrieve the translation of model
+$car->description // Retrieve the translation of description
+```
+In this case the translation retrieved is for the language defined in the session (more info: TODO)
+
+If we need a particular translation, then we can call this:
+```(php)
+$car->getTranslatedAttribute('model', Language::es()); //Retrieve the spanish translation for model
+```
+
+We can update our translations just with this:
+
+```(php)
+$car->updateTranslation(['model' => 'New text', ...], Language::es());
+```
 
 #### Add the laravel-i18n routes to your `web.php` file
 In order to being the editor accessible, you should add the editor's routes in your `web.php` file.

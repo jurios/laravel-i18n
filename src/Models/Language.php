@@ -34,9 +34,19 @@ class Language extends Model
         $this->table = config('i18n.tables.languages');
     }
 
+    public static function __callStatic($method, $parameters)
+    {
+        if (in_array($method, self::all()->pluck('ISO_639_1')->toArray()))
+        {
+            return self::getLanguageFromISO_639_1($method);
+        }
+
+        return parent::__callStatic($method, $parameters);
+    }
+
     //static methods
     /**
-     * Returns the fallback language (it must exists)
+     * Returns the fallback language (it must exists) which is configured in Laravel
      * @return mixed
      * @throws MissingLanguageException
      */
@@ -61,7 +71,7 @@ class Language extends Model
     }
 
     /**
-     * Returns the user configured language. If it's not configured by middleware then fallback language is used
+     * Returns the user configured language from the locale.
      * @return mixed
      * @throws MissingLanguageException
      */
@@ -72,15 +82,11 @@ class Language extends Model
             return session()->get('user_language');
         }
 
-        if (session()->has(config('i18n.session_var_name')))
-        {
-            $user_language = Language::where('ISO_639_1', session()->get(config('i18n.session_var_name')))->first();
-            session()->flash('user_language', $user_language);
-            return $user_language;
-        }
+        $locale = Locale::getUserLocale();
 
-        $user_language = self::getFallbackLanguage();
+        $user_language = $locale->language;
         session()->flash('user_language', $user_language);
+
         return $user_language;
     }
 
@@ -117,19 +123,19 @@ class Language extends Model
         return 0;
     }
 
-    //relationships
+    //Relationships
     public function translations()
     {
         return $this->hasMany(Translation::class, 'language_id');
     }
 
-    //scopes
+    //Scopes
     public function scopeEnabled(Builder $query, bool  $value = true)
     {
         $query->where('enabled', $value);
     }
 
-    // methods
+    //Methods
     public function isFallbackLanguage()
     {
         return $this->id === self::getFallbackLanguage()->id;

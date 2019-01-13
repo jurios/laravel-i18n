@@ -229,12 +229,24 @@ class Linguist
                 'Can not syncronize the fallback language because language (' . $fallback_locale . ') does not exist');
         }
 
-        if ($fallback_language->enabled)
+        $fallback_language->enable();
+
+        if (Locale::enabled()->where('language_id', $fallback_language->id)->get()->isEmpty())
         {
-            return null;
+            Locale::create([
+                'language_id' => $fallback_language->id,
+                'fallback' => true,
+                'created_by_sync' => true
+            ]);
         }
 
-        $fallback_language->enable();
+        if (Locale::enabled()->where('fallback', true)->where('language_id', $fallback_language->id)->get()->isEmpty())
+        {
+            $locale = Locale::enabled()->where('language_id', $fallback_language->id)->first();
+
+            $locale->fallback = true;
+            $locale->save();
+        }
 
         return $fallback_language;
 

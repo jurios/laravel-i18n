@@ -63,7 +63,7 @@ class Sync extends Command
 
         $this->output->writeln("\"<fg=red>{$deprecated_count}</>\" deprecated texts were deleted.");
 
-        $dynamic_count = $this->linguist->countDynamicTranslations($translations);
+        $dynamic_count = $this->linguist->countDynamicTranslations();
 
         $this->output->writeln("\"<fg=yellow>{$dynamic_count}</>\" texts are dynamic and can't be added.");
 
