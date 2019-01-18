@@ -25,9 +25,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Languages list</h3>
-                <div class="card-options">
-                </div>
+                Languages list
             </div>
             <div class="card-body">
                 <div class="alert alert-icon alert-primary" role="alert">
