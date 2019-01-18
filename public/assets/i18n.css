@@ -3,6 +3,7 @@ tr.line-update-tr {
 }
 
 body {
+    font-size: .875rem;
     font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
 }
 
@@ -42,6 +43,10 @@ div.sidebar ul {
     position: relative;
     margin: 0;
     padding: 0;
+}
+
+table {
+    font-size: small !important;
 }
 
 .sidebar > ul > li > a {
@@ -90,3 +95,12 @@ div.sidebar ul {
 .sidebar .active > .treeview-menu {
     display: block;
 }
+
+.content {
+    font-size: small !important;
+}
+
+.card-filters {
+    display: none;
+}
+

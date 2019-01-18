@@ -22,16 +22,15 @@
 @endsection
 
 @section('content')
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Languages list</h3>
-                <div class="card-options">
-                </div>
-            </div>
-            <div class="card-body">
-                @include('i18n::settings.languages.partials.table')
-            </div>
+    <div class="row content-title mb-4">
+        <div class="col">
+            <h1>Languages Settings</h1>
+            <small>Here you can enable or disable the languages that will be listed to be used in your locales</small>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            @include('i18n::settings.languages.partials.table')
         </div>
     </div>
 @endsection

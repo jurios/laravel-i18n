@@ -24,15 +24,3 @@
         </div>
     </div>
 </div>
-
-@push('inline-js')
-    <script>
-        require(['jquery'], function (jquery) {
-            var $ = jquery;
-
-            $(document).on('language-updated', function(e, data) {
-                $('#progress-bar').replaceWith(data);
-            });
-        });
-    </script>
-@endpush

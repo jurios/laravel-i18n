@@ -26,5 +26,6 @@
         </div>
     </div>
     @include('i18n::layout.partials.js')
+    @stack('inline-js')
 </body>
 </html>
