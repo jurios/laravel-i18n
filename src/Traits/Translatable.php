@@ -2,7 +2,9 @@
 
 namespace Kodilab\LaravelI18n;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Schema;
 
 trait Translatable
@@ -38,6 +40,43 @@ trait Translatable
         }
 
         return parent::__call($name, $arguments);
+    }
+
+    /**
+     * Scope for order a resource by a translatable field
+     *
+     * @param Builder $query
+     * @param string $attribute
+     * @param Language|null $language
+     * @param string $direction
+     * @return Builder
+     */
+    public function scopeOrderByTranslatedAttribute(Builder $query, string $attribute, Language $language = null,
+        string $direction = 'asc')
+    {
+        if (is_null($language))
+        {
+            $language = Locale::getUserLocale()->language;
+        }
+
+        $local_query = clone $query;
+
+        $resource_ids = $local_query->get()->pluck('id')->toArray();
+
+        $ordered_translations = DB::table($this->getTranslationsTableName())
+            ->whereIn('resource_id', $resource_ids)
+            ->where('language_id', $language->id)
+            ->orderBy($attribute, $direction)->get();
+
+        //TODO: Deal with resources without translation
+
+        $resource_ids = $ordered_translations->pluck('resource_id')->toArray();
+
+        if(count($resource_ids) > 0) {
+            return $query->orderByRaw("field(id," . implode(',', $resource_ids) . ")");
+        }
+
+        return $query->where('id', -1);
     }
 
     /**
