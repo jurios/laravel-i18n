@@ -20,9 +20,8 @@ class Text extends Model
     public $timestamps = false;
 
     /**
-     * Returns whether the translation exists for the language $language
+     * Returns whether the translation exists for the locale $locale
      * @param $md5
-     * @param Language $language
      * @return bool
      */
     public static function existsText($md5)
@@ -43,7 +42,7 @@ class Text extends Model
 
         self::created(function (Text $text) {
 
-            $fallback_language = Language::getFallbackLanguage();
+            $fallback_locale = Locale::getFallbackLocale();
 
             /** @var Collection $existingTranslations */
             $existingTranslations = Translation::where('md5', $text->md5)->get();
@@ -53,7 +52,7 @@ class Text extends Model
                 Translation::create([
                     'md5' => $text->md5,
                     'translation' => $text->text,
-                    'language_id' => $fallback_language->id,
+                    'locale_id' => $fallback_locale->id,
                     'text_id' => $text->id
                 ]);
 

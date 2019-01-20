@@ -87,7 +87,7 @@ class Facade extends \Illuminate\Support\Facades\Facade
         use ($model, $translatable_attributes) {
             $table->increments('id');
             $table->unsignedInteger('resource_id');
-            $table->unsignedInteger('language_id');
+            $table->unsignedInteger('locale_id');
 
             foreach ($translatable_attributes as $attribute => $data_type)
             {
@@ -97,7 +97,7 @@ class Facade extends \Illuminate\Support\Facades\Facade
             $table->foreign('resource_id')->references('id')->on($model)
                 ->onDelete('cascade');
 
-            $table->foreign('language_id')->references('id')->on(config('i18n.tables.languages'))
+            $table->foreign('locale_id')->references('id')->on(config('i18n.tables.locales'))
                 ->onDelete('cascade');
         });
     }

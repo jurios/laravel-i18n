@@ -12,7 +12,7 @@ class Locale extends Model
 
     protected $table;
 
-    protected $fillable = ['language_id', 'fallback', 'created_by_sync'];
+    protected $fillable = ['ISO_639_1', 'fallback', 'created_by_sync'];
 
     public function __construct(array $attributes = [])
     {
@@ -21,9 +21,9 @@ class Locale extends Model
     }
 
 
-    public function language()
+    public function translations()
     {
-        return $this->belongsTo(Language::class);
+        return $this->belongsTo(Translation::class);
     }
 
     //Scopes
@@ -32,15 +32,20 @@ class Locale extends Model
         return $query->where('enabled', $value);
     }
 
+    public function getReferenceAttribute()
+    {
+        return is_null($this->region) ? $this->ISO_639_1 : $this->ISO_639_1 . '_' . $this->region;
+    }
+
     //Methods
+    public function isFallbackLocale()
+    {
+        return $this->fallback;
+    }
+
     public function getLaravelLocale()
     {
-        if ($this->language)
-        {
-            return $this->language->reference;
-        }
-
-        return null;
+        return $this->laravel_locale;
     }
 
     public function getCarbonLocale()
@@ -53,15 +58,10 @@ class Locale extends Model
         return $this->getLaravelLocale();
     }
 
-    public function getFallbackLanguageAttribute()
-    {
-        return Language::getFallbackLanguage();
-    }
-
     /**
-     * Returns the user configured locale. If it's not configured by middleware then fallback language is used
+     * Returns the user configured locale. If it's not configured by middleware then fallback locale is used
      * @return mixed
-     * @throws MissingLanguageException
+     * @throws MissingLocaleException
      */
     public static function getUserLocale()
     {
@@ -91,39 +91,9 @@ class Locale extends Model
         return $fallback_locale;
     }
 
-    static function getBestLocale(string $language, string $region = null)
+    static function getBestLocale(string $locale, string $region = null)
     {
-        $language = Language::getLanguageFromISO_639_1($language);
-
-        if (is_null($language))
-        {
-            return null;
-        }
-
-        $query = Locale::enabled()->where('language_id', $language->id);
-        /** @var Collection $locales_based_on_language */
-        $locales = clone $query;
-        $locales_based_on_language = $locales->get();
-
-        if ($locales_based_on_language->isEmpty())
-        {
-            return null;
-        }
-
-        if (!is_null($region))
-        {
-            $locales = clone $query;
-
-            /** @var Collection $locales_based_on_language_and_region */
-            $locales_based_on_language_and_region = $locales->where('region', $region)->get();
-
-            if (!$locales_based_on_language_and_region->isEmpty())
-            {
-                return $locales_based_on_language_and_region->first();
-            }
-        }
-
-        return $locales_based_on_language->first();
+        //TODO
     }
 
 }

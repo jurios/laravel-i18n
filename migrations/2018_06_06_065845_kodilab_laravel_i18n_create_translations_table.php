@@ -22,10 +22,6 @@ class KodilabLaravelI18nCreateTranslationsTable extends Migration
 
             $table->boolean('needs_revision')->nullable(false)->default(false);
 
-            $table->unsignedInteger('language_id')->nullable(false);
-            $table->foreign('language_id')->references('id')->on(config('i18n.tables.languages'))
-                ->onDelete('cascade');
-
             $table->unsignedInteger('text_id')->nullable(true)->default(null);
             $table->foreign('text_id')->references('id')->on(config('i18n.tables.texts'))
                 ->onDelete('cascade');

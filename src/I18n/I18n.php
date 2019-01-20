@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 
 class I18n
 {
@@ -16,27 +17,26 @@ class I18n
     }
 
     /**
-     * Get the stored translation for the text $text using the variable replacement in $replace for the language
-     * reference $locale.
+     * Get the stored translation for the text $text using the variable replacement in $replace for the locale $locale.
      *
      * @param string $text
      * @param array $replace
-     * @param Language|null $language
+     * @param Locale|null $locale
      * @param bool $honestly
      * @return string
-     * @throws MissingLanguageException
+     * @throws MissingLocaleException
      */
-    public function translate(string $text, $replace = [], Language $language = null, bool $honestly = false)
+    public function translate(string $text, $replace = [], Locale $locale = null, bool $honestly = false)
     {
-        /** @var Language $language */
-        $language = is_null($language) ? Locale::getUserLocale()->language : $language;
+        /** @var Locale $locale */
+        $locale = is_null($locale) ? Locale::getUserLocale() : $locale;
 
-        if (is_null($language))
+        if (is_null($locale))
         {
-            throw new MissingLanguageException('Language not found');
+            throw new MissingLocaleException('Locale not found');
         }
 
-        $translated_line = $this->getTranslation($text, $language, $honestly);
+        $translated_line = $this->getTranslation($text, $locale, $honestly);
 
         return $this->makeReplacements($translated_line, $replace);
     }
@@ -78,43 +78,41 @@ class I18n
     }
 
     /**
-     * Return the translation text for $text in $locale language. It will use the fallback language
-     * if a translation has not been found in the user language.
+     * Return the translation text for $text using $locale locale. It will use the fallback locale
+     * if a translation has not been found in the user locale.
      *
      * @param $text
      * @param $locale
      * @return mixed
-     * @throws MissingLanguageException
+     * @throws MissingLocaleException
      */
-    private function getTranslation($text, Language $language, $honestly)
+    private function getTranslation($text, Locale $locale, $honestly)
     {
         $md5 = md5($text);
 
         if ($honestly)
         {
-            return $this->getTranslationTextFromDataBase($text, $language);
+            return $this->getTranslationTextFromDataBase($text, $locale);
         }
 
-        if (Cache::has($language->reference . '_' . $md5 ))
+        if (Cache::has($locale->reference . '_' . $md5 ))
         {
-            return Cache::get($language->reference . '_' . $md5);
+            return Cache::get($locale->reference . '_' . $md5);
         }
-        else
-        {
-            $translated_line = $this->getTranslationTextFromDataBase($text, $language);
 
-            if (is_null($translated_line))
+        $translated_line = $this->getTranslationTextFromDataBase($text, $locale);
+
+        if (is_null($translated_line))
+        {
+            $translated_line = $text;
+
+            if(!$locale->isFallbackLocale())
             {
-                $translated_line = $text;
-                
-                if(!$language->isFallbackLanguage())
-                {
-                    $translated_line = $this->getTranslation($text, Language::getFallbackLanguage(), $honestly);
-                }
+                $translated_line = $this->getTranslation($text, Locale::getFallbackLocale(), $honestly);
             }
-
-            Cache::add($language->reference . '_' . $md5, $translated_line, 60);
         }
+
+        Cache::add($locale->reference . '_' . $md5, $translated_line, 60);
 
         return $translated_line;
     }
@@ -125,11 +123,10 @@ class I18n
      * @param $text
      * @param $locale
      * @return mixed|null
-     * @throws MissingLanguageException
      */
-    private function getTranslationTextFromDataBase($text, Language $language)
+    private function getTranslationTextFromDataBase($text, Locale $locale)
     {
-        $translation = Translation::getTranslationByText($text, $language);
+        $translation = Translation::getTranslationByText($text, $locale);
 
         if (!is_null($translation))
         {

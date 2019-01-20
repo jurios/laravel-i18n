@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Session;
 use Kodilab\LaravelI18n\Language;
 use Kodilab\LaravelI18n\Linguist;
+use Kodilab\LaravelI18n\Locale;
 
 class Sync extends Command
 {
@@ -42,22 +43,24 @@ class Sync extends Command
      * Execute the console command.
      *
      * @return mixed
-     * @throws \Kodilab\LaravelI18n\Exceptions\MissingLanguageException
+     *
+     * @throws \Kodilab\LaravelI18n\Exceptions\MissingLocaleException
      */
     public function handle()
     {
-        if (!$this->linguist->isFallbackLanguageEnabled($this->output))
+        $this->linguist->setOutput($this->output);
+
+        if (!$this->linguist->existsFallbackLocale())
         {
-            $this->linguist->enableFallbackLanguage($this->output);
+            $this->linguist->generateFallbackLocale();
         }
 
-        if (!$this->linguist->hasFallbackLocale($this->output))
+        $locale = Locale::getFallbackLocale();
+
+        if (!$this->linguist->isAValidFallbackLocale($locale))
         {
-            $this->linguist->createFallbackLocale($this->output);
+            $this->linguist->generateFallbackLocale();
         }
-
-        $this->linguist->checkFallbackLocaleIsValid($this->output);
-
 
         $translationsByFile = $this->linguist->getAllTranslatableStringFromFiles();
 
@@ -76,7 +79,6 @@ class Sync extends Command
         $this->output->writeln("<fg=green>{$added_count}</> new texts were added.");
 
         $this->call('cache:clear');
-        Session::flush();
 
     }
 }

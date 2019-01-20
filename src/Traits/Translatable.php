@@ -4,7 +4,6 @@ namespace Kodilab\LaravelI18n;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Schema;
 
 trait Translatable
@@ -26,7 +25,7 @@ trait Translatable
     {
         if ($this->isTranslatableAttribute($name))
         {
-            return $this->getTranslatedAttribute($name, Locale::getUserLocale()->language);
+            return $this->getTranslatedAttribute($name, Locale::getUserLocale());
         }
 
         return parent::__get($name);
@@ -47,16 +46,17 @@ trait Translatable
      *
      * @param Builder $query
      * @param string $attribute
-     * @param Language|null $language
+     * @param Locale|null $locale
      * @param string $direction
      * @return Builder
+     * @throws Exceptions\MissingLocaleException
      */
-    public function scopeOrderByTranslatedAttribute(Builder $query, string $attribute, Language $language = null,
+    public function scopeOrderByTranslatedAttribute(Builder $query, string $attribute, Locale $locale = null,
         string $direction = 'asc')
     {
-        if (is_null($language))
+        if (is_null($locale))
         {
-            $language = Locale::getUserLocale()->language;
+            $locale = Locale::getUserLocale();
         }
 
         $local_query = clone $query;
@@ -65,7 +65,7 @@ trait Translatable
 
         $ordered_translations = DB::table($this->getTranslationsTableName())
             ->whereIn('resource_id', $resource_ids)
-            ->where('language_id', $language->id)
+            ->where('locale_id', $locale->id)
             ->orderBy($attribute, $direction)->get();
 
         //TODO: Deal with resources without translation
@@ -80,83 +80,84 @@ trait Translatable
     }
 
     /**
-     * Get the translated $attribute_name using the $language
+     * Get the translated $attribute_name using the $locale
      *
      * @param string $attribute_name
-     * @param Language $language
+     * @param Locale|null $locale
      * @param bool $honestly
-     * @return mixed|string
-     * @throws Exceptions\MissingLanguageException
+     * @return null|string
+     * @throws Exceptions\MissingLocaleException
      */
-    public function getTranslatedAttribute(string $attribute_name, Language $language = null, $honestly = false)
+    public function getTranslatedAttribute(string $attribute_name, Locale $locale = null, $honestly = false)
     {
         $this->loadTranslations();
 
-        if (is_null($language))
+        if (is_null($locale))
         {
-            $language = Locale::getUserLocale()->language;
+            $locale = Locale::getUserLocale();
         }
 
-        $translation = isset($this->translations[$language->id]) &&
-            isset($this->translations[$language->id][$attribute_name]) ? $this->translations[$language->id][$attribute_name] : null;
+        $translation = isset($this->translations[$locale->id]) &&
+            isset($this->translations[$locale->id][$attribute_name]) ? $this->translations[$locale->id][$attribute_name] : null;
 
-        if (is_null($translation) && $language->id !== Language::getFallbackLanguage() && !$honestly)
+        if (is_null($translation) && $locale->id !== Locale::getFallbackLocale()->id && !$honestly)
         {
-            return $this->getTranslatedAttribute($attribute_name, Language::getFallbackLanguage());
+            return $this->getTranslatedAttribute($attribute_name, Locale::getFallbackLocale());
         }
 
         return !is_null($translation) ? $translation : "";
     }
 
     /**
-     * Update the $attributes of a $language translation. The attributes which are not present in $attributes
+     * Update the $attributes of a $locale translation. The attributes which are not present in $attributes
      * will not be updated. If the translation doesn't exists then it will be created.
      *
      * @param array $attributes
-     * @param null $language
-     * @throws Exceptions\MissingLanguageException
+     * @param Locale|null $locale
+     * @throws Exceptions\MissingLocaleException
      */
-    public function updateTranslation(array $attributes, Language $language = null)
+    public function updateTranslation(array $attributes, Locale $locale = null)
     {
         $this->loadTranslations();
 
-        if (is_null($language))
+        if (is_null($locale))
         {
-            $language = Language::getFallbackLanguage();
+            $locale = Locale::getFallbackLocale();
         }
 
         $attributes = $this->filterValidTranslatableAttributes($attributes);
 
-        if (!$this->hasTranslation($language))
+        if (!$this->hasTranslation($locale))
         {
-            $this->createTranslation($attributes, $language);
+            $this->createTranslation($attributes, $locale);
             return;
         }
 
-        $this->getTranslationQuery($language)->update($attributes);
+        $this->getTranslationQuery($locale)->update($attributes);
 
         foreach ($attributes as $attribute => $value)
         {
-            $this->translations[$language->id][$attribute] = $value;
+            $this->translations[$locale->id][$attribute] = $value;
         }
     }
 
     /**
-     * Create a translation using the values in $attributes for a given $language
+     * Create a translation using the values in $attributes for a given $locale
+     *
      * @param array $attributes
-     * @param Language|null $language
-     * @throws Exceptions\MissingLanguageException
+     * @param Locale|null $locale
+     * @throws Exceptions\MissingLocaleException
      */
-    public function createTranslation(array $attributes, Language $language = null)
+    public function createTranslation(array $attributes, Locale $locale = null)
     {
         $this->loadTranslations();
 
-        if (is_null($language))
+        if (is_null($locale))
         {
-            $language = Language::getFallbackLanguage();
+            $locale = Locale::getFallbackLocale();
         }
 
-        if ($this->hasTranslation($language))
+        if ($this->hasTranslation($locale))
         {
             return;
         }
@@ -167,28 +168,28 @@ trait Translatable
         // we need to fill the not present ones with as empty string
         $attributes = $this->fillTranslatedAttributes($attributes);
 
-        $attributes['language_id'] = $language->id;
+        $attributes['locale_id'] = $locale->id;
         $attributes['resource_id'] = $this->id;
 
         DB::table($this->getTranslationsTableName())->insert($attributes);
 
-        unset($attributes['language_id']);
+        unset($attributes['locale_id']);
         unset($attributes['resource_id']);
 
-        $this->translations[$language->id] = $attributes;
+        $this->translations[$locale->id] = $attributes;
     }
 
     /**
-     * Returns whether a translation for a language exists
+     * Returns whether a translation for a locale exists
      *
-     * @param $language
+     * @param Locale $locale
      * @return bool
      */
-    public function hasTranslation( Language $language)
+    public function hasTranslation(Locale $locale)
     {
         $this->loadTranslations();
 
-        return isset($this->translations[$language->id]);
+        return isset($this->translations[$locale->id]);
     }
 
     /**
@@ -205,7 +206,7 @@ trait Translatable
 
                 foreach ($available_attributes as $attribute)
                 {
-                    $this->translations[$translation->language_id][$attribute] = $translation->$attribute;
+                    $this->translations[$translation->locale_id][$attribute] = $translation->$attribute;
                 }
             }
         }
@@ -213,16 +214,16 @@ trait Translatable
 
     /**
      * Return the query of the translation
-     * @param $language
+     * @param Locale $locale
      * @return \Illuminate\Database\Query\Builder
      */
-    private function getTranslationQuery(Language $language = null)
+    private function getTranslationQuery(Locale $locale = null)
     {
         $query = DB::table($this->getTranslationsTableName())->where('resource_id', $this->id);
 
-        if (!is_null($language))
+        if (!is_null($locale))
         {
-            $query->where('language_id', $language->id);
+            $query->where('locale_id', $locale->id);
         }
 
         return $query;
@@ -304,7 +305,7 @@ trait Translatable
             $columns = Schema::getColumnListing($this->getTranslationsTableName());
 
             foreach ($columns as $key => $name) {
-                if ($name === 'language_id' || $name === 'resource_id' || $name === 'id') {
+                if ($name === 'locale_id' || $name === 'resource_id' || $name === 'id') {
                     unset($columns[$key]);
                 }
             }

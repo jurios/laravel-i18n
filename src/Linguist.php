@@ -6,7 +6,7 @@ namespace Kodilab\LaravelI18n;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
-use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
+use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 
 class Linguist
 {
@@ -14,16 +14,32 @@ class Linguist
 
     protected $paths;
 
+    protected $fallback_language;
+
+    /** @var OutputStyle $output */
+    protected $output;
+
     /**
      * Linguist constructor.
+     *
      * @param Filesystem $filesystem
      * @param array $paths
+     * @param OutputStyle|null $output
      */
-    public function __construct(Filesystem $filesystem, array $paths)
+    public function __construct(Filesystem $filesystem, array $paths, OutputStyle $output = null)
     {
         $this->filesystem = $filesystem;
 
         $this->paths = $paths;
+
+        $this->fallback_language = config('app.fallback_locale');
+
+        $this->output = $output;
+    }
+
+    public function setOutput(OutputStyle $output)
+    {
+        $this->output = $output;
     }
 
     /**
@@ -149,7 +165,6 @@ class Linguist
      *
      * @param array $translations
      * @return int
-     * @throws Exceptions\MissingLanguageException
      */
     public function addNewTranslations(array $translations)
     {
@@ -218,119 +233,46 @@ class Linguist
         return $count;
     }
 
-    public function syncFallbackLanguage()
+    public function existsFallbackLocale()
     {
-        $fallback_locale = config('app.fallback_locale');
-
-        $fallback_language = Language::getLanguageFromISO_639_1($fallback_locale);
-
-        if (is_null($fallback_language))
-        {
-            throw new MissingLanguageException(
-                'Can not syncronize the fallback language because language (' . $fallback_locale . ') does not exist');
+        try {
+            Locale::getFallbackLocale();
+            $exists = true;
+        } catch (MissingLocaleException $exception) {
+            $exists = false;
         }
 
-        $fallback_language->enable();
-
-        if (Locale::enabled()->where('language_id', $fallback_language->id)->get()->isEmpty())
-        {
-            Locale::create([
-                'language_id' => $fallback_language->id,
-                'fallback' => true,
-                'created_by_sync' => true
-            ]);
-        }
-
-        if (Locale::enabled()->where('fallback', true)->where('language_id', $fallback_language->id)->get()->isEmpty())
-        {
-            $locale = Locale::enabled()->where('language_id', $fallback_language->id)->first();
-
-            $locale->fallback = true;
-            $locale->save();
-        }
-
-        return $fallback_language;
-
+        return $exists;
     }
 
-    /**
-     * Check whether the fallback language defined in laravel configuration is enabled
-     * @param OutputStyle $output
-     * @return mixed
-     */
-    public function isFallbackLanguageEnabled(OutputStyle $output = null)
+    public function isAValidFallbackLocale(Locale $locale)
     {
-        $iso = config('app.fallback_locale', 'en');
-
-        $enabled = Language::getLanguageFromISO_639_1($iso)->enabled;
-
-        if (!is_null($output))
-        {
-            $enabled ? null :
-                $output->writeln("<fg=red>Fallback language ({$iso}) is disabled. Needs to be enabled.</>");
-        }
-
-        return $enabled;
+        return $locale->ISO_639_1 === $this->fallback_language;
     }
 
-    public function enableFallbackLanguage(OutputStyle $output = null)
+    public function generateFallbackLocale()
     {
-        $iso = config('app.fallback_locale', 'en');
-
-        Language::getLanguageFromISO_639_1($iso)->update([
-            'enabled' => true
+        // As we are generating a fallback locale, we should disable other fallback locales
+        Locale::where('fallback', true)->update([
+            'fallback' => false
         ]);
 
-        !is_null($output) ? $output->writeln("<fg=green>Fallback language ({$iso}) enabled</>") : null;
-    }
-
-    public function hasFallbackLocale(OutputStyle $output = null)
-    {
-        $fallbackLocale = Locale::enabled()->where('fallback', true)->first();
-
-        if (is_null($fallbackLocale))
-        {
-            if (!is_null($output))
-            {
-                $output->writeln("<fg=red>Fallback locale not found. Needs to create one...</>");
-            }
-            return false;
-        }
-
-        if (!is_null($output))
-        {
-            $output->writeln("<fg=green>Fallback locale found.</>");
-        }
-
-        return true;
-    }
-
-    public function createFallbackLocale(OutputStyle $output = null)
-    {
-        $fallback_language = Language::getFallbackLanguage();
-
         $fallbackLocale = Locale::create([
-            'language_id' => $fallback_language->id,
+            'ISO_639_1' => $this->fallback_language,
             'fallback' => true,
             'created_by_sync' => true
         ]);
 
-        if (!is_null($output))
-        {
-            $output->writeln("\"<fg=green>Fallback locale created.</>\"");
-        }
+        $this->sendOutput("\"<fg=green>Fallback locale created.</>\"");
+
+        return $fallbackLocale;
     }
 
-    public function checkFallbackLocaleIsValid(OutputStyle $output = null)
+    private function sendOutput(string $message)
     {
-        $fallback_locale = Locale::getFallbackLocale();
-
-        $fallback_locale->language->enabled = true;
-        $fallback_locale->language->save();
-
-        if (!is_null($output))
+        if (!is_null($this->output))
         {
-            $output->writeln("<fg=green>Fallback locale language enabled.</>");
+            $this->output->writeln($message);
         }
     }
 }
