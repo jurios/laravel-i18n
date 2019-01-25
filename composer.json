@@ -25,7 +25,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Kodilab\\LaravelI18n\\": "src"
+            "Kodilab\\LaravelI18n\\": "src",
+            "Kodilab\\LaravelI18n\\Tests\\": "tests"
         },
         "files": [
             "src/helpers.php"
