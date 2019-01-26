@@ -33,6 +33,8 @@ class FacadeTest extends TestCase
 
     public function test_generate_i18n_table_for_test_model()
     {
+        $this->createTable('test_models');
+
         $attributes = [
             'string' => 'string',
             'number' => 'unsignedInteger',

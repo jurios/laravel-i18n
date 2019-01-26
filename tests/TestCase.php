@@ -91,4 +91,20 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     {
         return $this->test_files_path . DIRECTORY_SEPARATOR . $file_name;
     }
+
+    protected function createTable($table_name, $columns = [])
+    {
+        $this->app['db']->connection()->getSchemaBuilder()->create($table_name, function (Blueprint $table) use ($columns) {
+            $table->increments('id');
+
+            foreach ($columns as $name => $data_type)
+            {
+                $table->$data_type($name);
+            }
+        });
+
+        $this->beforeApplicationDestroyed(function () use ($table_name) {
+            $this->app['db']->connection()->getSchemaBuilder()->dropIfExists($table_name);
+        });
+    }
 }
