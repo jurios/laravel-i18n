@@ -101,6 +101,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         });
 
         $this->beforeApplicationDestroyed(function () {
+            $this->app['db']->connection()->getSchemaBuilder()->dropIfExists('test_models_i18n');
             $this->app['db']->connection()->getSchemaBuilder()->dropIfExists('test_models');
         });
     }
