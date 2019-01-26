@@ -26,8 +26,6 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 
         $this->factories_path = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'database/factories';
         $this->withFactories($this->factories_path);
-
-        $this->execTestModelMigrations();
     }
 
     protected function getPackageProviders($app)
@@ -92,16 +90,5 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function filePath(string $file_name)
     {
         return $this->test_files_path . DIRECTORY_SEPARATOR . $file_name;
-    }
-
-    protected function execTestModelMigrations()
-    {
-        $this->app['db']->connection()->getSchemaBuilder()->create('test_models', function (Blueprint $table) {
-            $table->increments('id');
-        });
-
-        $this->beforeApplicationDestroyed(function () {
-            $this->app['db']->connection()->getSchemaBuilder()->dropIfExists('test_models');
-        });
     }
 }

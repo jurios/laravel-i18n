@@ -3,6 +3,7 @@
 namespace Kodilab\LaravelI18n\Tests\Unit;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
@@ -49,26 +50,10 @@ class FacadeTest extends TestCase
             $this->assertContains($name, $columns);
         }
 
-        $this->app['db']->connection()->getSchemaBuilder()->dropIfExists('test_models_i18n');
-    }
-
-    public function test_drop_i18n_table_for_test_model()
-    {
-        $attributes = [
-            'string' => 'string',
-            'number' => 'unsignedInteger',
-            'text' => 'text'
-        ];
-
-        Facade::generateModelI18nTable('test_models', $attributes);
-
-        $this->assertTrue(Schema::hasTable('test_models_i18n'));
-
         Facade::dropIfExistsModelI18nTable('test_models');
 
         $this->expectException(QueryException::class);
 
         DB::table('test_models_i18n')->get();
-
     }
 }
