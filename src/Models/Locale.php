@@ -1,10 +1,9 @@
 <?php
 
-namespace Kodilab\LaravelI18n;
+namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 
 class Locale extends Model
@@ -13,6 +12,13 @@ class Locale extends Model
     protected $table;
 
     protected $fillable = ['ISO_639_1', 'fallback', 'created_by_sync'];
+
+    protected $casts = [
+        'dialect_of_id' => 'integer',
+        'enabled' => 'boolean',
+        'fallback' => 'boolean',
+        'created_by_sync' => 'boolean'
+    ];
 
     public function __construct(array $attributes = [])
     {

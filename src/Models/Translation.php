@@ -1,6 +1,6 @@
 <?php
 
-namespace Kodilab\LaravelI18n;
+namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
