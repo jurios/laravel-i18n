@@ -48,6 +48,8 @@ class FacadeTest extends TestCase
         {
             $this->assertContains($name, $columns);
         }
+
+        $this->app['db']->connection()->getSchemaBuilder()->dropIfExists('test_models_i18n');
     }
 
     public function test_drop_i18n_table_for_test_model()
