@@ -5,6 +5,9 @@ namespace Kodilab\LaravelI18n\Tests\Unit;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\WithFaker;
 use Kodilab\LaravelI18n\Linguist;
+use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Models\Text;
+use Kodilab\LaravelI18n\Models\Translation;
 use Kodilab\LaravelI18n\Tests\TestCase;
 
 class LinguistTest extends TestCase
@@ -24,12 +27,11 @@ class LinguistTest extends TestCase
 
         $this->linguist = new Linguist($this->filesystem, [$this->test_files_path]);
 
-
     }
 
     public function test_parsing_php_file_gets_translation_method_calls()
     {
-        $filename = __FUNCTION__ . 'php';
+        $filename = __FUNCTION__ . '.php';
 
         $this->generateTestFile($filename,
             "<? t('test :test', ['test' => 'test']); ?>");
@@ -74,5 +76,106 @@ class LinguistTest extends TestCase
         $this->assertCount(2, $result[md5('test :test')]['files']);
 
         $this->assertEquals(2, $result[md5('test :test')]['files']['file_name2.php']);
+    }
+
+    public function test_remove_deprecated_translations()
+    {
+        $text = factory(Text::class)->create([
+            'text' => 'text_deprecated'
+        ]);
+
+        factory(Translation::class)->create([
+            'translation' => $text->text,
+            'text_id' => $text->id
+        ]);
+
+        $texts = [
+            'test :test',
+            'test1 :test1'
+        ];
+
+        $this->assertCount(2, Translation::get());
+        $this->assertCount(1, Text::get());
+
+        $this->assertFalse(Translation::where('translation', 'text_deprecated')->get()->isEmpty());
+
+        $this->linguist->deleteDeprecatedTranslations($texts);
+
+        $this->assertTrue(Translation::where('translation', 'text_deprecated')->get()->isEmpty());
+        $this->assertTrue(Text::get()->isEmpty());
+    }
+
+    public function test_add_new_translations()
+    {
+        factory(Locale::class)->create([
+            'fallback' => true,
+            'enabled' => true
+        ]);
+
+        $texts = [
+            md5('test :test') => [
+                'text' => 'test :test',
+                'files' => [
+                    'file1' => 1
+                ]
+            ],
+            md5('test1 :test1') => [
+                'text' => 'test1 :test1',
+                'files' => [
+                    'file1' => 1
+                ]
+            ]
+        ];
+
+        $this->assertTrue(Text::get()->isEmpty());
+        $this->assertTrue(Translation::get()->isEmpty());
+
+        $this->linguist->addNewTranslations($texts);
+
+        $this->assertCount(2, Text::get());
+        $this->assertCount(2, Translation::get());
+    }
+
+    public function test_counting_dynamic_translations()
+    {
+        $filename = __FUNCTION__ . '.php';
+
+        $this->generateTestFile($filename,
+            "<? t(\$test); ?>");
+
+        $count = $this->linguist->countDynamicTranslations();
+
+        $this->assertEquals(1, $count);
+    }
+
+    public function test_detect_fallback_locale_existence()
+    {
+        $this->assertFalse($this->linguist->existsFallbackLocale());
+
+        factory(Locale::class)->create([
+            'fallback' => true,
+            'enabled' => true
+        ]);
+
+        $this->assertTrue($this->linguist->existsFallbackLocale());
+    }
+
+    public function test_detect_valid_fallback_locale()
+    {
+        $locale = factory(Locale::class)->create([
+            'fallback' => true,
+            'enabled' => true,
+            'ISO_639_1' => config('app.fallback_locale')
+        ]);
+
+        $this->assertTrue($this->linguist->isAValidFallbackLocale($locale));
+
+        Locale::where('fallback', true)->update([
+            'ISO_639_1' => 'es'
+        ]);
+
+        $locale = Locale::getFallbackLocale();
+
+        $this->assertFalse($this->linguist->isAValidFallbackLocale($locale));
     }
 }

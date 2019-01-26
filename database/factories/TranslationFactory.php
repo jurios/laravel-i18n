@@ -8,11 +8,7 @@ $factory->define(\Kodilab\LaravelI18n\Models\Translation::class, function (Faker
     $values = [
         'translation' => $text,
         'needs_revision' => $faker->boolean,
-        'text_id' => function () use ($text) {
-            return factory(\Kodilab\LaravelI18n\Models\Text::class)->create(
-                ['text' => $text]
-            );
-        },
+        'text_id' => null,
         'locale_id' => function () {
             return factory(\Kodilab\LaravelI18n\Models\Locale::class)->create();
         },
