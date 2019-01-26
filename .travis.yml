@@ -3,7 +3,6 @@ sudo: false
 
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS testing;'
-  - mysql -e 'GRANT ALL PRIVILEGES ON testing.* TO travis@localhost WITH GRANT OPTION;'
 
 before_script:
   - psql -c 'create database testing;' -U postgres
@@ -18,7 +17,7 @@ services:
 matrix:
   include:
     - php: 7.1
-      env: DB_USERNAME=travis DB_PASSWORD="" DB_DATABASE="testing"
+      env: DB_USERNAME=travis DB_PASSWORD="" DB_DATABASE="testing" DB_CONNECTION=mysql
     - php: 7.1
       env: DB_USERNAME=travis DB_PASSWORD="" DB_CONNECTION=pgsql DB_PORT=5432 DB_DATABASE="testing"
     - php: 7.1
