@@ -99,5 +99,9 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $this->app['db']->connection()->getSchemaBuilder()->create('test_models', function (Blueprint $table) {
             $table->increments('id');
         });
+
+        $this->beforeApplicationDestroyed(function () {
+            $this->app['db']->connection()->getSchemaBuilder()->dropIfExists('test_models');
+        });
     }
 }
