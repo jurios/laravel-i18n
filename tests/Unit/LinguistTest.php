@@ -150,6 +150,10 @@ class LinguistTest extends TestCase
 
     public function test_detect_fallback_locale_existence()
     {
+        Locale::get()->each(function ($locale) {
+            $locale->delete();
+        });
+
         $this->assertFalse($this->linguist->existsFallbackLocale());
 
         factory(Locale::class)->create([
