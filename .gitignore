@@ -2,5 +2,6 @@
 /.vscode
 /.vagrant
 /vendor
+/tests/test_files
 .env
 .DS_Store
