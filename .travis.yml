@@ -1,9 +1,11 @@
 language: php
 sudo: false
 
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS testing;'
+
 before_script:
   - psql -c 'create database testing;' -U postgres
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS testing;'
 
 install:
   - composer install
