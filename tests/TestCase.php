@@ -3,12 +3,17 @@
 namespace Kodilab\LaravelI18n\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected $test_files_path;
 
     protected $factories_path;
+
+    protected $test_model_name = 'test_model';
+
+    protected $test_model_table = 'test_models';
 
     protected function setUp()
     {
@@ -23,6 +28,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $this->beforeApplicationDestroyed(function () {
             $this->destroyTestFilesDirectory();
         });
+
+        $this->loadMigrationsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'migrations');
 
         $this->factories_path = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'database/factories';
         $this->withFactories($this->factories_path);
@@ -92,19 +99,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         return $this->test_files_path . DIRECTORY_SEPARATOR . $file_name;
     }
 
-    protected function createTable($table_name, $columns = [])
+    public function test_test_migration_is_fired()
     {
-        $this->app['db']->connection()->getSchemaBuilder()->create($table_name, function (Blueprint $table) use ($columns) {
-            $table->increments('id');
-
-            foreach ($columns as $name => $data_type)
-            {
-                $table->$data_type($name);
-            }
-        });
-
-        $this->beforeApplicationDestroyed(function () use ($table_name) {
-            $this->app['db']->connection()->getSchemaBuilder()->dropIfExists($table_name);
-        });
+        $this->assertTrue(Schema::hasTable('test_models'));
     }
 }

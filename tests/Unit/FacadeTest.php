@@ -28,34 +28,31 @@ class FacadeTest extends TestCase
         $this->expectException(QueryException::class);
 
         DB::table('test_models_i18n')->get();
-
     }
 
     public function test_generate_i18n_table_for_test_model()
     {
-        $this->createTable('test_models');
-
         $attributes = [
             'string' => 'string',
             'number' => 'unsignedInteger',
             'text' => 'text'
         ];
 
-        Facade::generateModelI18nTable('test_models', $attributes);
+        Facade::generateModelI18nTable($this->test_model_table, $attributes);
 
-        $this->assertTrue(Schema::hasTable('test_models_i18n'));
+        $this->assertTrue(Schema::hasTable($this->test_model_table . config('i18n.tables.model_translations_suffix')));
 
-        $columns = Schema::getColumnListing('test_models_i18n');
+        $columns = Schema::getColumnListing($this->test_model_table . config('i18n.tables.model_translations_suffix'));
 
         foreach ($attributes as $name => $value)
         {
             $this->assertContains($name, $columns);
         }
 
-        Facade::dropIfExistsModelI18nTable('test_models');
+        Facade::dropIfExistsModelI18nTable($this->test_model_table);
 
         $this->expectException(QueryException::class);
 
-        DB::table('test_models_i18n')->get();
+        DB::table($this->test_model_table . config('i18n.tables.model_translations_suffix'))->get();
     }
 }
