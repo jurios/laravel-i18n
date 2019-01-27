@@ -59,7 +59,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     {
         if (!file_exists($this->test_files_path))
         {
-            $this->assertTrue(mkdir($this->test_files_path));
+            mkdir($this->test_files_path);
         }
     }
 
@@ -76,8 +76,6 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
                 return;
             }
         }
-
-        $this->assertTrue(!file_exists($this->test_files_path));
     }
 
     protected function generateTestFile(string $file_name, string $content)
