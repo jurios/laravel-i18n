@@ -3,8 +3,6 @@
 namespace Kodilab\LaravelI18n\Tests\Unit;
 
 use Illuminate\Database\QueryException;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +12,6 @@ use Kodilab\LaravelI18n\Tests\TestCase;
 class FacadeTest extends TestCase
 {
     use WithFaker;
-    use RefreshDatabase;
 
     protected $filesystem;
 

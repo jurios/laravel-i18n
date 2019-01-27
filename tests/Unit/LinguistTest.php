@@ -3,6 +3,7 @@
 namespace Kodilab\LaravelI18n\Tests\Unit;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Kodilab\LaravelI18n\Linguist;
 use Kodilab\LaravelI18n\Models\Locale;
@@ -13,6 +14,7 @@ use Kodilab\LaravelI18n\Tests\TestCase;
 class LinguistTest extends TestCase
 {
     use WithFaker;
+    use RefreshDatabase;
 
     /** @var Linguist */
     protected $linguist;
