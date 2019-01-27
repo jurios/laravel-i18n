@@ -92,8 +92,18 @@ class LinguistTest extends TestCase
         ]);
 
         $texts = [
-            'test :test',
-            'test1 :test1'
+            md5('test :test') => [
+                'text' => 'test :test',
+                'files' => [
+                    'file1' => 1
+                ]
+            ],
+            md5('test1 :test1') => [
+                'text' => 'test1 :test1',
+                'files' => [
+                    'file1' => 1
+                ]
+            ]
         ];
 
         $this->assertCount(2, Translation::get());
