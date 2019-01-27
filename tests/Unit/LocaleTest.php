@@ -2,6 +2,7 @@
 
 namespace Kodilab\LaravelI18n\Tests\Unit;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
@@ -10,6 +11,8 @@ class LocaleTest extends TestCase
 {
     /** @var Locale */
     protected $fallback_locale;
+
+    use RefreshDatabase;
 
     protected function setUp()
     {
