@@ -25,6 +25,6 @@ class CreatePackageTestTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('test_models'));
+        Schema::dropIfExists('test_models');
     }
 }
