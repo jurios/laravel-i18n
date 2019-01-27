@@ -96,9 +96,4 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     {
         return $this->test_files_path . DIRECTORY_SEPARATOR . $file_name;
     }
-
-    public function test_test_migration_is_fired()
-    {
-        $this->assertTrue(Schema::hasTable('test_models'));
-    }
 }
