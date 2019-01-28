@@ -74,7 +74,7 @@ class Translation extends Model
      * @return Translation|null
      * @throws Exceptions\MissingLocaleException
      */
-    public static function generateFallbackTranslation(string $text)
+    public static function generateFallbackTranslationOrGetExistent(string $text)
     {
         $fallback_locale = Locale::getFallbackLocale();
         $md5 = md5($text);
@@ -89,18 +89,18 @@ class Translation extends Model
             ]);
         }
 
-        return self::getTranslationByText($text, Locale::getFallbackLocale());
+        return self::getTranslation($text, Locale::getFallbackLocale());
     }
 
     /**
-     * Returns the translation of $text in $locale locale. If it doesn't exist, try to create it for the fallback locale
+     * Returns the Translation of $text in $locale locale. If it doesn't exist, try to create it for the fallback locale
      *
      * @param string $text
      * @param Locale $locale
      * @return Translation|null
      * @throws Exceptions\MissingLocaleException
      */
-    public static function getTranslationByText(string $text, Locale $locale)
+    public static function getTranslation(string $text, Locale $locale, $honestly = false)
     {
         $md5 = md5($text);
 
@@ -112,8 +112,23 @@ class Translation extends Model
             return $translation;
         }
 
-        self::generateFallbackTranslation($text);
+        $fallback_translation = self::generateFallbackTranslationOrGetExistent($text);
 
-        return null;
+        return $honestly ? null : $fallback_translation;
+    }
+
+    /**
+     * Returns the translations text of the $text in the $locale language
+     *
+     * @param string $text
+     * @param Locale $locale
+     * @param bool $honestly
+     * @return string
+     */
+    public static function getTextTranslation(string $text, Locale $locale, $honestly = false)
+    {
+        $translation = self::getTranslation($text, $locale, $honestly);
+
+        return !is_null($translation) ? $translation->translation : "";
     }
 }

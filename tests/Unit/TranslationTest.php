@@ -58,7 +58,7 @@ class TranslationTest extends TestCase
            'locale_id' => $this->fallback_locale->id
         ]);
 
-        $new_translation = Translation::generateFallbackTranslation($translation_in_fallback_locale->translation);
+        $new_translation = Translation::generateFallbackTranslationOrGetExistent($translation_in_fallback_locale->translation);
 
         $this->assertEquals($translation_in_fallback_locale->id, $new_translation->id);
     }
@@ -67,7 +67,7 @@ class TranslationTest extends TestCase
     {
         $text = $this->faker->text;
 
-        $new_translation = Translation::generateFallbackTranslation($text);
+        $new_translation = Translation::generateFallbackTranslationOrGetExistent($text);
 
         $this->assertNotNull($new_translation->id);
 
@@ -83,7 +83,7 @@ class TranslationTest extends TestCase
         $this->assertFalse(Translation::existsTranslation(md5($text), $this->locale));
         $this->assertFalse(Translation::existsTranslation(md5($text), $this->fallback_locale));
 
-        Translation::getTranslationByText($text, $this->locale);
+        Translation::getTextTranslation($text, $this->locale);
 
         $this->assertFalse(Translation::existsTranslation(md5($text), $this->locale));
         $this->assertTrue(Translation::existsTranslation(md5($text), $this->fallback_locale));

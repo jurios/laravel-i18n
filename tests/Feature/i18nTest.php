@@ -81,6 +81,15 @@ class i18nTest extends TestCase
         $this->assertEquals("", $result);
     }
 
+    public function test_translated_text_has_replacements()
+    {
+        $value = $this->faker->word;
+
+        $result = $this->i18n->translate('test :test', ['test' => $value], $this->fallback_locale);
+
+        $this->assertEquals('test ' . $value, $result);
+    }
+
     private function generateOriginalTranslation(string $text, Locale $locale)
     {
         return factory(Translation::class)->create([
