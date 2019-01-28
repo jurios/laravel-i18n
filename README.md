@@ -1,5 +1,7 @@
 # laravel-i18n
 
+[![Build Status](https://travis-ci.com/jurios/laravel-i18n.svg?branch=master)](https://travis-ci.com/jurios/laravel-i18n)
+
 ## What is this?
 **laravel-i18n** is an alternative solution for deal with localization in Laravel
 framework. It uses database as a way to store the translated texts and cache to
