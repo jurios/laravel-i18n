@@ -121,6 +121,7 @@ class Translation extends Model
      * @param Locale $locale
      * @param bool $honestly
      * @return string
+     * @throws \Kodilab\LaravelI18n\Exceptions\MissingLocaleException
      */
     public static function getTextTranslation(string $text, Locale $locale, $honestly = false)
     {
