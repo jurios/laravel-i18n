@@ -3,10 +3,8 @@
 namespace Kodilab\LaravelI18n\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Session;
-use Kodilab\LaravelI18n\Language;
 use Kodilab\LaravelI18n\Linguist;
-use Kodilab\LaravelI18n\Locale;
+use Kodilab\LaravelI18n\Models\Locale;
 
 class Sync extends Command
 {
