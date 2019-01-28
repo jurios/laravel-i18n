@@ -79,21 +79,17 @@ class Translation extends Model
         $fallback_locale = Locale::getFallbackLocale();
         $md5 = md5($text);
 
-        $translation = self::getTranslationByMd5($md5, $fallback_locale);
-
-        if (is_null($translation))
+        if(!self::existsTranslation($md5, $fallback_locale))
         {
-            $translation = Translation::create([
+
+            return Translation::create([
                 'translation' => $text,
                 'md5' => $md5,
                 'locale_id' => $fallback_locale->id
             ]);
-
-            //session()->forget('fallback_locale');
-
         }
 
-        return $translation;
+        return self::getTranslationByText($text, Locale::getFallbackLocale());
     }
 
     /**
@@ -108,21 +104,6 @@ class Translation extends Model
     {
         $md5 = md5($text);
 
-        $translation = self::getTranslationByMd5($md5, $locale);
-
-        if(!is_null($translation))
-        {
-            return $translation;
-        }
-
-        self::generateFallbackTranslation($text);
-
-        return null;
-    }
-
-    public static function getTranslationByMd5(string $md5, Locale $locale)
-    {
-
         /** @var Translation $translation */
         $translation = Translation::where('md5', $md5)->where('locale_id', $locale->id)->first();
 
@@ -130,6 +111,8 @@ class Translation extends Model
         {
             return $translation;
         }
+
+        self::generateFallbackTranslation($text);
 
         return null;
     }
