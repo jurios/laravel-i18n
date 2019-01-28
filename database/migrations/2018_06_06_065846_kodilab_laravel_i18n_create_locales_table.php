@@ -42,7 +42,7 @@ class KodilabLaravelI18nCreateLocalesTable extends Migration
         });
 
         Schema::table(config('i18n.tables.translations'), function (Blueprint $table) {
-            $table->unsignedInteger('locale_id')->nullable(false)->after('needs_revision');
+            $table->unsignedInteger('locale_id')->nullable(false)->default(0)->after('needs_revision');
             $table->foreign('locale_id')->references('id')->on(config('i18n.tables.locales'))
                 ->onDelete('cascade');
         });

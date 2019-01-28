@@ -7,6 +7,9 @@ use Illuminate\Console\OutputStyle;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
+use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Models\Text;
+use Kodilab\LaravelI18n\Models\Translation;
 
 class Linguist
 {
@@ -156,6 +159,10 @@ class Linguist
         $deprecated = $deprecated_query->get();
 
         $deprecated_query->delete();
+
+        Text::whereNotIn('md5', $md5)->get()->each(function ($item) {
+            $item->delete();
+        });
 
         return count($deprecated);
     }

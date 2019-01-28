@@ -1,14 +1,15 @@
 <?php
 
 
-namespace Kodilab\LaravelI18n;
+namespace Kodilab\LaravelI18n\I18n;
 
 
 use Illuminate\Support\Facades\Cache;
-use Kodilab\LaravelI18n\Exceptions\MissingLanguageException;
+use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
+use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Models\Translation;
 
 class I18n
 {
