@@ -3,7 +3,7 @@
 namespace Kodilab\LaravelI18n\Controllers;
 
 
-class I18nDashboardController extends \Illuminate\Routing\Controller
+class I18nDashboardController extends I18nController
 {
     /**
      * Display the dashboard.
@@ -12,6 +12,6 @@ class I18nDashboardController extends \Illuminate\Routing\Controller
      */
     public function dashboard()
     {
-        return view('i18n::dashboard/dashboard');
+        return view($this->getConfigView(__FUNCTION__, 'i18n::dashboard.dashboard'));
     }
 }

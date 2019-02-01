@@ -9,7 +9,7 @@ use Kodilab\LaravelI18n\Text;
 use Kodilab\LaravelI18n\Translation;
 use Illuminate\Http\Request;
 
-class I18nTranslationsController extends \Illuminate\Routing\Controller
+class I18nTranslationsController extends I18nController
 {
     /**
      * Display a listing of the language's translations.

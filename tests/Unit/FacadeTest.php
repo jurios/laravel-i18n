@@ -52,4 +52,16 @@ class FacadeTest extends TestCase
 
         DB::table($this->test_model_table . config('i18n.tables.model_translations_suffix'))->get();
     }
+
+    public function test_add_custom_views()
+    {
+        $view_name = $this->faker->word;
+
+        $this->assertNull(config('i18n.views'));
+
+        Facade::editorRoutes(['I18nDashboardController@dashboard' => $view_name ]);
+
+        $this->assertEquals($view_name, config('i18n.views.I18nDashboardController@dashboard'));
+    }
 }
+

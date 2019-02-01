@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Kodilab\LaravelI18n\Filters\LanguageFilter;
 use Kodilab\LaravelI18n\Language;
 
-class I18NLanguagesController extends \Illuminate\Routing\Controller
+class I18NLanguagesController extends I18nController
 {
     /**
      * Display a listing of the languages.
