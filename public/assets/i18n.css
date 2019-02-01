@@ -1,106 +1,59 @@
-tr.line-update-tr {
-    transition: all 2s;
-}
-
 body {
     font-size: .875rem;
     font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+    width: 100%;
+    grid-template-rows: 56px 100%;
 }
 
 .grid {
     display: grid;
 }
 
-body {
-    width: 100%;
-    grid-template-rows: 56px 100%;
-}
-
-div.content {
+main {
     grid-template-columns: 230px auto;
 }
 
-div.sidebar a {
-    color: rgba(255, 255, 255, 0.9);
+.sidebar {
+
 }
 
-div.sidebar .active a, div.sidebar a:hover {
+.sidebar.sidebar-dark {
+    background: #343a40;
     color: rgba(255, 255, 255, 1);
+}
+
+.sidebar.sidebar-dark a {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sidebar.sidebar-dark a:hover, .sidebar.sidebar-dark ul > li.active a {
+    color: rgba(255, 255, 255, 1) !important;
     text-decoration: none;
 }
 
-div.sidebar ul {
-    text-decoration: none;
+.sidebar a {
+    transition: all 0.6s;
 }
 
-.sidebar > ul {
+
+
+.sidebar ul {
     list-style: none;
-    margin: 0;
     padding: 0;
 }
 
-.sidebar > ul > li {
-    position: relative;
-    margin: 0;
-    padding: 0;
+.sidebar ul > li {
+    padding: 10px 0px 10px 30px;
+    transition: 0.6s;
+    cursor: pointer;
 }
 
-table {
-    font-size: small !important;
+.sidebar ul > li:hover {
+    background-color: #3f4448 !important
 }
 
-.sidebar > ul > li > a {
-    padding: 12px 5px 12px 15px;
-    display: block;
-}
-
-.sidebar > ul > li > a > .fa {
-    width: 20px;
-}
-
-.sidebar > ul > li .label,
-.sidebar > ul > li .badge {
-    margin-right: 5px;
-}
-.sidebar > ul > li .badge {
-    margin-top: 3px;
-}
-.sidebar > ul li.header {
+.sidebar ul > li.header {
+    background: #292d31;
     padding: 10px 25px 10px 15px;
     font-size: 12px;
 }
-.sidebar > ul > li > a > .fa-angle-left,
-.sidebar > ul > li > a > .pull-right-container > .fa-angle-left {
-    width: auto;
-    height: auto;
-    padding: 0;
-    margin-right: 10px;
-    -webkit-transition: transform 0.5s ease;
-    -o-transition: transform 0.5s ease;
-    transition: transform 0.5s ease;
-}
-.sidebar > ul > li > a > .fa-angle-left {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    margin-top: -8px;
-}
-.sidebar .menu-open > a > .fa-angle-left,
-.sidebar .menu-open > a > .pull-right-container > .fa-angle-left {
-    -webkit-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-}
-.sidebar .active > .treeview-menu {
-    display: block;
-}
-
-.content {
-    font-size: small !important;
-}
-
-.card-filters {
-    display: none;
-}
-

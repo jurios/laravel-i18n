@@ -14,17 +14,15 @@
 </head>
 
 <body class="grid h-100">
-    <header s>
+    <header>
         @include('i18n::layout.partials.header.nav')
     </header>
-    <div class="content grid">
-        <div class="sidebar bg-dark">
-            @include('i18n::layout.partials.navigation')
-        </div>
+    <main class="grid">
+        @include('i18n::layout.partials.navigation')
         <div class="fluid-container p-4">
             @yield('content')
         </div>
-    </div>
+    </main>
     @include('i18n::layout.partials.js')
     @stack('inline-js')
 </body>

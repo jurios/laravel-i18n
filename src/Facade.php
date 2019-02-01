@@ -25,9 +25,9 @@ class Facade extends \Illuminate\Support\Facades\Facade
     {
         static::$app->make('router')->middleware('callback')->prefix('i18n')->name('i18n.')->group(function () {
 
-            static::$app->make('router')->get('/', function () {
-                return redirect()->route('i18n.languages.index');
-            })->name('dashboard');
+            static::$app->make('router')
+                ->get('/', '\Kodilab\LaravelI18n\Controllers\I18nDashboardController@dashboard')
+                ->name('dashboard');
 
             static::$app->make('router')
                 ->get('languages', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@index')
