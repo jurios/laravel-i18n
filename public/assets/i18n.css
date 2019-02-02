@@ -59,5 +59,9 @@ main {
 }
 
 .table--actions a {
-    margin-left: 10px;
+    margin-left: 15px;
+}
+
+td.td--progress {
+    padding: 7px 2px 2px 2px;
 }

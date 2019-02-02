@@ -1,26 +1,17 @@
-<div id="progress-bar">
-    <div class="clearfix">
-        <div class="float-left">
-            <strong>{{ $locale->perc }}%</strong>
-        </div>
-        <div class="float-right">
-            <small class="text-muted">
-                {{ count($locale->translations) }} of
-                {{ count(\Kodilab\LaravelI18n\Models\Locale::getFallbackLocale()->translations) }}
-            </small>
-        </div>
-    </div>
-    <div class="progress progress-xs">
-        @if($locale->perc === 100)
-            @php($color = 'green')
-        @elseif($locale->perc > 50)
-            @php($color = 'yellow')
-        @else
-            @php($color = 'red')
-        @endif
-        <div class="progress-bar bg-{{$color}}" role="progressbar"
-             style="width: {{ $locale->perc }}%"
-             aria-valuenow="{{ $locale->perc }}" aria-valuemin="0" aria-valuemax="100">
-        </div>
+@if($locale->perc === 100)
+    @php($color = 'bg-success')
+@elseif($locale->perc > 50)
+    @php($color = 'bg-warning')
+@else
+    @php($color = 'bg-danger')
+@endif
+
+@php($title = sprintf('%d of %d translations', count($locale->translations),
+    count(\Kodilab\LaravelI18n\Models\Locale::getFallbackLocale()->translations)))
+
+<div class="progress" title="{{ $title }}">
+    <div class="progress-bar {{ $color }}" role="progressbar" style="width: {{ $locale->perc }}%;" aria-valuenow="{{ $locale->perc }}"
+         aria-valuemin="0" aria-valuemax="100">
+        {{ $locale->perc }}%
     </div>
 </div>

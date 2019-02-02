@@ -28,17 +28,12 @@
 
 @section('table-head-' . $id)
     <tr>
-        <td>Info</td>
         <th>Reference</th>
-        <th>ISO_639_1</th>
-        <th>Region</th>
+        <th>Description</th>
         <th>Dialect of</th>
-        <th>Laravel locale</th>
-        <th>Price format</th>
-        <th>Carbon</th>
-        <th>Progress</th>
-        <th>Enabled</th>
+        <th width="30%" class="text-center">Progress</th>
         <th>Translations</th>
+        <th>Enabled</th>
         <th>Actions</th>
     </tr>
 @endsection
@@ -46,28 +41,29 @@
 @section('table-body-' . $id)
     @foreach($locales as $locale)
         <tr>
-            <td class="text-center">
-                <i class="fa fa-info-circle text-info"
-                   data-toggle="tooltip" data-placement="bottom" title="{{ $locale->description }}"></i>
-            </td>
             <td>
                 {{ $locale->reference }}
                 @if($locale->isFallbackLocale())
                     <span class="badge badge-primary">fallback</span>
                 @endif
+                @if($locale->created_by_sync)
+                    <i class="fa fa-exclamation-triangle text-warning"
+                       title="This locale has been created by sync with default values. Please, check it over."></i>
+                @endif
             </td>
-            <td>{{ $locale->ISO_639_1 }}</td>
-            <td>{{ $locale->region }}</td>
+            <td>{{ $locale->description }}</td>
             <td>
                 @if($locale->dialect_of)
                     {{ $locale->dialect_of->reference }}
                 @endif
             </td>
-            <td>{{ $locale->laravel_locale }}</td>
-            <td>{{ $locale->printPriceConfig() }}</td>
-            <td>{{ $locale->printCarbonConfig() }}</td>
-            <td>
+            <td class="td--progress">
                 @include('i18n::locales.partials.progress_bar')
+            </td>
+            <td>
+                <a href="{{ route('i18n.locales.translations.index', compact('locale')) }}">
+                    <i class="fe fe-list"></i> Translations
+                </a>
             </td>
             <td class="text-center">
                 @if($locale->enabled)
@@ -94,14 +90,10 @@
                     </a>
                 @endif
             </td>
-            <td>
-                <a href="{{ route('i18n.locales.translations.index', compact('locale')) }}">
-                    <i class="fe fe-list"></i> Translations
-                </a>
-            </td>
             <td class="table--actions">
-                <a href="#"><i class="fa fa-edit"></i></a>
-                <a href="#"><i class="fa fa-trash"></i></a>
+                <a href="#"><i class="fa fa-eye text-primary"></i></a>
+                <a href="#"><i class="fa fa-edit text-info"></i></a>
+                <a href="#"><i class="fa fa-trash text-danger"></i></a>
             </td>
         </tr>
     @endforeach

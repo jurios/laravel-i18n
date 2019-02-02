@@ -22,14 +22,5 @@
 @endsection
 
 @section('content')
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                Locale list
-            </div>
-            <div class="card-body">
-                @include('i18n::locales.partials.table')
-            </div>
-        </div>
-    </div>
+    @include('i18n::locales.partials.table')
 @endsection
