@@ -47,7 +47,7 @@
             </td>
             <td>{{ $language->ISO_639_1 }}</td>
             <td>
-                @include('i18n::languages.partials.progress_bar')
+                @include('i18n::locales.partials.progress_bar')
             </td>
             <td>
                 <a href="{{ route('i18n.languages.translations.index', compact('language')) }}">

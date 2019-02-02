@@ -23,6 +23,10 @@
             @yield('content')
         </div>
     </main>
+    @include('i18n::layout.partials.modals.ajax_dialog.placeholder_modal')
+
+    @stack('help-modals')
+
     @include('i18n::layout.partials.js')
     @stack('inline-js')
 </body>

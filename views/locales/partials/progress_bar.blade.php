@@ -1,26 +1,26 @@
 <div id="progress-bar">
     <div class="clearfix">
         <div class="float-left">
-            <strong>{{ $language->perc }}%</strong>
+            <strong>{{ $locale->perc }}%</strong>
         </div>
         <div class="float-right">
             <small class="text-muted">
-                {{ count($language->translations) }} of
-                {{ count(\Kodilab\LaravelI18n\Language::getFallbackLanguage()->translations) }}
+                {{ count($locale->translations) }} of
+                {{ count(\Kodilab\LaravelI18n\Models\Locale::getFallbackLocale()->translations) }}
             </small>
         </div>
     </div>
     <div class="progress progress-xs">
-        @if($language->perc === 100)
+        @if($locale->perc === 100)
             @php($color = 'green')
-        @elseif($language->perc > 50)
+        @elseif($locale->perc > 50)
             @php($color = 'yellow')
         @else
             @php($color = 'red')
         @endif
         <div class="progress-bar bg-{{$color}}" role="progressbar"
-             style="width: {{ $language->perc }}%"
-             aria-valuenow="{{ $language->perc }}" aria-valuemin="0" aria-valuemax="100">
+             style="width: {{ $locale->perc }}%"
+             aria-valuenow="{{ $locale->perc }}" aria-valuemin="0" aria-valuemax="100">
         </div>
     </div>
 </div>

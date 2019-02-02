@@ -29,6 +29,9 @@
                 <div class="alert alert-icon alert-danger" role="alert">
                     <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i>
                     Something terrible happened when it was loading this modal.
+                    <div class="text-center">
+                        <code class="error"></code>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -40,35 +43,49 @@
 
 @push('inline-js')
     <script>
-        require(['jquery'], function (jquery) {
+        $(document).ready(function () {
+            $('#placeholderModal').on('show.bs.modal', function (e) {
+                $source = $(e.relatedTarget);
+                url = $source.data('ajax-url');
 
-            var $ = jquery;
+                fetch(url).then((response) => {
+                    if (response.ok)
+                    {
+                        return response.text();
+                    }
 
-            $(document).ready(function () {
-                $('#placeholderModal').on('show.bs.modal', function (e) {
-                    $source = $(e.relatedTarget);
-                    url = $source.data('ajax-url');
+                    throw new Error(response.status + ' - ' + response.statusText);
 
-                    $.ajax({
-                        url: url,
-                        method: 'GET',
-                        success: function (data) {
-                            $('#placeholderModal .modal-dialog').append(data);
-                            $('#placeholderModal .modal-dialog .modal-content.placeholder').addClass('d-none');
-                        },
-                        error: function(data) {
-                            $('#placeholderModal .modal-dialog .modal-content.placeholder').addClass('d-none');
-                            $('#placeholderModal .modal-dialog .modal-content.placeholder-error').removeClass('d-none');
-                        }
+                }).then(function (view) {
+                    document.querySelectorAll('#placeholderModal .modal-dialog').forEach((node) => {
+                        node.innerHTML = view;
                     });
 
+                    document.querySelectorAll('#placeholderModal .modal-dialog .modal-content.placeholder')
+                        .forEach((node) => {
+                            node.classList.add('d-none');
+                        });
 
+                }).catch((error) => {
+                    document.querySelectorAll('#placeholderModal .modal-dialog .modal-content.placeholder')
+                        .forEach((node) => {
+                            node.classList.add('d-none');
+                        });
+
+                    document.querySelectorAll('#placeholderModal .modal-dialog .modal-content.placeholder-error')
+                        .forEach((node) => {
+                            node.classList.remove('d-none');
+                        });
+
+                    document.querySelectorAll('#placeholderModal .modal-dialog .modal-content.placeholder-error .error')
+                        .forEach((node) => {
+                            node.innerHTML = error;
+                        });
                 });
+            });
 
-                $('#placeholderModal').on('hidden.bs.modal', function (e) {
-                    $('#placeholderModal .modal-dialog .modal-content.ajax').remove();
-                });
-
+            $('#placeholderModal').on('hidden.bs.modal', function (e) {
+                $('#placeholderModal .modal-dialog .modal-content.ajax').remove();
             });
         });
     </script>

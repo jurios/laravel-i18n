@@ -33,66 +33,66 @@ class Facade extends \Illuminate\Support\Facades\Facade
 
                 static::addCustomView($views, $action);
 
-                $action = 'I18nLanguagesController@index';
+                $action = 'I18nLocalesController@index';
                 static::$app->make('router')
-                    ->get('languages', '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@index')
-                    ->name('languages.index');
+                    ->get('locales', '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@index')
+                    ->name('locales.index');
                 static::addCustomView($views, $action);
 
-                $action = 'I18nLanguagesController@enable_dialog';
+                $action = 'I18nLocalesController@enable_dialog';
                 static::$app->make('router')
-                    ->get('languages/{language}/enable/dialog',
-                        '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@enable_dialog')
-                    ->name('languages.enable.dialog');
+                    ->get('locales/{locale}/enable/dialog',
+                        '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@enable_dialog')
+                    ->name('locales.enable.dialog');
                 static::addCustomView($views, $action);
 
-                $action = 'I18nLanguagesController@enable';
+                $action = 'I18nLocalesController@enable';
                 static::$app->make('router')
-                    ->patch('languages/{language}/enable',
-                        '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@enable')
-                    ->name('languages.enable');
+                    ->patch('locales/{locale}/enable',
+                        '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@enable')
+                    ->name('locales.enable');
                 static::addCustomView($views, $action);
 
-                $action = 'I18nLanguagesController@disable_dialog';
+                $action = 'I18nLocalesController@disable_dialog';
                 static::$app->make('router')
-                    ->get('languages/{language}/disable/dialog',
-                        '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@disable_dialog')
-                    ->name('languages.disable.dialog');
+                    ->get('locales/{locale}/disable/dialog',
+                        '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@disable_dialog')
+                    ->name('locales.disable.dialog');
                 static::addCustomView($views, $action);
 
-                $action = 'I18nLanguagesController@disable';
+                $action = 'I18nLocalesController@disable';
                 static::$app->make('router')
-                    ->patch('languages/{language}/disable',
-                        '\Kodilab\LaravelI18n\Controllers\I18nLanguagesController@disable')
-                    ->name('languages.disable');
+                    ->patch('locales/{locale}/disable',
+                        '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@disable')
+                    ->name('locales.disable');
                 static::addCustomView($views, $action);
 
                 $action = 'I18nTranslationsController@index';
                 static::$app->make('router')
-                    ->get('languages/{language}/translations',
+                    ->get('locales/{locale}/translations',
                         '\Kodilab\LaravelI18n\Controllers\I18nTranslationsController@index')
-                    ->name('languages.translations.index');
+                    ->name('locales.translations.index');
                 static::addCustomView($views, $action);
 
                 $action = 'I18nTranslationsController@update';
                 static::$app->make('router')
-                    ->patch('languages/{language}/translations/{md5}',
+                    ->patch('locales/{locale}/translations/{md5}',
                         '\Kodilab\LaravelI18n\Controllers\I18nTranslationsController@update')
-                    ->name('languages.translations.update');
+                    ->name('locales.translations.update');
                 static::addCustomView($views, $action);
 
                 $action = 'I18nTranslationsController@info';
                 static::$app->make('router')
-                    ->get('languages/{language}/translations/{md5}/info',
+                    ->get('locales/{locale}/translations/{md5}/info',
                         '\Kodilab\LaravelI18n\Controllers\I18nTranslationsController@info')
-                    ->name('languages.translations.info');
+                    ->name('locales.translations.info');
                 static::addCustomView($views, $action);
 
                 $action = 'I18nSettingsController@languages';
                 static::$app->make('router')
-                    ->get('settings/languages',
+                    ->get('settings/locales',
                         '\Kodilab\LaravelI18n\Controllers\I18nSettingsController@languages')
-                    ->name('settings.languages.index');
+                    ->name('settings.locales.index');
                 static::addCustomView($views, $action);
 
             }

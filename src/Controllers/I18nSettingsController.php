@@ -2,12 +2,12 @@
 
 namespace Kodilab\LaravelI18n\Controllers;
 
-use Kodilab\LaravelI18n\Filters\LanguageFilter;
+use Kodilab\LaravelI18n\Filters\LocaleFilter;
 use Kodilab\LaravelI18n\Language;
 
 class I18nSettingsController extends I18nController
 {
-    public function languages(LanguageFilter $filters)
+    public function languages(LocaleFilter $filters)
     {
         $languages = Language::filters($filters)->results($filters);
 

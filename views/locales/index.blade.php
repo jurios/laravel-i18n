@@ -1,18 +1,18 @@
 @extends('i18n::layout.base')
 
 @section('title')
-    Languages
+    Locales
 @endsection
 
 @section('subtitle')
-    {{ count(\Kodilab\LaravelI18n\Language::all()) }} languages
+    {{ count(\Kodilab\LaravelI18n\Models\Locale::all()) }} languages
 @endsection
 
 @section('options')
 @endsection
 
 @section('alerts')
-    @if(!\Kodilab\LaravelI18n\Text::hasBeenSyncronized())
+    @if(! \Kodilab\LaravelI18n\Models\Text::hasBeenSyncronized())
         <div class="alert alert-icon alert-warning" role="alert">
             <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i>
             Looks like you didn't <b>syncronized</b> your translations statically.
@@ -25,15 +25,10 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                Languages list
+                Locale list
             </div>
             <div class="card-body">
-                <div class="alert alert-icon alert-primary" role="alert">
-                    <i class="fe fe-bell mr-2" aria-hidden="true"></i>
-                    This list only shows <b>enabled</b> languages. If you want to add more languages, you can do it in
-                    your <b><i class="fe fe-settings"></i> settings </b>.
-                </div>
-                @include('i18n::languages.partials.table')
+                @include('i18n::locales.partials.table')
             </div>
         </div>
     </div>

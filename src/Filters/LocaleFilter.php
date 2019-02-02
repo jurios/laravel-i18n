@@ -7,7 +7,7 @@ use Kodilab\LaravelFilters\QueryFilter;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Config\Repository;
 
-class LanguageFilter extends QueryFilter
+class LocaleFilter extends QueryFilter
 {
     public function __construct(Request $request, Repository $config)
     {

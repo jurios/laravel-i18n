@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 
 class Locale extends Model
@@ -19,6 +20,10 @@ class Locale extends Model
         'fallback' => 'boolean',
         'created_by_sync' => 'boolean'
     ];
+
+    protected $appends = [ 'perc' ];
+
+    use Filterable;
 
     protected static function boot()
     {
@@ -47,7 +52,7 @@ class Locale extends Model
 
     public function translations()
     {
-        return $this->belongsTo(Translation::class);
+        return $this->hasMany(Translation::class);
     }
 
     //Scopes
@@ -65,6 +70,30 @@ class Locale extends Model
     public function isFallbackLocale()
     {
         return $this->fallback;
+    }
+
+    public function printPriceConfig()
+    {
+        return '00.00 €';
+    }
+
+    public function printCarbonConfig()
+    {
+        return $this->carbon_locale . ' (' . $this->carbon_tz . ')';
+    }
+
+    public function getPercAttribute()
+    {
+        if ($this->isFallbackLocale())
+        {
+            return 100;
+        }
+        $count_fallback_translations = count(self::getFallbackLocale()->translations);
+        if ($count_fallback_translations > 0)
+        {
+            return (int)number_format((count($this->translations) * 100) / $count_fallback_translations, 0);
+        }
+        return 0;
     }
 
     /**
