@@ -189,6 +189,13 @@ class Linguist
 
                 $count++;
             }
+            else
+            {
+
+                Text::where('md5', $md5)->first()->update([
+                    'paths' => $translation['files']
+                ]);
+            }
         }
 
         return $count;

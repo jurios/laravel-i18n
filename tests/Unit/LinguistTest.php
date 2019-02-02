@@ -146,6 +146,32 @@ class LinguistTest extends TestCase
 
         $this->assertCount(2, Text::get());
         $this->assertCount(2, Translation::get());
+
+        $text = Text::where('md5', md5('test :test'))->first();
+
+        $this->assertArraySubset($text->paths, $texts[md5('test :test')]['files']);
+
+        $texts = [
+            md5('test :test') => [
+                'text' => 'test :test',
+                'files' => [
+                    'file1' => 1,
+                    'file2' => 2
+                ]
+            ],
+            md5('test1 :test1') => [
+                'text' => 'test1 :test1',
+                'files' => [
+                    'file1' => 1
+                ]
+            ]
+        ];
+        $this->linguist->addNewTranslations($texts);
+
+        $this->assertCount(2, Text::get());
+        $this->assertCount(2, Translation::get());
+        $this->assertArraySubset(Text::find($text->id)->paths, $texts[md5('test :test')]['files']);
+
     }
 
     public function test_counting_dynamic_translations()
