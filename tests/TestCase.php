@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Kodilab\LaravelI18n\Models\Locale;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
@@ -14,6 +15,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected $test_model_name = 'test_model';
 
     protected $test_model_table = 'test_models';
+
+    protected $fallback_locale;
 
     protected function setUp()
     {
@@ -95,5 +98,13 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function filePath(string $file_name)
     {
         return $this->test_files_path . DIRECTORY_SEPARATOR . $file_name;
+    }
+
+    protected function generateFallbackLocale()
+    {
+        $this->fallback_locale = factory(Locale::class)->create([
+            'fallback' => true,
+            'enabled' => true
+        ]);
     }
 }

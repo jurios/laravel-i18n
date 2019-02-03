@@ -274,7 +274,8 @@ class Linguist
         $fallbackLocale = Locale::create([
             'ISO_639_1' => $this->fallback_language,
             'fallback' => true,
-            'created_by_sync' => true
+            'created_by_sync' => true,
+            'enabled' => true
         ]);
 
         $this->sendOutput("\"<fg=green>Fallback locale created.</>\"");

@@ -92,7 +92,7 @@
             </td>
             <td class="table--actions">
                 <a href="#"><i class="fa fa-eye text-primary"></i></a>
-                <a href="#"><i class="fa fa-edit text-info"></i></a>
+                <a href="{{ route('i18n.locales.edit', compact('locale')) }}"><i class="fa fa-edit text-info"></i></a>
                 <a href="#"><i class="fa fa-trash text-danger"></i></a>
             </td>
         </tr>

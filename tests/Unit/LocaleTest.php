@@ -92,6 +92,32 @@ class LocaleTest extends TestCase
         $this->assertEquals($locale->ISO_639_1, $locale->laravel_locale);
     }
 
+    public function test_can_create_locale_with_same_iso_and_region()
+    {
+        Locale::get()->each(function($item) {
+            $item->delete();
+        });
+
+        factory(Locale::class)->create([
+            'ISO_639_1' => 'aa',
+            'region' => 'bb'
+        ]);
+
+        factory(Locale::class)->create([
+            'ISO_639_1' => 'aa',
+            'region' => 'cc'
+        ]);
+
+        $this->assertEquals(2, count(Locale::get()));
+
+        $this->expectException(\Exception::class);
+
+        factory(Locale::class)->create([
+            'ISO_639_1' => 'aa',
+            'region' => 'cc'
+        ]);
+    }
+
 
 
 }

@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 
@@ -12,13 +13,29 @@ class Locale extends Model
 
     protected $table;
 
-    protected $fillable = ['ISO_639_1', 'fallback', 'created_by_sync'];
+    protected $fillable = [
+        'ISO_639_1',
+        'region',
+        'description',
+        'laravel_locale',
+        'currency_number_decimals',
+        'currency_decimals_punctuation',
+        'currency_thousands_separator',
+        'currency_symbol',
+        'currency_symbol_position',
+        'carbon_locale',
+        'carbon_tz',
+        'fallback',
+        'created_by_sync',
+        'enabled'
+    ];
 
     protected $casts = [
         'dialect_of_id' => 'integer',
         'enabled' => 'boolean',
         'fallback' => 'boolean',
-        'created_by_sync' => 'boolean'
+        'created_by_sync' => 'boolean',
+        'currency_number_decimals' => 'integer'
     ];
 
     protected $appends = [ 'perc' ];
@@ -40,6 +57,21 @@ class Locale extends Model
                 $model->region = strtoupper($model->region);
             }
 
+            $occ = Locale::where('ISO_639_1', $model->ISO_639_1)
+                ->where('region', $model->region)->where('id', '<>', $model->id)->get();
+
+            if (!$occ->isEmpty())
+            {
+                throw new \Exception('Can not save a locale which already exists');
+            }
+
+        });
+
+        self::creating(function (Locale $model) {
+            if ($model->fallback === false)
+            {
+                $model->enabled = false;
+            }
         });
     }
 

@@ -20,7 +20,13 @@
     <main class="grid">
         @include('i18n::layout.partials.navigation')
         <div class="fluid-container p-4">
-            <h1>@yield('title')</h1>
+            @yield('alerts')
+            <div class="grid main--content">
+                <div class="h1">@yield('title')</div>
+                <div>
+                    @yield('options')
+                </div>
+            </div>
             @yield('content')
         </div>
     </main>

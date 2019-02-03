@@ -39,6 +39,30 @@ class Facade extends \Illuminate\Support\Facades\Facade
                     ->name('locales.index');
                 static::addCustomView($views, $action);
 
+                $action = 'I18nLocalesController@create';
+                static::$app->make('router')
+                    ->get('locales/new', '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@create')
+                    ->name('locales.create');
+                static::addCustomView($views, $action);
+
+                $action = 'I18nLocalesController@store';
+                static::$app->make('router')
+                    ->post('locales', '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@store')
+                    ->name('locales.store');
+                static::addCustomView($views, $action);
+
+                $action = 'I18nLocalesController@edit';
+                static::$app->make('router')
+                    ->get('locales/{locale}/edit', '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@edit')
+                    ->name('locales.edit');
+                static::addCustomView($views, $action);
+
+                $action = 'I18nLocalesController@update';
+                static::$app->make('router')
+                    ->patch('locales/{locale}', '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@update')
+                    ->name('locales.update');
+                static::addCustomView($views, $action);
+
                 $action = 'I18nLocalesController@enable_dialog';
                 static::$app->make('router')
                     ->get('locales/{locale}/enable/dialog',

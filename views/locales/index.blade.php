@@ -9,6 +9,11 @@
 @endsection
 
 @section('options')
+    <div class="btn-group" role="group" aria-label="Locale options">
+        <a href="{{ route('i18n.locales.create') }}" class="btn btn-sm btn-primary">
+            <i class="fa fa-plus"></i> New locale
+        </a>
+    </div>
 @endsection
 
 @section('alerts')
