@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Tests\Unit;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Models\Translation;
 use Kodilab\LaravelI18n\Tests\TestCase;
