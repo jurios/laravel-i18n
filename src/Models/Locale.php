@@ -73,6 +73,13 @@ class Locale extends Model
                 $model->enabled = false;
             }
         });
+
+        self::deleting(function (Locale $model) {
+            if ($model->isFallbackLocale())
+            {
+                throw new \Exception('Fallback locale can not be deleted');
+            }
+        });
     }
 
     public function __construct(array $attributes = [])

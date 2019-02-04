@@ -3,6 +3,7 @@
 namespace Kodilab\LaravelI18n\Tests\Unit;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
@@ -31,9 +32,7 @@ class LocaleTest extends TestCase
 
     public function test_throw_exception_when_fallback_locale_does_not_exist()
     {
-        Locale::all()->each(function($item) {
-            $item->delete();
-        });
+        DB::table(config('i18n.tables.locales'))->delete();
 
         $this->assertEquals(0, count(Locale::all()));
 
@@ -94,9 +93,7 @@ class LocaleTest extends TestCase
 
     public function test_can_create_locale_with_same_iso_and_region()
     {
-        Locale::get()->each(function($item) {
-            $item->delete();
-        });
+        DB::table(config('i18n.tables.locales'))->delete();
 
         factory(Locale::class)->create([
             'ISO_639_1' => 'aa',
@@ -116,6 +113,12 @@ class LocaleTest extends TestCase
             'ISO_639_1' => 'aa',
             'region' => 'cc'
         ]);
+    }
+
+    public function test_fallback_locale_can_not_be_deleted()
+    {
+        $this->expectException(\Exception::class);
+        $this->fallback_locale->delete();
     }
 
 

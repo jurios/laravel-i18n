@@ -120,4 +120,20 @@ class I18nLocalesController extends I18nController
 
         return redirect()->route('i18n.locales.index');
     }
+
+    public function destroy_dialog(Locale $locale)
+    {
+        return view($this->getConfigView(__FUNCTION__, 'i18n::locales.modals.destroy_locale'),
+            compact('locale'));
+    }
+
+    public function destroy(Locale $locale)
+    {
+        if (!$locale->isFallbackLocale())
+        {
+            $locale->delete();
+        }
+
+        return redirect()->route('i18n.locales.index');
+    }
 }

@@ -84,6 +84,20 @@ class Facade extends \Illuminate\Support\Facades\Facade
                     ->name('locales.disable.dialog');
                 static::addCustomView($views, $action);
 
+                $action = 'I18nLocalesController@destroy_dialog';
+                static::$app->make('router')
+                    ->get('locales/{locale}/destroy/dialog',
+                        '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@destroy_dialog')
+                    ->name('locales.destroy.dialog');
+                static::addCustomView($views, $action);
+
+                $action = 'I18nLocalesController@destroy';
+                static::$app->make('router')
+                    ->delete('locales/{locale}/destroy',
+                        '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@destroy')
+                    ->name('locales.destroy');
+                static::addCustomView($views, $action);
+
                 $action = 'I18nLocalesController@disable';
                 static::$app->make('router')
                     ->patch('locales/{locale}/disable',
