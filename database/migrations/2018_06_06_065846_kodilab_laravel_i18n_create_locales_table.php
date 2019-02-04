@@ -19,8 +19,6 @@ class KodilabLaravelI18nCreateLocalesTable extends Migration
             $table->string('ISO_639_1')->nullable(false);
             $table->string('region')->nullable(true)->default(null);
 
-            $table->index(['ISO_639_1', 'region']);
-
             $table->text('description')->nullable(true)->default(null);
 
             $table->unsignedInteger('dialect_of_id')->nullable(true)->default(null);
