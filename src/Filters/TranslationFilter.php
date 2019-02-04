@@ -4,15 +4,15 @@ namespace Kodilab\LaravelI18n\Filters;
 
 
 use Kodilab\LaravelFilters\QueryFilter;
-use Kodilab\LaravelI18n\Language;
+use Kodilab\LaravelI18n\Models\Locale;
 
 class TranslationFilter extends QueryFilter
 {
-    protected $translated_language;
+    protected $translated_locale;
 
-    public function setTranslatedLanguage(Language $language)
+    public function setTranslatedLocale(Locale $locale)
     {
-        $this->translated_language = $language;
+        $this->translated_locale = $locale;
     }
 
     public function translation($value = null)
@@ -22,15 +22,15 @@ class TranslationFilter extends QueryFilter
             return $this->query;
         }
 
-        $translated_language_translations_md5 = $this->translated_language->translations()
+        $translated_locale_translations_md5 = $this->translated_locale->translations()
             ->where('translation', 'like', '%' . $value . '%')->get()->pluck('md5')->toArray();
 
         $query = clone $this->query;
 
-        $fallback_language_translations_md5 = $query->where('translation', 'like', '%' . $value . '%')->get()
+        $fallback_locale_translations_md5 = $query->where('translation', 'like', '%' . $value . '%')->get()
             ->pluck('md5')->toArray();
 
-        $md5s = array_unique(array_merge($translated_language_translations_md5, $fallback_language_translations_md5), SORT_REGULAR);
+        $md5s = array_unique(array_merge($translated_locale_translations_md5, $fallback_locale_translations_md5), SORT_REGULAR);
 
         return $this->query->whereIn('md5', $md5s);
     }
@@ -41,7 +41,7 @@ class TranslationFilter extends QueryFilter
 
         $md5s = $query->get()->pluck('md5')->toArray();
 
-        $translations_md5s = $this->translated_language->translations()->whereIn('md5', $md5s)
+        $translations_md5s = $this->translated_locale->translations()->whereIn('md5', $md5s)
             ->where('needs_revision', true)->get()->pluck('md5')->toArray();
 
         return $this->query->whereIn('md5', $translations_md5s);
@@ -55,7 +55,7 @@ class TranslationFilter extends QueryFilter
 
         if ($value === 'translated')
         {
-            $translations_md5s = $this->translated_language->translations()->whereIn('md5', $md5s)
+            $translations_md5s = $this->translated_locale->translations()->whereIn('md5', $md5s)
                 ->get()->pluck('md5')->toArray();
 
             return $this->query->whereIn('md5', $translations_md5s);
@@ -63,7 +63,7 @@ class TranslationFilter extends QueryFilter
 
         if ($value === 'untranslated')
         {
-            $translations_md5s = $this->translated_language->translations()->whereIn('md5', $md5s)
+            $translations_md5s = $this->translated_locale->translations()->whereIn('md5', $md5s)
                 ->get()->pluck('md5')->toArray();
 
             return $this->query->whereNotIn('md5', $translations_md5s);
