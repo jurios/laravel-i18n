@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n\Tests\Unit;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Kodilab\LaravelI18n\Linguist;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Models\Text;
@@ -188,9 +189,7 @@ class LinguistTest extends TestCase
 
     public function test_detect_fallback_locale_existence()
     {
-        Locale::get()->each(function ($locale) {
-            $locale->delete();
-        });
+        DB::table(config('i18n.tables.locales'))->delete();
 
         $this->assertFalse($this->linguist->existsFallbackLocale());
 

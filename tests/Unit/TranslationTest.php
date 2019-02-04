@@ -30,9 +30,8 @@ class TranslationTest extends TestCase
         Translation::all()->each(function ($item) {
             $item->delete();
         });
-        Locale::all()->each(function ($item) {
-            $item->delete();
-        });
+
+        DB::table(config('i18n.tables.locales'))->delete();
 
         $this->fallback_locale = factory(Locale::class)->create([
             'fallback' => true,
