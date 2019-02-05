@@ -70,3 +70,8 @@ main .main--content {
     grid-template-columns: auto auto;
     justify-content: space-between;
 }
+
+tr.line-update-tr
+{
+    transition: all 1s;
+}

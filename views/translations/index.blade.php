@@ -14,7 +14,7 @@
 @section('content')
     <div class="card mb-4">
         <div class="card-body">
-            <div class="col-lg-4 offset-lg-4 mb-5">
+            <div id="translation_progress" class="col-lg-4 offset-lg-4 mb-5">
                 @include('i18n::locales.partials.progress_bar')
             </div>
         </div>
