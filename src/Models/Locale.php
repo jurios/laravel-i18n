@@ -135,6 +135,30 @@ class Locale extends Model
         return 0;
     }
 
+    public function renderCurrency(float $value, bool $currency = true)
+    {
+        $result = "";
+
+        if ($currency && $this->currency_symbol_position === 'before')
+        {
+            $result = $this->currency_symbol . ' ';
+        }
+
+        $result = $result . number_format(
+            $value,
+            !is_null($this->currency_number_decimals) ? $this->currency_number_decimals : 0,
+            !is_null($this->currency_decimals_punctuation) ? $this->currency_decimals_punctuation : '',
+            !is_null($this->currency_thousands_separator) ? $this->currency_thousands_separator : ''
+            );
+
+        if ($currency && $this->currency_symbol_position === 'after')
+        {
+            $result = $result . ' ' . $this->currency_symbol;
+        }
+
+        return $result;
+    }
+
     /**
      * Returns the user configured locale. If it's not configured by middleware then fallback locale is used
      * @return mixed

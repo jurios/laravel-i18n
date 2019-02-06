@@ -5,6 +5,10 @@ function t(string $text, $replace = [], $locale = null, $honestly = false)
     return app(\Kodilab\LaravelI18n\I18n\I18n::class)->translate($text, $replace, $locale, $honestly);
 }
 
+function currency(float $value, \Kodilab\LaravelI18n\Models\Locale $locale, $currency = true)
+{
+    return $locale->renderCurrency($value, $currency);
+}
 
 if (!function_exists('generateRandomString')) {
     function generateRandomString(int $length = 15)
