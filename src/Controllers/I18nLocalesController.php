@@ -25,6 +25,12 @@ class I18nLocalesController extends I18nController
             compact('locales', 'filters'));
     }
 
+    public function show(Locale $locale)
+    {
+        return view($this->getConfigView(__FUNCTION__, 'i18n::locales.show'),
+            compact('locale'));
+    }
+
     public function create()
     {
         $locale = new Locale();
@@ -49,11 +55,16 @@ class I18nLocalesController extends I18nController
             'carbon_tz' => $request->input('carbon_tz')
         ]);
 
-        return redirect()->route('i18n.locales.index');
+        return redirect()->route('i18n.locales.show', compact('locale'));
     }
 
     public function edit(Locale $locale)
     {
+        if ($locale->created_by_sync)
+        {
+            $locale->created_by_sync = false;
+            $locale->save();
+        }
         return view($this->getConfigView(__FUNCTION__, 'i18n::locales.form'),
             compact('locale'));
     }
@@ -89,7 +100,7 @@ class I18nLocalesController extends I18nController
             'carbon_tz' => $request->input('carbon_tz')
         ]);
 
-        return redirect()->route('i18n.locales.index');
+        return redirect()->route('i18n.locales.show', compact('locale'));
     }
 
     public function enable_dialog(Request $request, Locale $locale)

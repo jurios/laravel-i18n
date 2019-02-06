@@ -51,6 +51,12 @@ class Facade extends \Illuminate\Support\Facades\Facade
                     ->name('locales.store');
                 static::addCustomView($views, $action);
 
+                $action = 'I18nLocalesController@show';
+                static::$app->make('router')
+                    ->get('locales/{locale}', '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@show')
+                    ->name('locales.show');
+                static::addCustomView($views, $action);
+
                 $action = 'I18nLocalesController@edit';
                 static::$app->make('router')
                     ->get('locales/{locale}/edit', '\Kodilab\LaravelI18n\Controllers\I18nLocalesController@edit')

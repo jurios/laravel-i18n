@@ -4,7 +4,7 @@
     @php($id = generateRandomString(10))
 @endif
 
-@php($action = route('i18n.locales.index', compact('locale')))
+@php($action = route('i18n.locales.index'))
 
 @section('header-filters')
     @if(hasQueryString('qf-name'))
@@ -75,7 +75,7 @@
                                 'locale' => $locale,
                                 'from' => \Illuminate\Support\Facades\Request::fullUrl()
                             ]) }}">
-                        <i class="fas fa-toggle-off text-danger"></i>
+                        <i class="fas fa-toggle-on text-success"></i>
                     </a>
                 @else
                     <span class="badge badge-danger">
@@ -86,12 +86,12 @@
                                 'locale' => $locale,
                                 'from' => \Illuminate\Support\Facades\Request::fullUrl()
                             ]) }}">
-                        <i class="fas fa-toggle-on text-success"></i>
+                        <i class="fas fa-toggle-off text-danger"></i>
                     </a>
                 @endif
             </td>
             <td class="table--actions">
-                <a href="#"><i class="fa fa-eye text-primary"></i></a>
+                <a href="{{ route('i18n.locales.show', compact('locale')) }}"><i class="fa fa-eye text-primary"></i></a>
                 <a href="{{ route('i18n.locales.edit', compact('locale')) }}"><i class="fa fa-edit text-info"></i></a>
                 <a href="javascript:;" @ajaxmodal
                    data-ajax-url="{{ route('i18n.locales.destroy.dialog', ['locale' => $locale]) }}">

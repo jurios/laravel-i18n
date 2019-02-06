@@ -14,12 +14,5 @@
                 <span>Locales</span>
             </a>
         </li>
-
-        <li class="{{ addClassIfRouteContains('i18n.languages', 'settings') }}">
-            <a href="#">
-                <i class="fa fa-cog"></i>
-                <span>Settings</span>
-            </a>
-        </li>
     </ul>
 </div>
