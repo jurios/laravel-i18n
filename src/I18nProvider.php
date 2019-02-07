@@ -28,7 +28,7 @@ class I18nProvider extends ServiceProvider
     {
         $config_path = __DIR__ . '/../config/config.php';
         $assets_path = __DIR__ . '/../public/assets';
-        $views_path = __DIR__ . '/../views';
+        $views_path = __DIR__ . '/../resources/views';
         $migrations_path = __DIR__. '/../database/migrations';
 
         $this->publishes([
