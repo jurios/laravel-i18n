@@ -137,12 +137,14 @@
          * Show a green color effect as a feedback
          * @param tr
          */
-        function renderStatusEffect(tr)
+        function renderStatusEffect(tr, status)
         {
-            tr.classList.add('table-success');
+            item_class = 'table-' + status;
+
+            tr.classList.add(item_class);
 
             setTimeout(() => {
-                tr.classList.remove('table-success');
+                tr.classList.remove(item_class);
             }, 1000);
         }
 
@@ -179,9 +181,13 @@
                     return response.json()
                 }).then(response => {
                     updateRowFromFetchData(tr, response.line);
-                    renderStatusEffect(tr);
+                    renderStatusEffect(tr, 'success');
                     updateProgressBar(response.progress_bar_html);
-                }).catch(error => console.error(error));
+                    flash("Translation saved!", "success", true, true);
+                }).catch(error => {
+                    flash("Error when trying to save a translation!", "danger", true, true);
+                    renderStatusEffect(tr, 'danger');
+                });
             });
         });
     </script>

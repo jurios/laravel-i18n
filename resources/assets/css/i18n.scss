@@ -2,11 +2,14 @@ body {
   font-size: .875rem;
   font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
   width: 100%;
-  grid-template-rows: 56px 100%;
 }
 
 .grid {
   display: grid;
+}
+
+#app {
+  grid-template-rows: 56px 100%;
 }
 
 main {

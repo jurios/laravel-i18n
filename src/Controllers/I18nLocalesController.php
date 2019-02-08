@@ -3,6 +3,7 @@
 namespace Kodilab\LaravelI18n\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Kodilab\LaravelI18n\Filters\LocaleFilter;
 use Kodilab\LaravelI18n\Http\Requests\CreateLocaleRequest;
@@ -55,6 +56,11 @@ class I18nLocalesController extends I18nController
             'carbon_tz' => $request->input('carbon_tz')
         ]);
 
+        $request->session()->flash('status', [
+            'level' => 'success',
+            'message' => "Locale <b>" . $locale->reference . "</b> created"
+        ]);
+
         return redirect()->route('i18n.locales.show', compact('locale'));
     }
 
@@ -100,6 +106,11 @@ class I18nLocalesController extends I18nController
             'carbon_tz' => $request->input('carbon_tz')
         ]);
 
+        $request->session()->flash('status', [
+            'level' => 'success',
+            'message' => "Locale <b>" . $locale->reference . "</b> updated"
+        ]);
+
         return redirect()->route('i18n.locales.show', compact('locale'));
     }
 
@@ -138,11 +149,16 @@ class I18nLocalesController extends I18nController
             compact('locale'));
     }
 
-    public function destroy(Locale $locale)
+    public function destroy(Request $request, Locale $locale)
     {
         if (!$locale->isFallbackLocale())
         {
             $locale->delete();
+
+            $request->session()->flash('status', [
+                'level' => 'success',
+                'message' => "Locale <b>" . $locale->reference . "</b> deleted"
+            ]);
         }
 
         return redirect()->route('i18n.locales.index');
