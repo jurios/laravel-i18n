@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n\Controllers;
 use Kodilab\LaravelI18n\Filters\TranslationFilter;
 use Kodilab\LaravelI18n\Models\Locale;
 use Illuminate\Http\Request;
+use Kodilab\LaravelI18n\Models\Text;
 use Kodilab\LaravelI18n\Models\Translation;
 
 class I18nTranslationsController extends I18nController
@@ -16,12 +17,13 @@ class I18nTranslationsController extends I18nController
      */
     public function index(TranslationFilter $filters, Locale $locale)
     {
+        $filters->pagination = 10;
         /** @var Locale $fallback_locale */
         $fallback_locale = Locale::getFallbackLocale();
 
         $filters->setTranslatedLocale($locale);
 
-        $lines = $fallback_locale->translations()->filters($filters)->results($filters);
+        $lines = $fallback_locale->translations()->filters($filters)->get();
 
         return view('i18n::translations.index', compact('locale', 'fallback_locale', 'lines', 'filters'));
     }

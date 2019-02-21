@@ -22,17 +22,19 @@
         </div>
         <div class="form-group">
             <label class="form-label">Files</label>
-            <div class="form-control">
+            <div class="form-control" style="height: inherit">
+                <ul style="list-style: none; padding: 0;">
                 @foreach($text->paths as $path => $occurrences)
-                    {{ $path }} : {{$occurrences}} occurrences <br>
+                        <li><span class="badge badge-info" title="{{$occurrences}} occurrences">{{$occurrences}}</span> - {{ $path }}</li>
                 @endforeach
+                </ul>
             </div>
         </div>
     @endif
 @endsection
 
 @section('buttons')
-    <a href="javascript:;" type="button" class="btn btn-success" data-dismiss="modal">
+    <a href="javascript:;" class="btn btn-info" data-dismiss="modal">
         {{ 'Accept' }}
     </a>
 @endsection

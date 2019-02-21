@@ -7,21 +7,21 @@
 @php($action = route('i18n.locales.translations.index', compact('locale')))
 
 @section('header-filters')
-    @if(filledQueryString('qf-translation'))
+    @if(filledQueryString('translation'))
         <span class="tag">
-            text:'<i>{{getQueryString('qf-translation')}}</i>'
+            text:'<i>{{getQueryString('translation')}}</i>'
         </span>
     @endif
 
-    @if(filledQueryString('qf-status'))
+    @if(filledQueryString('status'))
         <span class="tag">
-            status:'<i>{{getQueryString('qf-status')}}</i>'
+            status:'<i>{{getQueryString('status')}}</i>'
         </span>
     @endif
 
-    @if(filledQueryString('qf-needs_revision'))
+    @if(filledQueryString('needs_revision'))
         <span class="tag">
-            needs_revision:'<i>{{getQueryString('qf-needs_revision')}}</i>'
+            needs_revision:'<i>{{getQueryString('needs_revision')}}</i>'
         </span>
     @endif
 @endsection
@@ -31,15 +31,15 @@
         <div class="col-lg-8">
             <div class="form-group">
                 <label class="form-label">Text</label>
-                <input class="form-control" name="qf-translation" placeholder="Translatable text" type="text"
-                       value="{{ getQueryString('qf-translation', null) }}">
+                <input class="form-control" name="translation" placeholder="Translatable text" type="text"
+                       value="{{ getQueryString('translation', null) }}">
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="form-label">Translation status</label>
-                <select name="qf-status" id="input-status" class="form-control custom-select">
+                <select name="status" id="input-status" class="form-control custom-select">
                     <option value="all">All</option>
                     <option value="translated">Translated</option>
                     <option value="untranslated">Untranslated</option>
@@ -52,7 +52,7 @@
         <div class="col-lg-4">
             <div class="form-group">
                 <label class="custom-control custom-checkbox custom-control-inline">
-                    <input class="custom-control-input" name="qf-needs_revision" value="true" {{ filledQueryString('qf-needs_revision') ? 'checked' : '' }} type="checkbox">
+                    <input class="custom-control-input" name="needs_revision" value="true" {{ filledQueryString('needs_revision') ? 'checked' : '' }} type="checkbox">
                     <span class="custom-control-label">Show <i>needs revision</i> only</span>
                 </label>
             </div>
@@ -96,10 +96,12 @@
                     <div class="btn-group-sm">
                         <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-upload"></i> Save</button>
 
-                        <a href="#" class="btn btn-sm btn-info" @ajaxmodal
-                           data-ajax-url="{{ route('i18n.locales.translations.info', ['locale' => $locale, 'md5' => $line->md5]) }}">
-                            <i class="fa fa-info-circle"></i>
-                        </a>
+                        @if(config('i18n.show_translation_info', false))
+                            <a href="#" class="btn btn-sm btn-info" @ajaxmodal
+                               data-ajax-url="{{ route('i18n.locales.translations.info', ['locale' => $locale, 'md5' => $line->md5]) }}">
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                        @endif
 
                         {{--<a href="#" class="btn btn-sm btn-danger"><i class="fe fe-trash"></i> Remove</a>--}}
                     </div>

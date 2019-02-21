@@ -3,7 +3,6 @@
 namespace Kodilab\LaravelI18n\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Kodilab\LaravelI18n\Filters\LocaleFilter;
 use Kodilab\LaravelI18n\Http\Requests\CreateLocaleRequest;
@@ -20,7 +19,7 @@ class I18nLocalesController extends I18nController
     public function index(LocaleFilter $filters)
     {
         $locales = Locale::with('translations')
-            ->filters($filters)->results($filters);
+            ->filters($filters)->get();
 
         return view($this->getConfigView(__FUNCTION__, 'i18n::locales.index'),
             compact('locales', 'filters'));
