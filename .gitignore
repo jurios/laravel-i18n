@@ -3,5 +3,7 @@
 /.vagrant
 /vendor
 /tests/test_files
+node_modules/
 .env
 .DS_Store
+mix-manifest.json

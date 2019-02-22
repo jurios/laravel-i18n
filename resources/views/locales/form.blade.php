@@ -149,17 +149,13 @@
                                     <label for="input_carbon_tz">
                                         Time zone
                                     </label>
-                                    <select id="input_carbon_tz" name="carbon_tz"
-                                            class="form-control {{ $errors->has('carbon_tz') ? 'is-invalid' : '' }}">
-                                        @foreach(DateTimeZone::listIdentifiers() as $tz)
-                                            <option value="{{ $tz }}" {{ old('carbon_tz', $locale->carbon_tz) === $tz ? 'selected' : '' }}>
-                                                {{ $tz }}
-                                            </option>
-                                        @endforeach
-                                        <option value="" {{ old('carbon_tz', $locale->carbon_tz) === null ? 'selected' : '' }}>
-                                            Use the default time zone
-                                        </option>
-                                    </select>
+                                    <vue-select classes="form-control"
+                                                :options="{{ json_encode(DateTimeZone::listIdentifiers()) }}"
+                                                value="{{ old('carbon_tz', $locale->carbon_tz) }}"
+                                                placeholder="Use the default time zone" name="carbon_tz"
+                                                name="carbon_tz"
+                                                >
+                                    </vue-select>
                                     @if($errors->has('carbon_locale'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('carbon_locale') }}

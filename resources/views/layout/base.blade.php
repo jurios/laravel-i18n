@@ -13,7 +13,9 @@
     </style>
 </head>
 
-<body class="grid h-100">
+<body class="h-100">
+<div id="app" class="grid h-100">
+    <flash></flash>
     <header>
         @include('i18n::layout.partials.header.nav')
     </header>
@@ -30,11 +32,31 @@
             @yield('content')
         </div>
     </main>
+</div>
     @include('i18n::layout.partials.modals.ajax_dialog.placeholder_modal')
 
     @stack('help-modals')
 
     @include('i18n::layout.partials.js')
+    <script>
+        @if(\Illuminate\Support\Facades\Session::has('status'))
+        @php($status = \Illuminate\Support\Facades\Session::get('status'))
+        @php($level = 'info')
+        @php($dismissible = true)
+        @php($message = null)
+        @php($icon = true)
+        @if(isset($status['message']))
+        @php($message = $status['message'])
+        @endif
+        @if(isset($status['level']))
+        @php($level = $status['level'])
+        @endif
+        @if(isset($status['dismissible']) && $status['dismissible'] === false)
+        @php($dismissible = false)
+        @endif
+        flash("{!! ($message) !!}", "{{ $level }}", "{{ $icon }}", "{{ $dismissible }}");
+        @endif
+    </script>
     @stack('inline-js')
 </body>
 </html>
