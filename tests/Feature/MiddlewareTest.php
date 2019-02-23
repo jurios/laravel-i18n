@@ -2,9 +2,9 @@
 
 namespace Kodilab\LaravelI18n\Tests\Feature;
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Kodilab\LaravelI18n\Models\Locale;
-use Kodilab\LaravelI18n\Models\Text;
 use Kodilab\LaravelI18n\Models\Translation;
 use Kodilab\LaravelI18n\Tests\TestCase;
 
@@ -56,6 +56,21 @@ class MiddlewareTest extends TestCase
             ->assertDontSee($this->locale_translation->translation);
 
         $this->get(route('tests.index', ['locale' => $this->locale->reference]))->assertStatus(200)
+            ->assertSee($this->locale_translation->translation)
+            ->assertDontSee($this->fallback_translation->translation);
+    }
+
+    public function test_set_locale_by_user_session_middleware()
+    {
+        $this->addMiddlewaredRoute('setLocaleByUserSession');
+
+        $this->session(['user_locale' => $this->fallback_locale])
+            ->get(route('tests.index'))->assertStatus(200)
+            ->assertSee($this->fallback_translation->translation)
+            ->assertDontSee($this->locale_translation->translation);
+
+        $this->session(['user_locale' => $this->locale])
+            ->get(route('tests.index'))->assertStatus(200)
             ->assertSee($this->locale_translation->translation)
             ->assertDontSee($this->fallback_translation->translation);
     }
