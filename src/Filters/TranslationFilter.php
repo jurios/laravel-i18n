@@ -3,10 +3,10 @@
 namespace Kodilab\LaravelI18n\Filters;
 
 
-use Kodilab\LaravelFilters\QueryFilter;
+use Kodilab\LaravelFilters\QueryFilters;
 use Kodilab\LaravelI18n\Models\Locale;
 
-class TranslationFilter extends QueryFilter
+class TranslationFilter extends QueryFilters
 {
     protected $translated_locale;
 

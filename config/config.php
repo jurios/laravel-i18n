@@ -63,5 +63,16 @@ return [
     |
     | Show credits in the footer of laravel-i18n views
     */
-    'show_credits' => true
+    'show_credits' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | show_translation_info
+    |--------------------------------------------------------------------------
+    |
+    | In the translation editor, show the information button next to a translation allowing to load a modal with
+    | further information about the translation (like the templates files which has that text)
+    |
+    */
+    'show_translation_info' => false
 ];

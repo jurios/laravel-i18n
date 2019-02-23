@@ -2,22 +2,21 @@
 
 namespace Kodilab\LaravelI18n\Filters;
 
-
-use Kodilab\LaravelFilters\QueryFilter;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Config\Repository;
+use Kodilab\LaravelFilters\QueryFilters;
 
-class LocaleFilter extends QueryFilter
+class LocaleFilter extends QueryFilters
 {
-    public function __construct(Request $request, Repository $config)
+    public function __construct(Request $request, string $prefix = null)
     {
-        parent::__construct($request, $config);
+        parent::__construct($request, $prefix);
 
-        if (!$this->request()->has($this->addPrefix('order_asc')) && !$this->request()->has($this->addPrefix('order_desc')))
+        if (!isset($this->filters['order_asc']) && !isset($this->request['order_desc']))
         {
-            $this->request->merge([ $this->addPrefix('order_desc') => 'enabled']);
+            $this->filters['order_desc'] = 'enabled';
         }
 
-        $this->paginate = 15;
+        $this->pagination = 15;
     }
 }
