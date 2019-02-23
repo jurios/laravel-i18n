@@ -13,6 +13,9 @@ class Locale extends Model
 
     const REFERENCE_DELIMITER = '_';
 
+    const ISO_639_1_SIZE = ["min" => 2, "max" => 3];
+    const REGION_SIZE = ["min" => 2, "max" => 3];
+
     protected $table;
 
     protected $fillable = [

@@ -2,10 +2,10 @@
 
 namespace Kodilab\LaravelI18n;
 
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
+use Kodilab\LaravelI18n\Models\Locale;
 
 
 class Facade extends \Illuminate\Support\Facades\Facade
@@ -188,5 +188,24 @@ class Facade extends \Illuminate\Support\Facades\Facade
     public static function dropIfExistsModelI18nTable(string $model)
     {
         Schema::dropIfExists($model . config('i18n.tables.model_translations_suffix', '_i18n'));
+    }
+
+    public static function getLocaleFromURL()
+    {
+        $segment = Request::segment(1);
+
+        $regex = sprintf("/^[a-z]{%d,%d}(_[A-Z]{%d,%d}){0,1}$/",
+            Locale::ISO_639_1_SIZE["min"],
+            Locale::ISO_639_1_SIZE["max"],
+            Locale::REGION_SIZE["min"],
+            Locale::REGION_SIZE["max"]
+        );
+
+        if (preg_match($regex, $segment))
+        {
+            return $segment;
+        }
+
+        return null;
     }
 }
