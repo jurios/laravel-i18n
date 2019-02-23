@@ -5,13 +5,16 @@ namespace Kodilab\LaravelI18n\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Kodilab\LaravelI18n\Locale;
+use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
+use Kodilab\LaravelI18n\Models\Locale;
 
-class SetLocale
+abstract class SetLocale
 {
+    /** @var Request $request */
+    protected $request;
+
     public function __construct()
-    {
-    }
+    {}
 
     /**
      * Handle an incoming request.
@@ -19,64 +22,41 @@ class SetLocale
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed
+     * @throws MissingLocaleException
      */
     public function handle(Request $request, Closure $next)
     {
-        $locale = null;
+        $this->request = $request;
 
-        if (!$request->session()->has('locale'))
-        {
-            /** @var Locale $locale */
-            $locale = $this->getLocaleFromRequestOrFallbackLocale($request);
+        $locale = $this->getLocale();
 
-            $request->session()->put('locale', $locale);
-
-        } else {
-
-            /** @var Locale $locale */
-            $locale = $request->session()->get('locale');
-
-        }
-
-        App::setLocale($locale->getLaravelLocale());
-        \Carbon\Carbon::setLocale($locale->getCarbonLocale());
-
-        // Here you can add other third-party packages that need locale configuration as well.
+        $this->saveRequestLocale($locale);
+        $this->updateLocales($locale);
 
         return $next($request);
     }
 
-    private function getLocaleFromRequestOrFallbackLocale(Request $request)
+    /**
+     * Method that will return the locale that is going to be used for that request
+     *
+     * @return mixed
+     * @throws \Kodilab\LaravelI18n\Exceptions\MissingLocaleException
+     */
+    protected function getLocale()
     {
-        $request_languages = $request->getLanguages();
-
-        foreach ($request_languages as $request_language) {
-
-            $region = $this->getRegionFromLocale($request_language);
-            $language = $this->getLanguageFromLocale($request_language);
-
-            $best_locale = Locale::getBestLocale($language, $region);
-
-            if (!is_null($best_locale))
-            {
-                return $best_locale;
-            }
-        }
-
         return Locale::getFallbackLocale();
     }
 
-    private function getRegionFromLocale($locale)
+    private function updateLocales(Locale $locale)
     {
-        $locale = explode("_", $locale);
-
-        return isset($locale[1]) ? $locale[1] : null;
+        // TODO: Check if we should do this
+        App::setLocale($locale->laravel_locale);
+        \Carbon\Carbon::setLocale($locale->carbon_locale);
     }
 
-    private function getLanguageFromLocale($locale)
+    private function saveRequestLocale($locale)
     {
-        $locale = explode("_", $locale);
-
-        return isset($locale[0]) ? $locale[0] : null;
+        $this->request->session()->put('locale', $locale);
     }
+
 }

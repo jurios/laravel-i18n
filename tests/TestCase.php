@@ -3,6 +3,8 @@
 namespace Kodilab\LaravelI18n\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Encryption\Encrypter;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 use Kodilab\LaravelI18n\Models\Locale;
 
@@ -36,6 +38,10 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 
         $this->factories_path = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'database/factories';
         $this->withFactories($this->factories_path);
+
+        $this->app['config']->set('app.key', 'base64:'.base64_encode(
+                Encrypter::generateKey($this->app['config']->get('app.cipher'))
+            ));
     }
 
     protected function getPackageProviders($app)

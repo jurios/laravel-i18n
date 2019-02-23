@@ -9,6 +9,7 @@ use Kodilab\LaravelI18n\Commands\Sync;
 use \Illuminate\Support\Facades\Blade;
 use Kodilab\LaravelI18n\Middleware\Callback;
 use Kodilab\LaravelI18n\Middleware\SetLocale;
+use Kodilab\LaravelI18n\Middleware\SetLocaleByPath;
 
 class I18nProvider extends ServiceProvider
 {
@@ -48,6 +49,7 @@ class I18nProvider extends ServiceProvider
         ]);
 
         $router->aliasMiddleware('callback', Callback::class);
+        $router->aliasMiddleware('setLocaleByPath', SetLocaleByPath::class);
 
         Blade::directive('ajaxmodal', function () {
             return "data-toggle=\"modal\" data-target=\"#placeholderModal\"";

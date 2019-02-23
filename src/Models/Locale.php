@@ -11,6 +11,8 @@ use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 class Locale extends Model
 {
 
+    const REFERENCE_DELIMITER = '_';
+
     protected $table;
 
     protected $fillable = [
@@ -102,7 +104,7 @@ class Locale extends Model
 
     public function getReferenceAttribute()
     {
-        return is_null($this->region) ? $this->ISO_639_1 : $this->ISO_639_1 . '_' . $this->region;
+        return is_null($this->region) ? $this->ISO_639_1 : $this->ISO_639_1 . self::REFERENCE_DELIMITER . $this->region;
     }
 
     //Methods
@@ -178,6 +180,11 @@ class Locale extends Model
         return $locale;
     }
 
+    /**
+     * Returns the fallback locale. If it's not a fallback locale then throw an exception
+     * @return mixed
+     * @throws MissingLocaleException
+     */
     static function getFallbackLocale()
     {
         // TODO: Try to load the translation from this locale
@@ -190,6 +197,22 @@ class Locale extends Model
         }
 
         return $fallback_locale;
+    }
+
+    /**
+     * Returns a locale which reference is $reference. If it isn't exist, then null is returned
+     * @param string $reference
+     * @return mixed
+     */
+    static function getLocaleByReference(string $reference = null)
+    {
+        $ISO_639_1 = explode(self::REFERENCE_DELIMITER, $reference)[0];
+
+        $region = isset(explode(self::REFERENCE_DELIMITER, $reference)[1]) ?
+            explode(self::REFERENCE_DELIMITER, $reference)[1] : null;
+
+        return self::where('ISO_639_1', $ISO_639_1)
+            ->where('region', $region)->first();
     }
 
     static function getBestLocale(string $locale, string $region = null)
