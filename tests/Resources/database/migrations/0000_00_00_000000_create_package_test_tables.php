@@ -18,11 +18,6 @@ class CreatePackageTestTables extends Migration
 
             $table->timestamps();
         });
-
-        /*\Kodilab\LaravelI18n\Facade::generateModelI18nTable('test_models', [
-            'name' => 'string',
-            'description' => 'text'
-        ]);*/
     }
 
     /**
@@ -32,7 +27,6 @@ class CreatePackageTestTables extends Migration
      */
     public function down()
     {
-        //\Kodilab\LaravelI18n\Facade::dropIfExistsModelI18nTable('test_models');
         Schema::dropIfExists('test_models');
     }
 }
