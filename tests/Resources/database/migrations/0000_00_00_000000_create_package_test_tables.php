@@ -15,6 +15,8 @@ class CreatePackageTestTables extends Migration
     {
         Schema::create('test_models', function (Blueprint $table) {
             $table->increments('id');
+
+            $table->timestamps();
         });
 
         /*\Kodilab\LaravelI18n\Facade::generateModelI18nTable('test_models', [

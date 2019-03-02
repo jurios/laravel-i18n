@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n\Traits;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Kodilab\LaravelI18n\Models\Locale;
 
 trait Translatable
 {
@@ -49,10 +50,10 @@ trait Translatable
      * @param Locale|null $locale
      * @param string $direction
      * @return Builder
-     * @throws Exceptions\MissingLocaleException
+     * @throws \Kodilab\LaravelI18n\Exceptions\MissingLocaleException
      */
-    public function scopeOrderByTranslatedAttribute(Builder $query, string $attribute, Locale $locale = null,
-        string $direction = 'asc')
+    public function scopeOrderByTranslatedAttribute(Builder $query, string $attribute,
+        string $direction = 'asc', Locale $locale = null)
     {
         if (is_null($locale))
         {
