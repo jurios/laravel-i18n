@@ -12,8 +12,6 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected $test_files_path;
 
-    protected $factories_path;
-
     protected $test_model_name = 'test_model';
 
     protected $test_model_table = 'test_models';
@@ -27,17 +25,16 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $this->artisan('migrate')->run();
 
         $this->test_files_path = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'test_files';
-
         $this->generateTestFilesDirectory();
 
         $this->beforeApplicationDestroyed(function () {
             $this->destroyTestFilesDirectory();
         });
 
-        $this->loadMigrationsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'migrations');
+        $this->loadMigrationsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'database/migrations');
 
-        $this->factories_path = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'database/factories';
-        $this->withFactories($this->factories_path);
+        $this->withFactories(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'database/factories');
+        $this->withFactories(__DIR__ . DIRECTORY_SEPARATOR . 'database/factories');
 
         $this->app['config']->set('app.key', 'base64:'.base64_encode(
                 Encrypter::generateKey($this->app['config']->get('app.cipher'))
