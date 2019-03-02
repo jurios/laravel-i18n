@@ -1,6 +1,6 @@
 <?php
 
-namespace Kodilab\LaravelI18n;
+namespace Kodilab\LaravelI18n\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
