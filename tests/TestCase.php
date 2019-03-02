@@ -31,10 +31,10 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
             $this->destroyTestFilesDirectory();
         });
 
-        $this->loadMigrationsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'Resources/database/migrations');
 
         $this->withFactories(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'database/factories');
-        $this->withFactories(__DIR__ . DIRECTORY_SEPARATOR . 'database/factories');
+        $this->withFactories(__DIR__ . DIRECTORY_SEPARATOR . 'Resources/database/factories');
 
         $this->app['config']->set('app.key', 'base64:'.base64_encode(
                 Encrypter::generateKey($this->app['config']->get('app.cipher'))
