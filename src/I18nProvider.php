@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
+use Kodilab\LaravelI18n\Commands\Install;
 use Kodilab\LaravelI18n\Commands\Sync;
 use \Illuminate\Support\Facades\Blade;
 use Kodilab\LaravelI18n\Middleware\Callback;
@@ -29,24 +30,16 @@ class I18nProvider extends ServiceProvider
     public function boot(\Illuminate\Routing\Router $router)
     {
         $config_path = __DIR__ . '/../config/config.php';
-        $assets_path = __DIR__ . '/../public/assets';
-        $views_path = __DIR__ . '/../resources/views';
         $migrations_path = __DIR__. '/../database/migrations';
 
         $this->publishes([
             $config_path => config_path('i18n.php')
-        ]);
-
-        $this->publishes([
-            $assets_path => public_path('vendor/laravel-i18n/assets')
-        ], 'public');
-
-        $this->loadViewsFrom($views_path, 'i18n');
+        ], 'laravel-i18n-config');
 
         $this->loadMigrationsFrom($migrations_path);
 
         $this->commands([
-            Sync::class,
+            Install::class
         ]);
 
         $router->aliasMiddleware('callback', Callback::class);

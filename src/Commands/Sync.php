@@ -46,37 +46,5 @@ class Sync extends Command
      */
     public function handle()
     {
-        $this->linguist->setOutput($this->output);
-
-        if (!$this->linguist->existsFallbackLocale())
-        {
-            $this->linguist->generateFallbackLocale();
-        }
-
-        $locale = Locale::getFallbackLocale();
-
-        if (!$this->linguist->isAValidFallbackLocale($locale))
-        {
-            $this->linguist->generateFallbackLocale();
-        }
-
-        $translationsByFile = $this->linguist->getAllTranslatableStringFromFiles();
-
-        $translations = $this->linguist->getTranslationsWithMd5($translationsByFile);
-
-        $deprecated_count = $this->linguist->deleteDeprecatedTranslations($translations);
-
-        $this->output->writeln("<fg=red>{$deprecated_count}</> deprecated texts were deleted.");
-
-        $dynamic_count = $this->linguist->countDynamicTranslations();
-
-        $this->output->writeln("<fg=yellow>{$dynamic_count}</> texts are dynamic and can't be added.");
-
-        $added_count = $this->linguist->addNewTranslations($translations);
-
-        $this->output->writeln("<fg=green>{$added_count}</> new texts were added.");
-
-        $this->call('cache:clear');
-
     }
 }
