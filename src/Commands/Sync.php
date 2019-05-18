@@ -46,5 +46,6 @@ class Sync extends Command
      */
     public function handle()
     {
+        //
     }
 }

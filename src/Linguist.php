@@ -5,19 +5,12 @@ namespace Kodilab\LaravelI18n;
 
 use Illuminate\Console\OutputStyle;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Collection;
-use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
-use Kodilab\LaravelI18n\Models\Locale;
-use Kodilab\LaravelI18n\Models\Text;
-use Kodilab\LaravelI18n\Models\Translation;
 
 class Linguist
 {
     protected $filesystem;
 
     protected $paths;
-
-    protected $fallback_language;
 
     /** @var OutputStyle $output */
     protected $output;
@@ -29,20 +22,36 @@ class Linguist
      * @param array $paths
      * @param OutputStyle|null $output
      */
-    public function __construct(Filesystem $filesystem, array $paths, OutputStyle $output = null)
+    public function __construct(Filesystem $filesystem, array $paths)
     {
         $this->filesystem = $filesystem;
 
         $this->paths = $paths;
-
-        $this->fallback_language = config('app.fallback_locale');
-
-        $this->output = $output;
     }
 
-    public function setOutput(OutputStyle $output)
+    /**
+     * Returns every occurrence of translated text in the project. The array has the next format:
+     * [
+     *      'text' => [
+     *          0 => /path/to/file,
+     *          1 => /path/to_file,
+     *          ...
+     *      [
+     * ]
+     *
+     * @return array
+     */
+    public function texts()
     {
-        $this->output = $output;
+        $result = [];
+
+        foreach ($this->getAllTranslatableStringFromFiles() as $file => $occurrences) {
+            foreach ($occurrences as $occurrence) {
+                $result[$occurrence][] = $file;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -99,109 +108,6 @@ class Linguist
     }
 
     /**
-     * Transforms the array from getAllTranslatableStringFromFiles() to the next format:
-     * [
-     *      md5(text1) => [
-     *          'text' => text1,
-     *          'files' => [
-     *              path/to/file1 => times_in_file1
-     *              path/to/file2 => times_in_file2
-     *          ]
-     *      ],
-     *      md5(text2) => text2,
-     *      ....
-     * ]
-     *
-     * @param array $translationsByFile
-     * @return array
-     */
-    public function getTranslationsWithMd5(array $translationsByFile)
-    {
-        $result = [];
-
-        foreach ($translationsByFile as $file => $translations)
-        {
-            foreach ($translations as $translation)
-            {
-                $md5 = md5($translation);
-
-                if (!isset($result[$md5]))
-                {
-                    $result[$md5] = [
-                        'text' => $translation,
-                        'files' => [
-                            $file => 1
-                        ]
-                    ];
-                }
-                else {
-                    isset($result[$md5]['files'][$file])? $result[$md5]['files'][$file]++ : $result[$md5]['files'][$file] = 1;
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Delete translation in database which is not present in $translations array
-     *
-     * @param array $translations
-     * @return int
-     */
-    public function deleteDeprecatedTranslations(array $translations)
-    {
-        $md5 = array_keys($translations);
-
-        $deprecated_query = Translation::whereNotIn('md5', $md5);
-
-        /** @var Collection $deprecated */
-        $deprecated = $deprecated_query->get();
-
-        $deprecated_query->delete();
-
-        Text::whereNotIn('md5', $md5)->get()->each(function ($item) {
-            $item->delete();
-        });
-
-        return count($deprecated);
-    }
-
-    /**
-     * Add the translations present in $translation which are not present in database
-     *
-     * @param array $translations
-     * @return int
-     */
-    public function addNewTranslations(array $translations)
-    {
-        $count = 0;
-
-        foreach ($translations as $md5 => $translation)
-        {
-            if (!Text::existsText($md5))
-            {
-                Text::create([
-                    'md5' => $md5,
-                    'text' => $translation['text'],
-                    'paths' => $translation['files']
-                ]);
-
-                $count++;
-            }
-            else
-            {
-
-                Text::where('md5', $md5)->first()->update([
-                    'paths' => $translation['files']
-                ]);
-            }
-        }
-
-        return $count;
-    }
-
-    /**
      * Look for dynamic translations ( uses t($var, ...) ) which can not be created statically
      *
      * @param array $translations
@@ -245,49 +151,5 @@ class Linguist
         }
 
         return $count;
-    }
-
-    public function existsFallbackLocale()
-    {
-        try {
-            Locale::getFallbackLocale();
-            $exists = true;
-        } catch (MissingLocaleException $exception) {
-            $exists = false;
-        }
-
-        return $exists;
-    }
-
-    public function isAValidFallbackLocale(Locale $locale)
-    {
-        return $locale->ISO_639_1 === $this->fallback_language;
-    }
-
-    public function generateFallbackLocale()
-    {
-        // As we are generating a fallback locale, we should disable other fallback locales
-        Locale::where('fallback', true)->update([
-            'fallback' => false
-        ]);
-
-        $fallbackLocale = Locale::create([
-            'ISO_639_1' => $this->fallback_language,
-            'fallback' => true,
-            'created_by_sync' => true,
-            'enabled' => true
-        ]);
-
-        $this->sendOutput("\"<fg=green>Fallback locale created.</>\"");
-
-        return $fallbackLocale;
-    }
-
-    private function sendOutput(string $message)
-    {
-        if (!is_null($this->output))
-        {
-            $this->output->writeln($message);
-        }
     }
 }

@@ -39,16 +39,9 @@ class I18nProvider extends ServiceProvider
         $this->loadMigrationsFrom($migrations_path);
 
         $this->commands([
-            Install::class
+            Install::class,
+            Sync::class
         ]);
-
-        $router->aliasMiddleware('callback', Callback::class);
-        $router->aliasMiddleware('setLocaleByPath', SetLocaleByPath::class);
-        $router->aliasMiddleware('setLocaleByUserSession', SetLocaleByUserSession::class);
-
-        Blade::directive('ajaxmodal', function () {
-            return "data-toggle=\"modal\" data-target=\"#placeholderModal\"";
-        });
     }
 
     /**
@@ -63,12 +56,5 @@ class I18nProvider extends ServiceProvider
         $this->mergeConfigFrom(
             $configPath, 'i18n'
         );
-
-        $this->app->bind(Linguist::class, function () {
-            return new Linguist(
-                new Filesystem,
-                array_merge($this->app['config']['view.paths'], [$this->app['path']])
-            );
-        });
     }
 }
