@@ -22,19 +22,14 @@ class Sync extends Command
      */
     protected $description = 'Syncronize laravel translations found in php files with fallback language translations on the database';
 
-    /** @var Linguist $linguist */
-    protected $linguist;
-
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(Linguist $linguist)
+    public function __construct()
     {
         parent::__construct();
-
-        $this->linguist = $linguist;
     }
 
     /**
