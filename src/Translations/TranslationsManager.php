@@ -70,7 +70,7 @@ class TranslationsManager
     {
         $translation = $this->normalizeTranslationsArray();
 
-        $json = json_encode($translation, true);
+        $json = json_encode($translation, JSON_PRETTY_PRINT);
 
         file_put_contents($this->json_path, $json);
     }

@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n\Commands;
 use Illuminate\Console\Command;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
 use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Translations\Installer;
 
 class Install extends Command
 {
@@ -69,6 +70,9 @@ class Install extends Command
                 'enabled' => true,
                 'fallback' => true
             ]);
+
+            $installer = new Installer($locale);
+            $installer->install();
         }
     }
 }
