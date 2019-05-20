@@ -48,6 +48,18 @@ class TranslationsManager
     }
 
     /**
+     * Removes the 'original' translation from the collection and from the file
+     *
+     * @param string $original
+     */
+    public function delete(string $original)
+    {
+        $this->translations->forget($original);
+
+        $this->save();
+    }
+
+    /**
      * Import the array format translations into the json translations and persist them into the file
      *
      * @param array $array

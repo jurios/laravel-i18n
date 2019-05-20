@@ -107,4 +107,51 @@ class TranslationsManagerTest extends TestCase
         $this->assertEquals(1, count($manager->translations));
         $this->assertTrue($manager->translations->where('original', $original)->isNotEmpty());
     }
+
+    public function test_delete_translation_will_delete_the_translation_from_the_collection()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        $this->assertEquals(0, count($manager->translations));
+
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->paragraph;
+
+        $manager->add($original, $translation);
+
+        $this->assertEquals(1, count($manager->translations));
+
+        $manager->delete($original);
+
+        $this->assertEquals(0, count($manager->translations));
+    }
+
+    public function test_delete_translation_will_delete_the_transtion_from_the_file()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        //We assure the translation file is created
+        $this->generateRandomTranslationFile($locale);
+
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->paragraph;
+
+        $manager->add($original, $translation);
+
+
+        $file_content_array = json_decode(file_get_contents($manager->json_path), true);
+
+        $this->assertTrue(key_exists($original, $file_content_array));
+
+        $manager->delete($original);
+
+        $file_content_array = json_decode(file_get_contents($manager->json_path), true);
+
+        $this->assertFalse(key_exists($original, $file_content_array));
+
+    }
 }
