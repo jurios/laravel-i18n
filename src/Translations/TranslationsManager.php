@@ -60,6 +60,49 @@ class TranslationsManager
     }
 
     /**
+     * Sync the translations with the original occurrences
+     *
+     * @param array $originals
+     */
+    public function sync(array $occurrences)
+    {
+        $translations = $this->addOccurrenceFlag();
+
+        foreach ($occurrences as $occurrence) {
+
+            if (!isset($translations[$occurrence])) {
+                $translation = $this->locale->isFallback() ? $occurrence : "";
+                $this->add($occurrence, $translation);
+            }
+
+            $translations[$occurrence]['occurrence'] = true;
+        }
+
+        foreach ($translations as $translation) {
+            if ($translation['occurrence'] === false) {
+                $this->delete($translation['original']);
+            }
+        }
+
+    }
+
+    /**
+     * It returns the translation with a occurrence flag needed in order to detect deprecated translations during sync
+     *
+     */
+    private function addOccurrenceFlag()
+    {
+       $translations = [];
+
+        foreach ($this->translations as $original => $translation) {
+            $translation['occurrence'] = false;
+            $translations[$original] = $translation;
+        }
+
+        return $translations;
+    }
+
+    /**
      * Import the array format translations into the json translations and persist them into the file
      *
      * @param array $array
@@ -82,7 +125,7 @@ class TranslationsManager
     {
         $translation = $this->normalizeTranslationsArray();
 
-        $json = json_encode($translation, JSON_PRETTY_PRINT);
+        $json = json_encode($translation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
         file_put_contents($this->json_path, $json);
     }

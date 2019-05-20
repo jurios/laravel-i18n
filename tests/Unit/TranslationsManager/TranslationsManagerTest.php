@@ -154,4 +154,64 @@ class TranslationsManagerTest extends TestCase
         $this->assertFalse(key_exists($original, $file_content_array));
 
     }
+
+    public function test_sync_will_keep_the_occurrences_that_already_exists()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->paragraph;
+
+        $manager->add($original, $translation);
+
+        $manager->sync([$original]);
+
+        $this->assertTrue($manager->translations->where('original', $original)->isNotEmpty());
+    }
+
+    public function test_sync_will_remove_deprecated_translations()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->paragraph;
+
+        $manager->add($original, $translation);
+
+        $manager->sync([]);
+
+        $this->assertTrue($manager->translations->where('original', $original)->isEmpty());
+    }
+
+    public function test_sync_will_add_new_occurrence_without_translation()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        $original = $this->faker->unique()->paragraph;
+
+        $manager->sync([$original]);
+
+        $this->assertTrue($manager->translations->where('original', $original)->isNotEmpty());
+        $this->assertEquals("", $manager->translations->where('original', $original)->first()['translation']);
+    }
+
+    public function test_sync_will_add_new_occurrence_with_translation_if_is_fallback_locale()
+    {
+        $locale = $this->fallback_locale;
+
+        $manager = new TranslationsManager($locale);
+
+        $original = $this->faker->unique()->paragraph;
+
+        $manager->sync([$original]);
+
+        $this->assertTrue($manager->translations->where('original', $original)->isNotEmpty());
+        $this->assertEquals($original, $manager->translations->where('original', $original)->first()['translation']);
+    }
 }

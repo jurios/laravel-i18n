@@ -68,6 +68,11 @@ class Locale extends Model
         return $this->ISO_639_1;
     }
 
+    public function isFallback()
+    {
+        return $this->fallback;
+    }
+
     public static function getFallbackLocale()
     {
         /** @var Locale $fallback_locale */

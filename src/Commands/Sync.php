@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n\Commands;
 use Illuminate\Console\Command;
 use Kodilab\LaravelI18n\Linguist;
 use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Translations\TranslationsManager;
 
 class Sync extends Command
 {
@@ -22,14 +23,18 @@ class Sync extends Command
      */
     protected $description = 'Syncronize laravel translations found in php files with fallback language translations on the database';
 
+    /** @var Linguist */
+    protected $linguist;
+
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Linguist $linguist)
     {
         parent::__construct();
+        $this->linguist = $linguist;
     }
 
     /**
@@ -41,6 +46,15 @@ class Sync extends Command
      */
     public function handle()
     {
-        //
+        $texts = $this->linguist->texts();
+
+        $locales = Locale::all();
+
+        /** @var Locale $locale */
+        foreach ($locales as $locale) {
+            $manager = new TranslationsManager($locale);
+
+            $manager->sync(array_keys($texts));
+        }
     }
 }

@@ -69,7 +69,7 @@ class Linguist
      *
      * @return array
      */
-    public function getAllTranslatableStringFromFiles()
+    private function getAllTranslatableStringFromFiles()
     {
         /*
          * This pattern is derived from Barryvdh\TranslationManager by Barry vd. Heuvel <barryvdh@gmail.com>

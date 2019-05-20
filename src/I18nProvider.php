@@ -56,5 +56,12 @@ class I18nProvider extends ServiceProvider
         $this->mergeConfigFrom(
             $configPath, 'i18n'
         );
+
+        $this->app->bind(Linguist::class, function () {
+            return new Linguist(
+                new Filesystem,
+                array_merge($this->app['config']['view.paths'], [$this->app['path']])
+            );
+        });
     }
 }
