@@ -20,7 +20,6 @@ class TranslationsManager
 
     public function __construct(Locale $locale)
     {
-        $this->translations = new Collection();
         $this->locale = $locale;
         $this->json_path = config('i18n.translations_path') . DIRECTORY_SEPARATOR . $locale->reference . '.json';
         $this->readTranslations();
@@ -60,46 +59,11 @@ class TranslationsManager
     }
 
     /**
-     * Sync the translations with the original occurrences
-     *
-     * @param array $originals
+     * Load the translations from the file
      */
-    public function sync(array $occurrences)
+    public function refresh()
     {
-        $translations = $this->addOccurrenceFlag();
-
-        foreach ($occurrences as $occurrence) {
-
-            if (!isset($translations[$occurrence])) {
-                $translation = $this->locale->isFallback() ? $occurrence : "";
-                $this->add($occurrence, $translation);
-            }
-
-            $translations[$occurrence]['occurrence'] = true;
-        }
-
-        foreach ($translations as $translation) {
-            if ($translation['occurrence'] === false) {
-                $this->delete($translation['original']);
-            }
-        }
-
-    }
-
-    /**
-     * It returns the translation with a occurrence flag needed in order to detect deprecated translations during sync
-     *
-     */
-    private function addOccurrenceFlag()
-    {
-       $translations = [];
-
-        foreach ($this->translations as $original => $translation) {
-            $translation['occurrence'] = false;
-            $translations[$original] = $translation;
-        }
-
-        return $translations;
+        $this->readTranslations();
     }
 
     /**
@@ -125,7 +89,12 @@ class TranslationsManager
     {
         $translation = $this->normalizeTranslationsArray();
 
-        $json = json_encode($translation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        if (count($translation) <= 0) {
+            unlink($this->json_path);
+            return;
+        }
+
+        $json = json_encode($translation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         file_put_contents($this->json_path, $json);
     }
@@ -135,6 +104,8 @@ class TranslationsManager
      */
     private function readTranslations()
     {
+        $this->translations = new Collection();
+
         if (file_exists($this->json_path)) {
             $translations = json_decode(file_get_contents($this->json_path), true);
 
@@ -146,10 +117,7 @@ class TranslationsManager
 
     private function addToTranslationsCollection(string $original, string $translation)
     {
-        $this->translations->put($original, [
-            'original' => $original,
-            'translation' => $translation
-        ]);
+        $this->translations->put($original, new Translation($original, $translation));
     }
 
     /**
@@ -161,9 +129,10 @@ class TranslationsManager
 
         $result = [];
 
+        /** @var Translation $item */
         foreach ($this->translations as $item) {
-            $original = $item['original'];
-            $translation = $item['translation'];
+            $original = $item->original;
+            $translation = $item->translation;
 
             $result[$original] = $translation;
         }

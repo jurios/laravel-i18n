@@ -39,8 +39,8 @@ class TranslationsManagerTest extends TestCase
         $manager->add($original, $translation);
 
         $this->assertEquals(1, count($manager->translations));
-        $this->assertEquals($original, $manager->translations->first()['original']);
-        $this->assertEquals($translation, $manager->translations->first()['translation']);
+        $this->assertEquals($original, $manager->translations->first()->original);
+        $this->assertEquals($translation, $manager->translations->first()->translation);
 
     }
 
@@ -137,6 +137,8 @@ class TranslationsManagerTest extends TestCase
         //We assure the translation file is created
         $this->generateRandomTranslationFile($locale);
 
+        $manager->refresh();
+
         $original = $this->faker->unique()->paragraph;
         $translation = $this->faker->paragraph;
 
@@ -155,7 +157,7 @@ class TranslationsManagerTest extends TestCase
 
     }
 
-    public function test_sync_will_keep_the_occurrences_that_already_exists()
+    public function test_delete_translation_will_remove_the_file_if_the_collection_is_empty()
     {
         $locale = factory(Locale::class)->create();
 
@@ -166,52 +168,28 @@ class TranslationsManagerTest extends TestCase
 
         $manager->add($original, $translation);
 
-        $manager->sync([$original]);
+        $this->assertTrue(file_exists($manager->json_path));
 
-        $this->assertTrue($manager->translations->where('original', $original)->isNotEmpty());
+        $manager->delete($original);
+
+        $this->assertFalse(file_exists($manager->json_path));
     }
 
-    public function test_sync_will_remove_deprecated_translations()
+    public function test_refresh_will_load_the_translations_from_the_file()
     {
         $locale = factory(Locale::class)->create();
 
         $manager = new TranslationsManager($locale);
 
-        $original = $this->faker->unique()->paragraph;
-        $translation = $this->faker->paragraph;
+        $count = $this->faker->numberBetween(0, 100);
 
-        $manager->add($original, $translation);
+        //We assure the translation file is created
+        $this->generateRandomTranslationFile($locale, $count);
 
-        $manager->sync([]);
+        $this->assertEquals(0, count($manager->translations));
 
-        $this->assertTrue($manager->translations->where('original', $original)->isEmpty());
-    }
+        $manager->refresh();
 
-    public function test_sync_will_add_new_occurrence_without_translation()
-    {
-        $locale = factory(Locale::class)->create();
-
-        $manager = new TranslationsManager($locale);
-
-        $original = $this->faker->unique()->paragraph;
-
-        $manager->sync([$original]);
-
-        $this->assertTrue($manager->translations->where('original', $original)->isNotEmpty());
-        $this->assertEquals("", $manager->translations->where('original', $original)->first()['translation']);
-    }
-
-    public function test_sync_will_add_new_occurrence_with_translation_if_is_fallback_locale()
-    {
-        $locale = $this->fallback_locale;
-
-        $manager = new TranslationsManager($locale);
-
-        $original = $this->faker->unique()->paragraph;
-
-        $manager->sync([$original]);
-
-        $this->assertTrue($manager->translations->where('original', $original)->isNotEmpty());
-        $this->assertEquals($original, $manager->translations->where('original', $original)->first()['translation']);
+        $this->assertEquals($count, count($manager->translations));
     }
 }
