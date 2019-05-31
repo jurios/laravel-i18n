@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kodilab\LaravelI18n\Tests\Unit\TranslationsManager;
+namespace Kodilab\LaravelI18n\Tests\Unit\Translations;
 
 
 
@@ -79,33 +79,6 @@ class TranslationsManagerTest extends TestCase
         $manager->add($original, $translation);
 
         $this->assertTrue(file_exists($manager->json_path));
-    }
-
-    public function test_import_array_translations_will_import_translations_into_the_json_file()
-    {
-        $index = $this->faker->word;
-        $index2 = $this->faker->word;
-        $index3 = $this->faker->word;
-        $translation = $this->faker->paragraph;
-
-        $array_translations = [
-            $index => [
-                $index2 => [
-                    $index3 => $translation
-                ]
-            ]
-        ];
-
-        $locale = factory(Locale::class)->create();
-
-        $manager = new TranslationsManager($locale);
-
-        $manager->importArray($array_translations);
-
-        $original = $index . '.'. $index2 . '.' . $index3;
-
-        $this->assertEquals(1, count($manager->translations));
-        $this->assertTrue($manager->translations->where('original', $original)->isNotEmpty());
     }
 
     public function test_delete_translation_will_delete_the_translation_from_the_collection()

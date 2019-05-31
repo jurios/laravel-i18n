@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n;
 
 use Illuminate\Console\OutputStyle;
 use Illuminate\Filesystem\Filesystem;
+use Kodilab\LaravelI18n\Translations\Translation;
 
 class Linguist
 {
@@ -32,11 +33,7 @@ class Linguist
     /**
      * Returns every occurrence of translated text in the project. The array has the next format:
      * [
-     *      'text' => [
-     *          0 => /path/to/file,
-     *          1 => /path/to_file,
-     *          ...
-     *      [
+     *      'text' => 'translation (text)'
      * ]
      *
      * @return array
@@ -47,7 +44,7 @@ class Linguist
 
         foreach ($this->getAllTranslatableStringFromFiles() as $file => $occurrences) {
             foreach ($occurrences as $occurrence) {
-                $result[$occurrence][] = $file;
+                $result[$occurrence] = new Translation($occurrence, $occurrence);
             }
         }
 

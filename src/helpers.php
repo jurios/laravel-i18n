@@ -1,18 +1,30 @@
 <?php
 
-if (!function_exists('transformArrayTranslation')) {
-    function transformArrayTranslation($index, array $translations, array &$results) {
-        foreach ($translations as $original => $translation) {
+if (!function_exists('exportToPlainTranslationArray')) {
+    function exportToPlainTranslationArray($index, array $translations) {
 
-            $i = is_null($index) ? $original : $index . '.' . $original;
+        if (!function_exists('recursive_transform')) {
+            function recursive_transform($index, array $translations, &$results)
+            {
 
-            if (!is_array($translation)) {
-                $results[$i] = $translation;
-            }
+                foreach ($translations as $original => $translation) {
 
-            if (is_array($translation)) {
-                transformArrayTranslation($i, $translation, $results);
+                    $i = is_null($index) ? $original : $index . '.' . $original;
+
+                    if (!is_array($translation)) {
+                        $results[$i] = $translation;
+                    }
+
+                    if (is_array($translation)) {
+                        recursive_transform($i, $translation, $results);
+                    }
+                }
             }
         }
+
+        $result = [];
+        recursive_transform($index, $translations, $result);
+
+        return $result;
     }
 }

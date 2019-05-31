@@ -10,7 +10,7 @@ class Synchronizer
     protected $manager;
 
     /** @var array */
-    protected $founds;
+    protected $translations;
 
     /** @var array */
     protected $deprecated;
@@ -21,56 +21,61 @@ class Synchronizer
     /** @var array */
     protected $exist;
 
-    public function __construct(TranslationsManager $manager, array $founds)
+    public function __construct(TranslationsManager $manager, array $translations)
     {
         $this->manager = $manager;
-        $this->founds = $founds;
+        $this->translations = $translations;
 
         $this->deprecated = [];
         $this->new = [];
         $this->exist = [];
 
-        $this->fillTranslations();
         $this->sync();
     }
 
-    private function fillTranslations()
+    /**
+     * Set all translations as deprecated
+     */
+    private function setAllDeprecated()
     {
         /** @var Translation $translation */
         foreach ($this->manager->translations as $translation)
         {
-            //We set all existing translations as deprecated, then will be compared with the originals found
-            $this->deprecated[$translation->original] = true;
-
+            $this->deprecated[$translation->original] = $translation;
         }
     }
 
     private function sync()
     {
-        foreach ($this->founds as $original) {
-            if (isset($this->deprecated[$original])) {
-                unset($this->deprecated[$original]);
-                $this->exist[$original] = true;
+        //We set all existing translations as deprecated, then will be compared with the originals found
+        $this->setAllDeprecated();
+
+        /** @var Translation $translation */
+        foreach ($this->translations as $translation) {
+
+            if (isset($this->deprecated[$translation->original])) {
+                unset($this->deprecated[$translation->original]);
+                $this->exist[$translation->original] = $translation;
             }
 
-            if (!isset($this->deprecated[$original]) && !isset($this->exist[$original])) {
-                $this->new[$original] = true;
+            if (!isset($this->deprecated[$translation->original]) && !isset($this->exist[$translation->original])) {
+                $this->new[$translation->original] = $translation;
             }
         }
     }
 
     public function new()
     {
-        return array_keys($this->new);
+        return $this->new;
     }
 
     public function deprecated()
     {
-        return array_keys($this->deprecated);
+        return $this->deprecated;
     }
 
     public function exist()
     {
-        return array_keys($this->exist);
+        return $this->exist;
     }
 }

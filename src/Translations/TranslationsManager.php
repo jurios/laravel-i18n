@@ -21,7 +21,7 @@ class TranslationsManager
     public function __construct(Locale $locale)
     {
         $this->locale = $locale;
-        $this->json_path = config('i18n.translations_path') . DIRECTORY_SEPARATOR . $locale->reference . '.json';
+        $this->json_path = config('i18n.translations_path', resource_path('lang')) . DIRECTORY_SEPARATOR . $locale->reference . '.json';
         $this->readTranslations();
     }
 
@@ -67,22 +67,6 @@ class TranslationsManager
     }
 
     /**
-     * Import the array format translations into the json translations and persist them into the file
-     *
-     * @param array $array
-     */
-    public function importArray(array $array)
-    {
-        $export = [];
-
-        transformArrayTranslation(null, $array, $export);
-
-        foreach ($export as $original => $translation) {
-            $this->add($original, $translation);
-        }
-    }
-
-    /**
      * Persists the current translation collection into the file
      */
     private function save()
@@ -90,7 +74,11 @@ class TranslationsManager
         $translation = $this->normalizeTranslationsArray();
 
         if (count($translation) <= 0) {
-            unlink($this->json_path);
+
+            if (file_exists($this->json_path)) {
+                unlink($this->json_path);
+            }
+
             return;
         }
 

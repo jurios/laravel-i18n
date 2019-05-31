@@ -14,6 +14,4 @@ return [
     'tables' => [
         'locales' => 'i18n_locales',
     ],
-
-    'translations_path' => resource_path('lang'),
 ];

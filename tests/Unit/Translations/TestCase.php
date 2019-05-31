@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kodilab\LaravelI18n\Tests\Unit\TranslationsManager;
+namespace Kodilab\LaravelI18n\Tests\Unit\Translations;
 
 
 use Illuminate\Foundation\Testing\WithFaker;
