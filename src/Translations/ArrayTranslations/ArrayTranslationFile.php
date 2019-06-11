@@ -48,7 +48,7 @@ class ArrayTranslationFile
     private function getRawContent()
     {
         if (file_exists($this->path)) {
-            return require_once $this->path;
+            return require $this->path;
         }
 
         return [];
