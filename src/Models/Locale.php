@@ -17,7 +17,7 @@ class Locale extends Model
     protected $table;
 
     protected $fillable = [
-        'ISO_639_1',
+        'iso',
         'description',
         'laravel_locale',
         'currency_number_decimals',
@@ -44,9 +44,9 @@ class Locale extends Model
 
         self::saving(function (Locale $model) {
 
-            $model->ISO_639_1 = strtolower($model->ISO_639_1);
-            $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->ISO_639_1;
-            $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->ISO_639_1;
+            $model->iso = strtolower($model->iso);
+            $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->iso;
+            $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->iso;
 
         });
 
@@ -65,7 +65,7 @@ class Locale extends Model
 
     public function getReferenceAttribute()
     {
-        return $this->ISO_639_1;
+        return $this->iso;
     }
 
     public function isFallback()

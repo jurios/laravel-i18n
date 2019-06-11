@@ -5,7 +5,7 @@ use Faker\Generator as Faker;
 $factory->define(\Kodilab\LaravelI18n\Models\Locale::class, function (Faker $faker) {
     $language_iso = $faker->languageCode;
     return [
-        'ISO_639_1' => $language_iso,
+        'iso' => $language_iso,
         'description' => $faker->text,
         'laravel_locale' => $language_iso,
         'currency_number_decimals' => 2,
