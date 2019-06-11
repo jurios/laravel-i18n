@@ -2,6 +2,12 @@
 
 [![Build Status](https://travis-ci.com/jurios/laravel-i18n.svg?branch=master)](https://travis-ci.com/jurios/laravel-i18n)
 
+## Disclaimer
+This project is still in a pre-release stage. It should work but could contains unexpected bugs.
+
+Please, consider fill an issue if you see a bug or an unexpected behaviour. That would be really useful
+to make `laravel-i18n` better.
+
 ## What is this?
 **laravel-i18n** is a Laravel built-in localization wrapper which adds some features for improving the localization
 system.
@@ -58,13 +64,17 @@ php artisan make:i18n
 
 This will add a new locale in the `i18n_locale`.
 
-#### Sync process
+#### Sync process 
 
 Once we have at least one locale (and this locale is the fallback) in our `i18n_locales` table, 
-we can start the sync process. 
-This process will re-build the `lang/{locale}.json` files with the existing translatable texts (calls to `_()` function) from our codebase 
-(templates files, controllers etc..) 
-& all 3th-party translations exported in`lang/{locale}/*.php` files. What's more it will removed the deprecated texts.
+we can start the sync process.
+
+As `laravel-i18n` considers the `locale_fallback` locale as the language used in our codebase, the idea behind `sync` 
+is keep updated the `lang/{locale_fallback}.json` file. The `sync` process will detect the new translatable texts 
+from our codebase (calls to `_()` function) & all 3th-party translations exported in`lang/{locale}/*.php` files 
+and will add them into the `lang/{locale_fallback}.json` file. 
+What's more will detect the deprecated translations in the `lang/{locale_fallback}.json` file and will remove them from 
+each `lang/{locale}.json` file. 
 
 You can start a sync process with the command: 
 
@@ -73,6 +83,9 @@ php artisan i18n:sync
 ```
 
 This process should fired as frequently as possible. It's recommended execute this process every deployment.
+
+**Important:** New texts are added only in the fallback locale json file. If you want to know why, please take a look
+to the next section. 
 
 ##### Sync detailed
 
@@ -83,7 +96,8 @@ What the sync process does is:
 3. Remove deprecated transalations which are not present neither in codebase or exported translations from **all** `{locale}.json` files.
 
 The reason why new texts are only included in the fallback locale is because they need to be translated in order to add
-them in a specific language. (They can't be added with an empty ("") translation because Laravel will consider "" as the translation).
+them in a specific language. (They can't be added with an empty ("") translation because Laravel will consider "" as the translation
+As a result, you will see only "blank" spaces instead of default text for untranslated texts).
 
 `laravel-i18n` will provide commands in order to list what texts remains untranslated for each locale in order to let you identify them
 fastly (WIP). In the editor (WIP) you will be able to list them too.
