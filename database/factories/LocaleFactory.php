@@ -3,7 +3,13 @@
 use Faker\Generator as Faker;
 
 $factory->define(\Kodilab\LaravelI18n\Models\Locale::class, function (Faker $faker) {
-    $language_iso = $faker->unique()->randomLetter . $faker->unique()->randomLetter;
+
+    $language_iso = $faker->unique()->languageCode;
+
+    while(!is_null(\Kodilab\LaravelI18n\Models\Locale::where('iso', $language_iso)->first())) {
+        $language_iso = $faker->unique()->languageCode;
+    }
+
     return [
         'iso' => $language_iso,
         'description' => $faker->text,
