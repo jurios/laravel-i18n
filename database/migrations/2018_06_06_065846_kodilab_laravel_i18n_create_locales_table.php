@@ -16,14 +16,9 @@ class KodilabLaravelI18nCreateLocalesTable extends Migration
         Schema::create(config('i18n.tables.locales'), function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('ISO_639_1')->nullable(false);
-            $table->string('region')->nullable(true)->default(null);
+            $table->string('iso')->unique()->nullable(false);
 
             $table->text('description')->nullable(true)->default(null);
-
-            $table->unsignedInteger('dialect_of_id')->nullable(true)->default(null);
-            $table->foreign('dialect_of_id')->references('id')->on(config('i18n.tables.locales'))
-                ->onDelete('set null');
 
             $table->string('laravel_locale')->nullable(true)->default(null);
 
@@ -38,15 +33,8 @@ class KodilabLaravelI18nCreateLocalesTable extends Migration
 
             $table->boolean('enabled')->nullable(false)->default(false);
             $table->boolean('fallback')->nullable(false)->default(false);
-            $table->boolean('created_by_sync')->nullable(false)->default(false);
 
             $table->timestamps();
-        });
-
-        Schema::table(config('i18n.tables.translations'), function (Blueprint $table) {
-            $table->unsignedInteger('locale_id')->nullable(false)->default(0)->after('needs_revision');
-            $table->foreign('locale_id')->references('id')->on(config('i18n.tables.locales'))
-                ->onDelete('cascade');
         });
     }
 
@@ -57,11 +45,6 @@ class KodilabLaravelI18nCreateLocalesTable extends Migration
      */
     public function down()
     {
-        Schema::table(config('i18n.tables.translations'), function (Blueprint $table) {
-            $table->dropForeign(config('i18n.tables.translations') . '_' . 'locale_id_foreign');
-            $table->dropColumn('locale_id');
-        });
-
         Schema::dropIfExists(config('i18n.tables.locales'));
     }
 }

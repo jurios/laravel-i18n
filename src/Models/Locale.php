@@ -6,21 +6,18 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Kodilab\LaravelFilters\Filterable;
+use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 
 class Locale extends Model
 {
 
-    const REFERENCE_DELIMITER = '_';
-
     const ISO_639_1_SIZE = ["min" => 2, "max" => 3];
-    const REGION_SIZE = ["min" => 2, "max" => 3];
 
     protected $table;
 
     protected $fillable = [
-        'ISO_639_1',
-        'region',
+        'iso',
         'description',
         'laravel_locale',
         'currency_number_decimals',
@@ -31,7 +28,6 @@ class Locale extends Model
         'carbon_locale',
         'carbon_tz',
         'fallback',
-        'created_by_sync',
         'enabled'
     ];
 
@@ -39,13 +35,8 @@ class Locale extends Model
         'dialect_of_id' => 'integer',
         'enabled' => 'boolean',
         'fallback' => 'boolean',
-        'created_by_sync' => 'boolean',
         'currency_number_decimals' => 'integer'
     ];
-
-    protected $appends = [ 'perc' ];
-
-    use Filterable;
 
     protected static function boot()
     {
@@ -53,36 +44,15 @@ class Locale extends Model
 
         self::saving(function (Locale $model) {
 
-            $model->ISO_639_1 = strtolower($model->ISO_639_1);
-            $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->ISO_639_1;
-            $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->ISO_639_1;
-
-            if (!is_null($model->region))
-            {
-                $model->region = strtoupper($model->region);
-            }
-
-            $occ = Locale::where('ISO_639_1', $model->ISO_639_1)
-                ->where('region', $model->region)->where('id', '<>', $model->id)->get();
-
-            if (!$occ->isEmpty())
-            {
-                throw new \Exception('Can not save a locale which already exists');
-            }
+            $model->iso = strtolower($model->iso);
+            $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->iso;
+            $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->iso;
 
         });
 
         self::creating(function (Locale $model) {
-            if ($model->fallback === false)
-            {
+            if ($model->fallback === false) {
                 $model->enabled = false;
-            }
-        });
-
-        self::deleting(function (Locale $model) {
-            if ($model->isFallbackLocale())
-            {
-                throw new \Exception('Fallback locale can not be deleted');
             }
         });
     }
@@ -93,134 +63,25 @@ class Locale extends Model
         $this->table = config('i18n.tables.locale', 'i18n_locales');
     }
 
-
-    public function translations()
-    {
-        return $this->hasMany(Translation::class);
-    }
-
-    //Scopes
-    public function scopeEnabled(Builder $query, bool $value = true)
-    {
-        return $query->where('enabled', $value);
-    }
-
     public function getReferenceAttribute()
     {
-        return is_null($this->region) ? $this->ISO_639_1 : $this->ISO_639_1 . self::REFERENCE_DELIMITER . $this->region;
+        return $this->iso;
     }
 
-    //Methods
-    public function isFallbackLocale()
+    public function isFallback()
     {
         return $this->fallback;
     }
 
-    public function printPriceConfig()
+    public static function getFallbackLocale()
     {
-        return '00.00 €';
-    }
+        /** @var Locale $fallback_locale */
+        $fallback_locale = self::where('fallback', true)->first();
 
-    public function printCarbonConfig()
-    {
-        return $this->carbon_locale . ' (' . $this->carbon_tz . ')';
-    }
-
-    public function getPercAttribute()
-    {
-        if ($this->isFallbackLocale())
-        {
-            return 100;
-        }
-        $count_fallback_translations = count(self::getFallbackLocale()->translations);
-        if ($count_fallback_translations > 0)
-        {
-            return (int)number_format((count($this->translations) * 100) / $count_fallback_translations, 0);
-        }
-        return 0;
-    }
-
-    public function renderCurrency(float $value, bool $currency = true)
-    {
-        $result = "";
-
-        if ($currency && $this->currency_symbol_position === 'before')
-        {
-            $result = $this->currency_symbol . ' ';
-        }
-
-        $result = $result . number_format(
-            $value,
-            !is_null($this->currency_number_decimals) ? $this->currency_number_decimals : 0,
-            !is_null($this->currency_decimals_punctuation) ? $this->currency_decimals_punctuation : '',
-            !is_null($this->currency_thousands_separator) ? $this->currency_thousands_separator : ''
-            );
-
-        if ($currency && $this->currency_symbol_position === 'after')
-        {
-            $result = $result . ' ' . $this->currency_symbol;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns the user configured locale. If it's not configured by middleware then fallback locale is used
-     * @return mixed
-     * @throws MissingLocaleException
-     */
-    public static function getUserLocale()
-    {
-        if (session()->has('locale'))
-        {
-            return session()->get('locale');
-        }
-
-        $locale = Locale::getFallbackLocale();
-
-        session()->put('locale', $locale);
-
-        return $locale;
-    }
-
-    /**
-     * Returns the fallback locale. If it's not a fallback locale then throw an exception
-     * @return mixed
-     * @throws MissingLocaleException
-     */
-    static function getFallbackLocale()
-    {
-        // TODO: Try to load the translation from this locale
-        $fallback_locale = Locale::enabled()->where('fallback', true)->first();
-
-        if(is_null($fallback_locale))
-        {
-            throw new MissingLocaleException(
-                'Enabled fallback locale not found. One fallback locale must exists');
+        if (is_null($fallback_locale)) {
+            throw new MissingFallbackLocaleException('Fallback locale not found.');
         }
 
         return $fallback_locale;
     }
-
-    /**
-     * Returns a locale which reference is $reference. If it isn't exist, then null is returned
-     * @param string $reference
-     * @return mixed
-     */
-    static function getLocaleByReference(string $reference = null)
-    {
-        $ISO_639_1 = explode(self::REFERENCE_DELIMITER, $reference)[0];
-
-        $region = isset(explode(self::REFERENCE_DELIMITER, $reference)[1]) ?
-            explode(self::REFERENCE_DELIMITER, $reference)[1] : null;
-
-        return self::where('ISO_639_1', $ISO_639_1)
-            ->where('region', $region)->first();
-    }
-
-    static function getBestLocale(string $locale, string $region = null)
-    {
-        //TODO
-    }
-
 }
