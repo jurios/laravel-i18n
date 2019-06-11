@@ -4,6 +4,7 @@
 namespace Kodilab\LaravelI18n\Translations\ArrayTranslations;
 
 
+use Illuminate\Filesystem\Filesystem;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Translations\Translation;
 
@@ -15,13 +16,17 @@ class ArrayTranslationCollector
     /** @var Locale */
     protected $fallback_locale;
 
+    /** @var Filesystem */
+    protected $filesystem;
+
     protected $array_translations_fallback;
 
     protected $array_translations_en;
 
-    public function __construct(array $array_translation_collection)
+    public function __construct()
     {
-        $this->array_translation_collection = $array_translation_collection;
+        $this->filesystem = new Filesystem();
+        $this->array_translation_collection = $this->discoverArrayTranslations();
 
         /** @var ArrayTranslations $array_translations */
         foreach ($this->array_translation_collection as $array_translations) {
@@ -60,6 +65,20 @@ class ArrayTranslationCollector
         }
 
         return $translations;
+    }
+
+    private function discoverArrayTranslations()
+    {
+        $array_translations = [];
+
+        $directories = $this->filesystem->directories(resource_path('lang'));
+
+        /** @var string $directory */
+        foreach ($directories as $directory) {
+            $array_translations[] = new ArrayTranslations($directory);
+        }
+
+        return $array_translations;
     }
 
     private function bestTranslation(string $path) {

@@ -57,54 +57,20 @@ class Sync extends Command
     {
         $locale = Locale::getFallbackLocale();
 
-        $array_translations = $this->discoverArrayTranslations();
+        $array_translations = (new ArrayTranslationCollector())->collect();
 
-        $at_sync = new ArrayTranslationCollector($array_translations);
+        $parsed_translations = $this->linguist->texts();
 
-        $array_translations = $at_sync->collect();
-
-        $occurrence_translations = $this->linguist->texts();
-
-        $translations = array_merge($array_translations, $occurrence_translations);
+        $translations = array_merge($array_translations, $parsed_translations);
 
         $fallback_manager = new TranslationsManager($locale);
         $synchronizer = new Synchronizer($fallback_manager, $translations);
 
         //Only add new translations to the fallback locale as we guess is the original locale of the text
-        $this->addNewTranslations($fallback_manager, $synchronizer->new());
+        $fallback_manager->merge($synchronizer->new());
 
         //For deprecated, they will be removed from all locale files
         $this->removeDeprecatedTranslations($synchronizer->deprecated());
-
-    }
-
-
-    private function discoverArrayTranslations()
-    {
-        $array_translations = [];
-
-        $directories = $this->filesystem->directories(resource_path('lang'));
-
-        /** @var string $directory */
-        foreach ($directories as $directory) {
-            $array_translations[] = new ArrayTranslations($directory);
-        }
-
-        return $array_translations;
-    }
-
-    /**
-     * Add the new_translations originals to the manager locale's file
-     *
-     * @param TranslationsManager $manager
-     * @param array $new_translations
-     */
-    private function addNewTranslations(TranslationsManager $manager, array $new_translations)
-    {
-        /** @var Translation $translation */
-        foreach ($new_translations as $translation) {
-            $manager->add($translation->original, $translation->translation);
-        }
     }
 
     /**

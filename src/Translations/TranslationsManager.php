@@ -46,6 +46,14 @@ class TranslationsManager
         $this->save();
     }
 
+    public function merge(array $translations)
+    {
+        /** @var Translation $translation */
+        foreach ($translations as $translation) {
+            $this->add($translation->original, $translation->translation);
+        }
+    }
+
     /**
      * Removes the 'original' translation from the collection and from the file
      *
