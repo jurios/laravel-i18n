@@ -8,10 +8,10 @@ system.
 
 ### Features
 
-* Automatically new translatable text detection (project texts and 3th party exported translations)
+* Automatically adds the new translatable text (detected by parsing the project texts and 3th party exported translations)
 * Automatically removes deprecated translations in order to keep it clean
 * Web editor to manage languages and translations from your templates (WIP)
-
+* Utils for list remaining translations for each locale (WIP)
 
 ### Installation
 
@@ -21,7 +21,7 @@ First, include the package to your project:
 composer require kodilab/laravel-i18n dev-master
 ``` 
 
-Once you have `laravel-i18n` in your project, you must publish the config files with:
+Once you have `laravel-i18n`, you must publish the config files with:
 
 ```
 php artisan vendor:publish --provider="Kodilab\LaravelI18n\I18nProvider"
@@ -34,7 +34,7 @@ You can check the `laravel-i18n` configuration in the `config/i18n.php` configur
 `i18n_locales` by default. You can change the table name in the `config/i18n.php` file (this change must be done before
 applying the migration).
 
-In order to create the table, just launch the migrations:
+In order to create the table, just apply the migrations:
 
 ```
 php artisan migrate
@@ -42,30 +42,48 @@ php artisan migrate
 
 #### Install
 
+The install command will create the fallback locale based on the `fallback_locale` parameter 
+defined on Laravel configuration in the `config/app.php` file.
+
+The fallback locale in `laravel-i18n` has the same meaning as the `fallback_locale` for the Laravel localization system:
+Is the language which will be used when a translation is not defined for a given language.
+As `laravel-i18n` will consider the texts found in the project as a translation of the `fallback_locale` of the text, is
+a good practice define in your `config/app.php` the same `fallback_locale` as your language used in your codebase.
+
+Once you have the desired `fallback_locale` in your `config/app.php`, let's install the `laravel-i18n` package:
+
 ```
 php artisan make:i18n
 ```
 
-This will create the default fallback locale. The fallback locale is the language will be used by default (recommended use
- the same language used in the template texts). This value is taken from the `config/app.php` file (`fallback_locale` parameter).
-
-For example, considering my template text are written in `english`, my `fallback_locale` parameter should be `en`. 
-Therefore, the `locale` persisted will be the `en` locale. As `english` is considered the fallback locale, when a translation
-does not exist for a given language, the `english` translation will be used.
+This will add a new locale in the `i18n_locale`.
 
 #### Sync process
-Once we have at least one locale in our `i18n_locales` table, we can start the sync process. This process will re-build
-our `lang/{locale}.json` files with the existing translatable texts from our codebase (templates files, controllers etc..) 
-& all 3th-party translations exported in`lang/{locale}/*.php` files. 
 
-Only translated texts will appear in the  `lang/{locale}.json` files.  As `laravel-i18n` considers the `fallback_locale` 
-the language used on the codebase, `lang/{fallback_locale}.json` will contain all texts found.
+Once we have at least one locale (and this locale is the fallback) in our `i18n_locales` table, 
+we can start the sync process. 
+This process will re-build the `lang/{locale}.json` files with the existing translatable texts (calls to `_()` function) from our codebase 
+(templates files, controllers etc..) 
+& all 3th-party translations exported in`lang/{locale}/*.php` files. What's more it will removed the deprecated texts.
 
-This process should fired frequently (specially when a text has changed/add/removed). It's recommended execute this process
-every deployment. In order to start it:
+You can start a sync process with the command: 
 
 ```
 php artisan i18n:sync
 ```
 
+This process should fired as frequently as possible. It's recommended execute this process every deployment.
+
 ##### Sync detailed
+
+What the sync process does is:
+
+1. Look for new texts exported into the `lang/{locale}/*.php` files and add them to the **fallback locale translation file (only)**
+2. Look for the calls to the translation function (by default, `_()`) in the project codebase and add them to the **fallback locale translation file (only)**
+3. Remove deprecated transalations which are not present neither in codebase or exported translations from **all** `{locale}.json` files.
+
+The reason why new texts are only included in the fallback locale is because they need to be translated in order to add
+them in a specific language. (They can't be added with an empty ("") translation because Laravel will consider "" as the translation).
+
+`laravel-i18n` will provide commands in order to list what texts remains untranslated for each locale in order to let you identify them
+fastly (WIP). In the editor (WIP) you will be able to list them too.
