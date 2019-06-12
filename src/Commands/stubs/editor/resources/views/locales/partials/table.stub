@@ -9,7 +9,7 @@
 @section('table-filters-header-' . $id)
     @if(hasQueryString('name'))
         <span class="badge badge-success">
-            {{_('Name')}}:'<i>{{getQueryString('name')}}</i>'
+            {{__('Name')}}:'<i>{{getQueryString('name')}}</i>'
         </span>
     @endif
 @endsection
@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-lg-8">
             <div class="form-group">
-                <label class="form-label">{{ _('Name:') }}</label>
+                <label class="form-label">{{ __('Name:') }}</label>
                 <input class="form-control" name="name" placeholder="Language name" type="text"
                        value="{{ getQueryString('name', null) }}">
             </div>
@@ -72,13 +72,6 @@
                     <span class="badge badge-danger">
                         Disabled
                     </span>
-                    <--a href="javascript:;" title="Enable this locale" @ajaxmodal
-                       data-ajax-url="{{ route('i18n.locales.enable.dialog', [
-                                'locale' => $locale,
-                                'from' => \Illuminate\Support\Facades\Request::fullUrl()
-                            ]) }}">
-                        <i class="fas fa-toggle-off text-danger"></i>
-                    </a-->
                 @endif
             </td>
             <td class="table--actions">

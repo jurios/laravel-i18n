@@ -71,7 +71,7 @@ we can start the sync process.
 
 As `laravel-i18n` considers the `locale_fallback` locale as the language used in our codebase, the idea behind `sync` 
 is keep updated the `lang/{locale_fallback}.json` file. The `sync` process will detect the new translatable texts 
-from our codebase (calls to `_()` function) & all 3th-party translations exported in`lang/{locale}/*.php` files 
+from our codebase (calls to `__()` function) & all 3th-party translations exported in`lang/{locale}/*.php` files 
 and will add them into the `lang/{locale_fallback}.json` file. 
 What's more will detect the deprecated translations in the `lang/{locale_fallback}.json` file and will remove them from 
 each `lang/{locale}.json` file. 
@@ -92,7 +92,7 @@ to the next section.
 What the sync process does is:
 
 1. Look for new texts exported into the `lang/{locale}/*.php` files and add them to the **fallback locale translation file (only)**
-2. Look for the calls to the translation function (by default, `_()`) in the project codebase and add them to the **fallback locale translation file (only)**
+2. Look for the calls to the translation function (by default, `__()`) in the project codebase and add them to the **fallback locale translation file (only)**
 3. Remove deprecated transalations which are not present neither in codebase or exported translations from **all** `{locale}.json` files.
 
 The reason why new texts are only included in the fallback locale is because they need to be translated in order to add

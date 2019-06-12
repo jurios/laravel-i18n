@@ -28,6 +28,7 @@ class LocaleController extends I18nController
         $locale = \Kodilab\LaravelI18n\Models\Locale::create([
             'iso' => $request->input('iso'),
             'description' => $request->input('description'),
+            'enabled' => (bool)$request->input('enabled'),
             'laravel_locale' => $request->input('laravel_locale'),
             'currency_number_decimals' => $request->input('currency_number_decimals'),
             'currency_decimals_punctuation' => $request->input('currency_decimals_punctuation'),
@@ -55,6 +56,7 @@ class LocaleController extends I18nController
         $locale->update([
             'iso' => $request->input('iso'),
             'description' => $request->input('description'),
+            'enabled' => (bool)$request->input('enabled'),
             'laravel_locale' => $request->input('laravel_locale'),
             'currency_number_decimals' => $request->input('currency_number_decimals'),
             'currency_decimals_punctuation' => $request->input('currency_decimals_punctuation'),

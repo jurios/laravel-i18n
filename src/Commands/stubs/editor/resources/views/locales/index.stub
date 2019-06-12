@@ -1,5 +1,15 @@
 @extends('i18n::layouts.editor.editor')
 
 @section('content')
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="btn-group float-right">
+                <a href="{{ route('i18n.locales.create') }}" class="btn btn-success">
+                    {{ __('New locale') }}
+                </a>
+            </div>
+        </div>
+    </div>
+
     @include('vendor.i18n.editor.locales.partials.table')
 @endsection
