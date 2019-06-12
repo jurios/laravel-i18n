@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
+use Kodilab\LaravelI18n\Commands\Editor;
 use Kodilab\LaravelI18n\Commands\Install;
 use Kodilab\LaravelI18n\Commands\Sync;
 use \Illuminate\Support\Facades\Blade;
@@ -40,7 +41,8 @@ class I18nProvider extends ServiceProvider
 
         $this->commands([
             Install::class,
-            Sync::class
+            Sync::class,
+            Editor::class
         ]);
     }
 
