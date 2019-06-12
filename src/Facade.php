@@ -18,9 +18,14 @@ class Facade extends \Illuminate\Support\Facades\Facade
             ->name('i18n.')
             ->namespace('I18n')
             ->group(function () {
+
                 static::$app->make('router')
                     ->get('/', 'DashboardController@dashboard')
                     ->name('dashboard');
+
+                static::$app->make('router')
+                    ->get('/locales', 'LocaleController@index')
+                    ->name('locales.index');
             });
     }
 }

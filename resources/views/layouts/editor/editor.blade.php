@@ -76,5 +76,7 @@
         @yield('content')
     </main>
 </div>
+
+@stack('inline-scripts')
 </body>
 </html>

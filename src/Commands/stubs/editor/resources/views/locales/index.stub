@@ -1,0 +1,5 @@
+@extends('i18n::layouts.editor.editor')
+
+@section('content')
+    @include('vendor.i18n.editor.locales.partials.table')
+@endsection
