@@ -6,10 +6,10 @@
 
 @php($action = route('i18n.locales.index'))
 
-@section('header-filters')
-    @if(hasQueryString('qf-name'))
-        <span class="tag">
-            {{_('name')}}:'<i>{{getQueryString('qf-name')}}</i>'
+@section('table-filters-header-' . $id)
+    @if(hasQueryString('name'))
+        <span class="badge badge-success">
+            {{_('Name')}}:'<i>{{getQueryString('name')}}</i>'
         </span>
     @endif
 @endsection
@@ -19,8 +19,8 @@
         <div class="col-lg-8">
             <div class="form-group">
                 <label class="form-label">{{ _('Name:') }}</label>
-                <input class="form-control" name="qf-name" placeholder="Language name" type="text"
-                       value="{{ getQueryString('qf-name', null) }}">
+                <input class="form-control" name="name" placeholder="Language name" type="text"
+                       value="{{ getQueryString('name', null) }}">
             </div>
         </div>
     </div>
@@ -31,8 +31,7 @@
         <th>Reference</th>
         <th>Description</th>
         <th>Fallback</th>
-        <th width="30%" class="text-center">Progress</th>
-        <th>Translations</th>
+        <th width="30%" class="text-center">Translation progress</th>
         <th>Enabled</th>
         <th>Actions</th>
     </tr>
@@ -56,11 +55,6 @@
             </td>
             <td class="td--progress">
                 @include('vendor.i18n.editor.locales.partials.progress_bar')
-            </td>
-            <td>
-                {{--<a href="{{ route('i18n.locales.translations.index', compact('locale')) }}">
-                    <i class="fe fe-list"></i> Translations
-                </a>--}}
             </td>
             <td class="text-center">
                 @if($locale->enabled)
@@ -88,9 +82,9 @@
                 @endif
             </td>
             <td class="table--actions">
+                <a href="{{ route('i18n.locales.show', compact('locale')) }}">See</a>
+                <a href="{{ route('i18n.locales.edit', compact('locale')) }}">Edit</a>
             {{--
-                <a href="{{ route('i18n.locales.show', compact('locale')) }}"><i class="fa fa-eye text-primary"></i></a>
-                <a href="{{ route('i18n.locales.edit', compact('locale')) }}"><i class="fa fa-edit text-info"></i></a>
                 <a href="javascript:;" @ajaxmodal
                    data-ajax-url="{{ route('i18n.locales.destroy.dialog', ['locale' => $locale]) }}">
                     <i class="fa fa-trash text-danger"></i>
@@ -99,4 +93,8 @@
             </td>
         </tr>
     @endforeach
+@endsection
+
+@section('table-footer-' . $id)
+    {{ $locales->links() }}
 @endsection

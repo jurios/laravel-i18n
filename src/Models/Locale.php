@@ -84,4 +84,14 @@ class Locale extends Model
 
         return $fallback_locale;
     }
+
+    public function getTranslationsAttribute()
+    {
+        return [];
+    }
+
+    public function getPercAttribute()
+    {
+        return 0;
+    }
 }

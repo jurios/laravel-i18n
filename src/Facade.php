@@ -24,8 +24,7 @@ class Facade extends \Illuminate\Support\Facades\Facade
                     ->name('dashboard');
 
                 static::$app->make('router')
-                    ->get('/locales', 'LocaleController@index')
-                    ->name('locales.index');
+                    ->resource('/locales', 'LocaleController');
             });
     }
 }
