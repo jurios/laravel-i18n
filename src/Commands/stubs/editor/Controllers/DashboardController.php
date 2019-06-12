@@ -11,6 +11,6 @@ class DashboardController extends I18nController
      */
     public function dashboard()
     {
-        return view(self::VIEW_PATH . '.dasboard');
+        return view(self::VIEW_PATH . '.editor.dashboard.dashboard');
     }
 }
