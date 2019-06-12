@@ -84,6 +84,8 @@ class Editor extends Command
      */
     protected function exportViews()
     {
+        $this->copyLaravelLayout();
+
         foreach ($this->views as $key => $value) {
             if (file_exists($view = $this->getViewPath($value)) && ! $this->option('force')) {
                 if (! $this->confirm("The [{$value}] view already exists. Do you want to replace it?")) {
@@ -94,6 +96,19 @@ class Editor extends Command
             copy(
                 __DIR__.'/stubs/editor/resources/views/'.$key,
                 $view
+            );
+        }
+    }
+
+    /**
+     * Copy the layout from laravel framework
+     */
+    private function copyLaravelLayout()
+    {
+        if (!file_exists($path = resource_path('views/layouts/app.blade.php'))) {
+            copy(
+                base_path('vendor/laravel/framework/src/Illuminate/Auth/Console/stubs/make/views/layouts/app.stub'),
+                $path
             );
         }
     }
