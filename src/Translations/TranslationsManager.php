@@ -33,6 +33,19 @@ class TranslationsManager
     }
 
     /**
+     * Returns all translations
+     */
+    public function all()
+    {
+        return $this->translations;
+    }
+
+    public function find(string $original)
+    {
+        return $this->translations->where('original', $original)->first();
+    }
+
+    /**
      * It will add the original's text translation into the translations collection. If the translations already exists,
      * it will be updated.
      *

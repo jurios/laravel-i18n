@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
+use Kodilab\LaravelI18n\Translations\TranslationsManager;
 
 class Locale extends Model
 {
@@ -90,7 +91,16 @@ class Locale extends Model
 
     public function getTranslationsAttribute()
     {
-        return [];
+        $manager = new TranslationsManager($this);
+
+        return $manager->translations;
+    }
+
+    public function translation(string $original)
+    {
+        $manager = new TranslationsManager($this);
+
+        return $manager->find($original);
     }
 
     public function getPercAttribute()

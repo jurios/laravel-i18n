@@ -1,0 +1,53 @@
+@extends('i18n::layouts.editor.partials.table.table')
+
+@if(!isset($id))
+    @php($id = Str::random(10))
+@endif
+
+@php($action = route('i18n.locales.translations.index', compact('locale')))
+
+@section('table-filters-header-' . $id)
+    @if(hasQueryString('name'))
+        <span class="badge badge-success">
+            {{__('Name')}}:'<i>{{getQueryString('name')}}</i>'
+        </span>
+    @endif
+@endsection
+
+@section('filters')
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-group">
+                <label class="form-label">{{ __('Name:') }}</label>
+                <input class="form-control" name="name" placeholder="Language name" type="text"
+                       value="{{ getQueryString('name', null) }}">
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('table-head-' . $id)
+    <tr>
+        <th width="30%">Fallback Translation</th>
+        <th>Translation </th>
+        <th>Actions</th>
+    </tr>
+@endsection
+
+@section('table-body-' . $id)
+    @foreach($fallback->translations as $translation)
+        <tr>
+            <td>
+                {{ $translation->translation }}
+            </td>
+            <td>
+                <textarea class="form-control">{{ $locale->translation($translation->original)->translation }}</textarea>
+            </td>
+            <td class="table--actions">
+            </td>
+        </tr>
+    @endforeach
+@endsection
+
+@section('table-footer-' . $id)
+@endsection

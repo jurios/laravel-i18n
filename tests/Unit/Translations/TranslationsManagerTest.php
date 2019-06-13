@@ -165,4 +165,20 @@ class TranslationsManagerTest extends TestCase
 
         $this->assertEquals($count, count($manager->translations));
     }
+
+    public function test_find_will_return_the_translation_of_original()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        $original = $this->faker->paragraph;
+        $translation = $this->faker->paragraph;
+
+        $manager->add($original, $translation);
+
+        $occurrence = $manager->find($original);
+
+        $this->assertEquals($translation, $occurrence->translation);
+    }
 }

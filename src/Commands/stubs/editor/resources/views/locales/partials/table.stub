@@ -55,9 +55,14 @@
                     <span class="badge badge-primary">fallback</span>
                 @endif
             </td>
-            <td class="td--progress">
+
+            <td class="td--progress" style="cursor: pointer;"
+                onclick="window.location.replace('{{ route('i18n.locales.translations.index', compact('locale')) }}')">
+
                 @include('vendor.i18n.editor.locales.partials.progress_bar')
+
             </td>
+
             <td class="text-center">
                 @if($locale->enabled)
                     <span class="badge badge-success">

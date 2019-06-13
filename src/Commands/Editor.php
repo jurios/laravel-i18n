@@ -34,18 +34,21 @@ class Editor extends Command
      * @var array
      */
     protected $views = [
-        'locales/partials/table.stub' =>        self::BASE_VIEWS_PATH . '/editor/locales/partials/table.blade.php',
-        'locales/partials/progress_bar.stub' => self::BASE_VIEWS_PATH . '/editor/locales/partials/progress_bar.blade.php',
-        'locales/index.stub' =>                 self::BASE_VIEWS_PATH . '/editor/locales/index.blade.php',
-        'locales/form.stub' =>                  self::BASE_VIEWS_PATH . '/editor/locales/form.blade.php',
-        'locales/show.stub' =>                  self::BASE_VIEWS_PATH . '/editor/locales/show.blade.php',
-        'dashboard/dashboard.stub' =>           self::BASE_VIEWS_PATH . '/editor/dashboard/dashboard.blade.php',
+        'locales/partials/table.stub' =>                        self::BASE_VIEWS_PATH . '/editor/locales/partials/table.blade.php',
+        'locales/partials/progress_bar.stub' =>                 self::BASE_VIEWS_PATH . '/editor/locales/partials/progress_bar.blade.php',
+        'locales/index.stub' =>                                 self::BASE_VIEWS_PATH . '/editor/locales/index.blade.php',
+        'locales/form.stub' =>                                  self::BASE_VIEWS_PATH . '/editor/locales/form.blade.php',
+        'locales/show.stub' =>                                  self::BASE_VIEWS_PATH . '/editor/locales/show.blade.php',
+        'dashboard/dashboard.stub' =>                           self::BASE_VIEWS_PATH . '/editor/dashboard/dashboard.blade.php',
+        'locales/translations/index.stub' =>                    self::BASE_VIEWS_PATH . '/editor/locales/translations/index.blade.php',
+        'locales/translations/partials/table/table.stub' =>     self::BASE_VIEWS_PATH . '/editor/locales/translations/partials/table/table.blade.php',
     ];
 
     protected $controllers = [
         'DashboardController.php' => 'DashboardController.php',
         'LocaleController.php' => 'LocaleController.php',
         'I18nController.php' => 'I18nController.php',
+        'TranslationController.php' => 'TranslationController.php'
     ];
 
     /**
@@ -122,6 +125,18 @@ class Editor extends Command
         }
 
         if (! is_dir($directory = $this->getViewPath(self::BASE_VIEWS_PATH . '/editor/locales/partials'))) {
+            mkdir($directory, 0755, true);
+        }
+
+        if (! is_dir($directory = $this->getViewPath(self::BASE_VIEWS_PATH . '/editor/locales/translations'))) {
+            mkdir($directory, 0755, true);
+        }
+
+        if (! is_dir($directory = $this->getViewPath(self::BASE_VIEWS_PATH . '/editor/locales/translations/partials'))) {
+            mkdir($directory, 0755, true);
+        }
+
+        if (! is_dir($directory = $this->getViewPath(self::BASE_VIEWS_PATH . '/editor/locales/translations/partials/table'))) {
             mkdir($directory, 0755, true);
         }
 
