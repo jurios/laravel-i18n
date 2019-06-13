@@ -54,12 +54,6 @@ class Locale extends Model
             }
 
         });
-
-        self::creating(function (Locale $model) {
-            if ($model->fallback === false) {
-                $model->enabled = false;
-            }
-        });
     }
 
     public function __construct(array $attributes = [])

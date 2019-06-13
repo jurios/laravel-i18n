@@ -44,7 +44,7 @@
                                         Region
                                         <small class="text-muted">e.g 'GB, ES, FR ...'</small>
                                     </label>
-                                    <input id="input_region" name="iso" type="text"
+                                    <input id="input_region" name="region" type="text"
                                            class="form-control {{ $errors->has('region') ? 'is-invalid' : '' }}"
                                            value="{{ old('region', $locale->region) }}">
                                     @if($errors->has('region'))
@@ -55,7 +55,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
 
                                 <div class="form-group">
                                     <label for="input_description">
@@ -73,7 +73,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-2">
 
                                 <div class="form-group">
                                     <label for="input_enabled">
