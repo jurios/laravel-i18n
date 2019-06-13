@@ -78,14 +78,16 @@ class LocaleController extends I18nController
 
     public function destroy(\Illuminate\Http\Request $request, \Kodilab\LaravelI18n\Models\Locale $locale)
     {
-        if (!$locale->isFallbackLocale())
-        {
+        if (!$locale->isFallback()) {
+
             $locale->delete();
             $request->session()->flash('status', [
                 'level' => 'success',
                 'message' => "Locale <b>" . $locale->reference . "</b> deleted"
             ]);
         }
+
         return redirect()->route('i18n.locales.index');
+
     }
 }

@@ -8,6 +8,14 @@
                 <a href="{{ route('i18n.locales.edit', compact('locale')) }}" class="btn btn-primary">
                     {{ __('Edit') }}
                 </a>
+                @unless($locale->isFallback())
+                    <a class="locale-destroy-button btn btn-danger" href="javascript:;"
+                        data-locale-id="{{ $locale->id }}"
+                        data-locale-reference="{{ $locale->reference }}"
+                        data-locale-description="{{ $locale->description }}">
+                        {{ __('Destroy') }}
+                    </a>
+                @endunless
             </div>
         </div>
     </div>

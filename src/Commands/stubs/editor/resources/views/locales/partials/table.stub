@@ -79,12 +79,14 @@
             <td class="table--actions">
                 <a href="{{ route('i18n.locales.show', compact('locale')) }}">See</a>
                 <a href="{{ route('i18n.locales.edit', compact('locale')) }}">Edit</a>
-            {{--
-                <a href="javascript:;" @ajaxmodal
-                   data-ajax-url="{{ route('i18n.locales.destroy.dialog', ['locale' => $locale]) }}">
-                    <i class="fa fa-trash text-danger"></i>
-                </a>
-            --}}
+                @unless($locale->isFallback())
+                    <a class="locale-destroy-button" href="javascript:;"
+                        data-locale-id="{{ $locale->id }}"
+                        data-locale-reference="{{ $locale->reference }}"
+                        data-locale-description="{{ $locale->description }}">
+                        {{ __('Destroy') }}
+                    </a>
+                @endunless
             </td>
         </tr>
     @endforeach
