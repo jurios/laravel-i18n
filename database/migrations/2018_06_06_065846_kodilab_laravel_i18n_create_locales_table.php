@@ -16,7 +16,9 @@ class KodilabLaravelI18nCreateLocalesTable extends Migration
         Schema::create(config('i18n.tables.locales'), function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('iso')->unique()->nullable(false);
+            $table->string('iso')->nullable(false);
+            $table->string('region')->nullable(true);
+            $table->index(['iso', 'region']);
 
             $table->text('description')->nullable(true)->default(null);
 

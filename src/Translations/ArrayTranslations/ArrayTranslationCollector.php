@@ -19,7 +19,9 @@ class ArrayTranslationCollector
     /** @var Filesystem */
     protected $filesystem;
 
-    protected $array_translations_fallback;
+    protected $array_translations_fallback_iso;
+
+    protected $array_translations_fallback_reference;
 
     protected $array_translations_en;
 
@@ -31,8 +33,12 @@ class ArrayTranslationCollector
         /** @var ArrayTranslations $array_translations */
         foreach ($this->array_translation_collection as $array_translations) {
 
+            if ($array_translations->locale_reference() === Locale::getFallbackLocale()->iso) {
+                $this->array_translations_fallback_iso = $array_translations;
+            }
+
             if ($array_translations->locale_reference() === Locale::getFallbackLocale()->reference) {
-                $this->array_translations_fallback = $array_translations;
+                $this->array_translations_fallback_reference = $array_translations;
             }
 
             if ($array_translations->locale_reference() === 'en') {
@@ -82,8 +88,13 @@ class ArrayTranslationCollector
     }
 
     private function bestTranslation(string $path) {
-        if (!is_null($this->array_translations_fallback) && !is_null($this->array_translations_fallback->find($path))) {
-            return $this->array_translations_fallback->find($path);
+
+        if (!is_null($this->array_translations_fallback_reference) && !is_null($this->array_translations_fallback_reference->find($path))) {
+            return $this->array_translations_fallback_reference->find($path);
+        }
+
+        if (!is_null($this->array_translations_fallback_iso) && !is_null($this->array_translations_fallback_iso->find($path))) {
+            return $this->array_translations_fallback_iso->find($path);
         }
 
         if (!is_null($this->array_translations_en) && !is_null($this->array_translations_en->find($path))) {

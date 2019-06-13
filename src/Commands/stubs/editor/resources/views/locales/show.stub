@@ -27,6 +27,12 @@
                         </div>
 
                         <div class="col-md-2">
+                            <label>
+                                Region
+                            </label>
+                            <div class="h3">
+                                {{$locale->region }}
+                            </div>
                         </div>
 
                         <div class="col-md-4">

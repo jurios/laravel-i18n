@@ -27,6 +27,7 @@ class LocaleController extends I18nController
     {
         $locale = \Kodilab\LaravelI18n\Models\Locale::create([
             'iso' => $request->input('iso'),
+            'region' => $request->input('region'),
             'description' => $request->input('description'),
             'enabled' => (bool)$request->input('enabled'),
             'laravel_locale' => $request->input('laravel_locale'),
@@ -55,6 +56,7 @@ class LocaleController extends I18nController
     {
         $locale->update([
             'iso' => $request->input('iso'),
+            'region' => $request->input('region'),
             'description' => $request->input('description'),
             'enabled' => (bool)$request->input('enabled'),
             'laravel_locale' => $request->input('laravel_locale'),

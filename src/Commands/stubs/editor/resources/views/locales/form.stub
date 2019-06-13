@@ -22,13 +22,13 @@
                             <div class="col-md-2">
 
                                 <div class="form-group">
-                                    <label for="input_ISO_639_1">
+                                    <label for="input_iso">
                                         ISO 639-1
                                         <small class="text-muted">e.g 'en'</small>
                                     </label>
-                                    <input id="input_ISO_639_1" name="iso" type="text"
+                                    <input id="input_iso" name="iso" type="text"
                                            class="form-control {{ $errors->has('iso') ? 'is-invalid' : '' }}"
-                                           value="{{ old('ISO_639_1', $locale->iso) }}">
+                                           value="{{ old('iso', $locale->iso) }}">
                                     @if($errors->has('iso'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('iso') }}
@@ -37,7 +37,23 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-2">
+
+                                <div class="form-group">
+                                    <label for="input_region">
+                                        Region
+                                        <small class="text-muted">e.g 'GB, ES, FR ...'</small>
+                                    </label>
+                                    <input id="input_region" name="iso" type="text"
+                                           class="form-control {{ $errors->has('region') ? 'is-invalid' : '' }}"
+                                           value="{{ old('region', $locale->region) }}">
+                                    @if($errors->has('region'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('region') }}
+                                        </div>
+                                    @endif
+                                </div>
+
                             </div>
                             <div class="col-md-4">
 
@@ -89,9 +105,6 @@
                                     @endif
                                 </div>
 
-                            </div>
-
-                            <div class="col-md-1">
                             </div>
 
                         </div>
@@ -328,7 +341,7 @@
     </form>
 @endsection
 
-@push('inline-js')
+@push('inline-scripts')
     <script>
         function number_format (number, decimals, dec_point, thousands_sep) {
             // Strip all characters but numerical ones.

@@ -29,6 +29,7 @@
 @section('table-head-' . $id)
     <tr>
         <th>Reference</th>
+        <th>Region</th>
         <th>Description</th>
         <th>Fallback</th>
         <th width="30%" class="text-center">Translation progress</th>
@@ -41,12 +42,13 @@
     @foreach($locales as $locale)
         <tr>
             <td>
-                {{ $locale->reference }}
+                {{ $locale->iso }}
                 @if($locale->created_by_sync)
                     <i class="fa fa-exclamation-triangle text-warning"
                        title="This locale has been created by sync with default values. Please, check it over."></i>
                 @endif
             </td>
+            <td>{{ $locale->region }}</td>
             <td>{{ $locale->description }}</td>
             <td>
                 @if($locale->isFallback())
