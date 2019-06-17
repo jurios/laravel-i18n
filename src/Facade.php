@@ -29,6 +29,10 @@ class Facade extends \Illuminate\Support\Facades\Facade
                 static::$app->make('router')
                     ->get('/locales/{locale}/translations', 'TranslationController@index')
                     ->name('locales.translations.index');
+
+                static::$app->make('router')
+                    ->patch('/locales/{locale}/translations/update', 'TranslationController@update')
+                    ->name('locales.translations.update');
             });
     }
 }

@@ -74,7 +74,7 @@ class Linguist
          * https://github.com/barryvdh/laravel-translation-manager/blob/master/src/Manager.php
          */
 
-        $functions = ['t'];
+        $functions = ['t', '__'];
 
         $pattern =
             // See https://regex101.com/r/jS5fX0/4
