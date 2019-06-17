@@ -59,6 +59,16 @@ class TranslationsManager
         $this->save();
     }
 
+    /**
+     * Add alias
+     * @param string $original
+     * @param string $translation
+     */
+    public function update(string $original, string $translation)
+    {
+        $this->add($original, $translation);
+    }
+
     public function merge(array $translations)
     {
         /** @var Translation $translation */

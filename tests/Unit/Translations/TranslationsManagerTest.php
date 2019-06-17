@@ -81,6 +81,35 @@ class TranslationsManagerTest extends TestCase
         $this->assertTrue(file_exists($manager->json_path));
     }
 
+    public function test_add_will_replace_the_translation_if_it_exists()
+    {
+
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        //We assure the translation file is created
+        $this->generateRandomTranslationFile($locale);
+
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->paragraph;
+        $translation2 = $this->faker->paragraph;
+
+        $manager->add($original, $translation);
+
+        $file_content_array = json_decode(file_get_contents($manager->json_path), true);
+
+        $this->assertEquals($file_content_array[$original], $translation);
+
+        $manager->add($original, $translation2);
+
+        $file_content_array = json_decode(file_get_contents($manager->json_path), true);
+
+        $this->assertEquals($file_content_array[$original], $translation2);
+        $this->assertEquals($manager->find($original)->translation, $translation2);
+
+    }
+
     public function test_delete_translation_will_delete_the_translation_from_the_collection()
     {
         $locale = factory(Locale::class)->create();
