@@ -22,12 +22,12 @@ class TranslationController extends I18nController
 
         $manager = new \Kodilab\LaravelI18n\Translations\TranslationsManager($locale);
         $manager->update($original, $translation);
-        $manager->refresh();
 
         $translation = $manager->find($original);
 
         return response()->json([
-            'line' => $translation->translation
+            'line' => $translation->translation,
+            'percentage' => $manager->percentage
         ]);
     }
 }

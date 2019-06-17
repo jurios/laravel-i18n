@@ -7,6 +7,7 @@ namespace Kodilab\LaravelI18n\Tests\Unit\Translations;
 
 use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Translations\Translation;
 use Kodilab\LaravelI18n\Translations\TranslationsManager;
 
 class TranslationsManagerTest extends TestCase
@@ -209,5 +210,27 @@ class TranslationsManagerTest extends TestCase
         $occurrence = $manager->find($original);
 
         $this->assertEquals($translation, $occurrence->translation);
+    }
+
+    public function test_percentage_returns_the_percentage_translated()
+    {
+        $fallback_manager = new TranslationsManager($this->fallback_locale);
+
+        $translation = new Translation($this->faker->paragraph, $this->faker->paragraph);
+
+        $this->generateRandomTranslationFile($this->fallback_locale, 1);
+        $fallback_manager->refresh();
+        $fallback_manager->add($translation->original, $translation->translation);
+
+        $this->assertEquals(100, $fallback_manager->percentage);
+
+
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        $manager->add($translation->original, $translation->translation);
+
+        $this->assertEquals(50, $manager->percentage);
     }
 }

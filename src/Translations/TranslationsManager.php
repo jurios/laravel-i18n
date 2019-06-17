@@ -18,6 +18,7 @@ class TranslationsManager
     /** @var Collection */
     protected $translations;
 
+
     public function __construct(Locale $locale)
     {
         $this->locale = $locale;
@@ -29,6 +30,10 @@ class TranslationsManager
     {
         if (property_exists($this, $name)) {
             return $this->$name;
+        }
+
+        if ($name === 'percentage') {
+            return $this->generateTranslatedPercentage();
         }
     }
 
@@ -157,5 +162,15 @@ class TranslationsManager
         }
 
         return $result;
+    }
+
+
+    private function generateTranslatedPercentage()
+    {
+        $fallback_manager = new TranslationsManager(Locale::getFallbackLocale());
+
+        $fallback_translations_count = count($fallback_manager->translations);
+
+        return (int) round((count($this->translations) * 100) / $fallback_translations_count, 0);
     }
 }

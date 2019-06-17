@@ -12,6 +12,6 @@
 <div class="progress" title="{{ $title }}">
     <div class="progress-bar {{ $color }}" role="progressbar" style="width: {{ $locale->perc }}%;" aria-valuenow="{{ $locale->perc }}"
          aria-valuemin="0" aria-valuemax="100">
-        {{ $locale->perc }}%
+        {{ $locale->perc }}% - {{ $title }}
     </div>
 </div>

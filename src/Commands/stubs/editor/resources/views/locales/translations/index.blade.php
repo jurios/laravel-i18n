@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="alert alert-warning text-center">
-        Please, keep coherence with the <b>:</b> and <b>HTML tags </b> in your translations. Any change with those elements
+        Please, keep the coherence with the "<b>:</b>" and <b>HTML tags "<>"</b> in your translations. Any change with those elements
         could make show your translations incorrectly.
     </div>
     @include('vendor.i18n.editor.locales.translations.partials.table.table')

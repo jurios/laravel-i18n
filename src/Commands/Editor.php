@@ -34,14 +34,14 @@ class Editor extends Command
      * @var array
      */
     protected $views = [
-        'locales/partials/table.stub' =>                        self::BASE_VIEWS_PATH . '/editor/locales/partials/table.blade.php',
-        'locales/partials/progress_bar.stub' =>                 self::BASE_VIEWS_PATH . '/editor/locales/partials/progress_bar.blade.php',
-        'locales/index.stub' =>                                 self::BASE_VIEWS_PATH . '/editor/locales/index.blade.php',
-        'locales/form.stub' =>                                  self::BASE_VIEWS_PATH . '/editor/locales/form.blade.php',
-        'locales/show.stub' =>                                  self::BASE_VIEWS_PATH . '/editor/locales/show.blade.php',
-        'dashboard/dashboard.stub' =>                           self::BASE_VIEWS_PATH . '/editor/dashboard/dashboard.blade.php',
-        'locales/translations/index.stub' =>                    self::BASE_VIEWS_PATH . '/editor/locales/translations/index.blade.php',
-        'locales/translations/partials/table/table.stub' =>     self::BASE_VIEWS_PATH . '/editor/locales/translations/partials/table/table.blade.php',
+        'locales/partials/table.blade.php' =>                        self::BASE_VIEWS_PATH . '/editor/locales/partials/table.blade.php',
+        'locales/partials/progress_bar.blade.php' =>                 self::BASE_VIEWS_PATH . '/editor/locales/partials/progress_bar.blade.php',
+        'locales/index.blade.php' =>                                 self::BASE_VIEWS_PATH . '/editor/locales/index.blade.php',
+        'locales/form.blade.php' =>                                  self::BASE_VIEWS_PATH . '/editor/locales/form.blade.php',
+        'locales/show.blade.php' =>                                  self::BASE_VIEWS_PATH . '/editor/locales/show.blade.php',
+        'dashboard/dashboard.blade.php' =>                           self::BASE_VIEWS_PATH . '/editor/dashboard/dashboard.blade.php',
+        'locales/translations/index.blade.php' =>                    self::BASE_VIEWS_PATH . '/editor/locales/translations/index.blade.php',
+        'locales/translations/partials/table/table.blade.php' =>     self::BASE_VIEWS_PATH . '/editor/locales/translations/partials/table/table.blade.php',
     ];
 
     protected $controllers = [
@@ -74,7 +74,7 @@ class Editor extends Command
 
             file_put_contents(
                 base_path('routes/web.php'),
-                file_get_contents(__DIR__.'/stubs/editor/routes/web.stub'),
+                file_get_contents(__DIR__.'/stubs/editor/routes/web.php'),
                 FILE_APPEND
             );
         }

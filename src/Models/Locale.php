@@ -105,6 +105,8 @@ class Locale extends Model
 
     public function getPercAttribute()
     {
-        return 0;
+        $manager = new TranslationsManager($this);
+
+        return $manager->percentage;
     }
 }

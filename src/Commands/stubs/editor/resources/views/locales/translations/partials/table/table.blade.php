@@ -7,23 +7,9 @@
 @php($action = route('i18n.locales.translations.index', compact('locale')))
 
 @section('table-filters-header-' . $id)
-    @if(hasQueryString('name'))
-        <span class="badge badge-success">
-            {{__('Name')}}:'<i>{{getQueryString('name')}}</i>'
-        </span>
-    @endif
 @endsection
 
 @section('filters')
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="form-group">
-                <label class="form-label">{{ __('Name:') }}</label>
-                <input class="form-control" name="name" placeholder="Language name" type="text"
-                       value="{{ getQueryString('name', null) }}">
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('table-head-' . $id)
