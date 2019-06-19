@@ -2,18 +2,12 @@
 
 namespace Kodilab\LaravelI18n\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
-use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
-use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 use Kodilab\LaravelI18n\Translations\TranslationsManager;
 
 class Locale extends Model
 {
-
-    const ISO_639_1_SIZE = ["min" => 2, "max" => 3];
 
     protected $table;
 
