@@ -7,6 +7,7 @@ namespace Kodilab\LaravelI18n\Tests\Unit\Translations;
 
 use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Translations\Translation;
 use Kodilab\LaravelI18n\Translations\TranslationsManager;
 
 class TranslationsManagerTest extends TestCase
@@ -79,6 +80,35 @@ class TranslationsManagerTest extends TestCase
         $manager->add($original, $translation);
 
         $this->assertTrue(file_exists($manager->json_path));
+    }
+
+    public function test_add_will_replace_the_translation_if_it_exists()
+    {
+
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        //We assure the translation file is created
+        $this->generateRandomTranslationFile($locale);
+
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->paragraph;
+        $translation2 = $this->faker->paragraph;
+
+        $manager->add($original, $translation);
+
+        $file_content_array = json_decode(file_get_contents($manager->json_path), true);
+
+        $this->assertEquals($file_content_array[$original], $translation);
+
+        $manager->add($original, $translation2);
+
+        $file_content_array = json_decode(file_get_contents($manager->json_path), true);
+
+        $this->assertEquals($file_content_array[$original], $translation2);
+        $this->assertEquals($manager->find($original)->translation, $translation2);
+
     }
 
     public function test_delete_translation_will_delete_the_translation_from_the_collection()
@@ -164,5 +194,43 @@ class TranslationsManagerTest extends TestCase
         $manager->refresh();
 
         $this->assertEquals($count, count($manager->translations));
+    }
+
+    public function test_find_will_return_the_translation_of_original()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        $original = $this->faker->paragraph;
+        $translation = $this->faker->paragraph;
+
+        $manager->add($original, $translation);
+
+        $occurrence = $manager->find($original);
+
+        $this->assertEquals($translation, $occurrence->translation);
+    }
+
+    public function test_percentage_returns_the_percentage_translated()
+    {
+        $fallback_manager = new TranslationsManager($this->fallback_locale);
+
+        $translation = new Translation($this->faker->paragraph, $this->faker->paragraph);
+
+        $this->generateRandomTranslationFile($this->fallback_locale, 1);
+        $fallback_manager->refresh();
+        $fallback_manager->add($translation->original, $translation->translation);
+
+        $this->assertEquals(100, $fallback_manager->percentage);
+
+
+        $locale = factory(Locale::class)->create();
+
+        $manager = new TranslationsManager($locale);
+
+        $manager->add($translation->original, $translation->translation);
+
+        $this->assertEquals(50, $manager->percentage);
     }
 }

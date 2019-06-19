@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
+use Kodilab\LaravelI18n\Commands\Editor;
 use Kodilab\LaravelI18n\Commands\Install;
 use Kodilab\LaravelI18n\Commands\Sync;
 use \Illuminate\Support\Facades\Blade;
@@ -30,17 +31,21 @@ class I18nProvider extends ServiceProvider
     public function boot(\Illuminate\Routing\Router $router)
     {
         $config_path = __DIR__ . '/../config/config.php';
-        $migrations_path = __DIR__. '/../database/migrations';
+        $migrations_path = __DIR__ . '/../database/migrations';
+        $views_path = __DIR__ . '/../resources/views';
 
         $this->publishes([
             $config_path => config_path('i18n.php')
         ], 'laravel-i18n-config');
 
+        $this->loadViewsFrom($views_path, 'i18n');
+
         $this->loadMigrationsFrom($migrations_path);
 
         $this->commands([
             Install::class,
-            Sync::class
+            Sync::class,
+            Editor::class
         ]);
     }
 

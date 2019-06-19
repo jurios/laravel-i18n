@@ -18,11 +18,12 @@ class TranslationsManager
     /** @var Collection */
     protected $translations;
 
+
     public function __construct(Locale $locale)
     {
         $this->locale = $locale;
         $this->json_path = config('i18n.translations_path', resource_path('lang')) . DIRECTORY_SEPARATOR . $locale->reference . '.json';
-        $this->readTranslations();
+        $this->translations = $this->getTranslations($this->json_path);
     }
 
     public function __get($name)
@@ -30,6 +31,23 @@ class TranslationsManager
         if (property_exists($this, $name)) {
             return $this->$name;
         }
+
+        if ($name === 'percentage') {
+            return $this->generateTranslatedPercentage();
+        }
+    }
+
+    /**
+     * Returns all translations
+     */
+    public function all()
+    {
+        return $this->translations;
+    }
+
+    public function find(string $original)
+    {
+        return $this->translations->where('original', $original)->first();
     }
 
     /**
@@ -44,6 +62,16 @@ class TranslationsManager
         $this->addToTranslationsCollection($original, $translation);
 
         $this->save();
+    }
+
+    /**
+     * Add alias
+     * @param string $original
+     * @param string $translation
+     */
+    public function update(string $original, string $translation)
+    {
+        $this->add($original, $translation);
     }
 
     public function merge(array $translations)
@@ -71,7 +99,7 @@ class TranslationsManager
      */
     public function refresh()
     {
-        $this->readTranslations();
+        $this->translations = $this->getTranslations($this->json_path);
     }
 
     /**
@@ -96,19 +124,24 @@ class TranslationsManager
     }
 
     /**
-     * Read the translation from the file and feed the translation collection
+     * Returns the translation from the file.
+     *
+     * @param string $json_path
+     * @return Collection
      */
-    private function readTranslations()
+    private function getTranslations(string $json_path)
     {
-        $this->translations = new Collection();
+        $translations = new Collection();
 
         if (file_exists($this->json_path)) {
-            $translations = json_decode(file_get_contents($this->json_path), true);
+            $content = json_decode(file_get_contents($json_path), true);
 
-            foreach ($translations as $original => $translation) {
-                $this->addToTranslationsCollection($original, $translation);
+            foreach ($content as $original => $translation) {
+                $translations->put($original, new Translation($original, $translation));
             }
         }
+
+        return $translations;
     }
 
     private function addToTranslationsCollection(string $original, string $translation)
@@ -134,5 +167,19 @@ class TranslationsManager
         }
 
         return $result;
+    }
+
+
+    private function generateTranslatedPercentage()
+    {
+        $fallback_manager = new TranslationsManager(Locale::getFallbackLocale());
+
+        $fallback_translations_count = count($fallback_manager->translations);
+
+        if ($fallback_translations_count > 0) {
+            return (int) round((count($this->translations) * 100) / $fallback_translations_count, 0);
+        }
+
+        return 100;
     }
 }

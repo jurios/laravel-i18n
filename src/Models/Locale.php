@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
 use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
+use Kodilab\LaravelI18n\Translations\TranslationsManager;
 
 class Locale extends Model
 {
@@ -45,15 +46,14 @@ class Locale extends Model
         self::saving(function (Locale $model) {
 
             $model->iso = strtolower($model->iso);
+            $model->region = !is_null($model->region) ? strtoupper($model->region) : null;
             $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->iso;
             $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->iso;
 
-        });
-
-        self::creating(function (Locale $model) {
-            if ($model->fallback === false) {
-                $model->enabled = false;
+            if ($model->isFallback()) {
+                $model->enabled = true;
             }
+
         });
     }
 
@@ -65,6 +65,10 @@ class Locale extends Model
 
     public function getReferenceAttribute()
     {
+        if (!is_null($this->region)) {
+            return $this->iso . '_' . $this->region;
+        }
+
         return $this->iso;
     }
 
@@ -83,5 +87,26 @@ class Locale extends Model
         }
 
         return $fallback_locale;
+    }
+
+    public function getTranslationsAttribute()
+    {
+        $manager = new TranslationsManager($this);
+
+        return $manager->translations;
+    }
+
+    public function translation(string $original)
+    {
+        $manager = new TranslationsManager($this);
+
+        return $manager->find($original);
+    }
+
+    public function getPercAttribute()
+    {
+        $manager = new TranslationsManager($this);
+
+        return $manager->percentage;
     }
 }

@@ -28,3 +28,22 @@ if (!function_exists('exportToPlainTranslationArray')) {
         return $result;
     }
 }
+
+if (!function_exists('getQueryString')) {
+    function getQueryString(string $query, $default = null)
+    {
+        return \Illuminate\Support\Facades\Request::input($query, $default);
+    }
+}
+if (!function_exists('hasQueryString')) {
+    function hasQueryString(string $query)
+    {
+        return \Illuminate\Support\Facades\Request::has($query);
+    }
+}
+if (!function_exists('filledQueryString')) {
+    function filledQueryString(string $query)
+    {
+        return \Illuminate\Support\Facades\Request::filled($query);
+    }
+}
