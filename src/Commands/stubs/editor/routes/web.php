@@ -1,2 +1,2 @@
 
-I18n::editorRoutes();
+\Kodilab\LaravelI18n\Facade::editorRoutes();
