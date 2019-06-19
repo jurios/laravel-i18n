@@ -176,6 +176,10 @@ class TranslationsManager
 
         $fallback_translations_count = count($fallback_manager->translations);
 
-        return (int) round((count($this->translations) * 100) / $fallback_translations_count, 0);
+        if ($fallback_translations_count > 0) {
+            return (int) round((count($this->translations) * 100) / $fallback_translations_count, 0);
+        }
+
+        return 100;
     }
 }
