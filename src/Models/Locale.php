@@ -84,6 +84,12 @@ class Locale extends Model
         return $fallback_locale;
     }
 
+    /**
+     * Returns the translation collection of the locale
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws MissingFallbackLocaleException
+     */
     public function getTranslationsAttribute()
     {
         $translator = new Translator($this);

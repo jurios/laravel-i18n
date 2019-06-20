@@ -8,7 +8,7 @@ use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\Unit\Translations\TestCase;
 use Kodilab\LaravelI18n\Translations\FileHandlers\JsonFile;
 
-class JsonTest extends TestCase
+class JsonFileTest extends TestCase
 {
     public function test_content_is_equal_than_the_translation_defined_in_the_file()
     {
