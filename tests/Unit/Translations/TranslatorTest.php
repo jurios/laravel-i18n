@@ -26,6 +26,21 @@ class TranslatorTest extends TestCase
         $this->assertEquals($translation_text, $translation->translation);
     }
 
+    public function test_translator_gets_the_null_translation_as_empty()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $original_text = $this->faker->paragraph;
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [$original_text => null]);
+
+        $translator = new Translator($locale);
+
+        $translation = $translator->translations[$original_text];
+
+        $this->assertTrue($translation->isEmpty());
+    }
+
     public function test_translations_should_be_joined_with_fallback_translation_mark_those_translations_as_empty()
     {
         $locale = factory(Locale::class)->create();
