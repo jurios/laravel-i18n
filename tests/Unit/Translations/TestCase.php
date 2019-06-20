@@ -48,11 +48,16 @@ class TestCase extends \Kodilab\LaravelI18n\Tests\TestCase
      * @param string $path
      * @param array $translations
      */
-    protected function addTranslationsToFile(string $path, array $translations)
+    protected function addTranslationsToFile(string $path, array $translations, string $format = 'json')
     {
-        $translations_json = json_encode($translations, JSON_PRETTY_PRINT);
+        if ($format === 'json') {
+            $content = json_encode($translations, JSON_PRETTY_PRINT);
+        }
+        else {
+            $content = exportArrayToString($translations);
+        }
 
-        file_put_contents($path, $translations_json);
+        file_put_contents($path, $content);
     }
 
     /**
@@ -61,7 +66,7 @@ class TestCase extends \Kodilab\LaravelI18n\Tests\TestCase
      * @param string $path
      * @param int $count
      */
-    protected function fillFileWithRandomTranslations(string $path, int $count = 10)
+    protected function fillFileWithRandomTranslations(string $path, int $count = 10, string $format = 'json')
     {
         $translations = [];
 
@@ -69,7 +74,7 @@ class TestCase extends \Kodilab\LaravelI18n\Tests\TestCase
             $translations[$this->faker->unique()->paragraph] = $this->faker->paragraph;
         }
 
-        $this->addTranslationsToFile($path, $translations);
+        $this->addTranslationsToFile($path, $translations, $format);
     }
 
     /**
