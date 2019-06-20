@@ -6,7 +6,7 @@ namespace Kodilab\LaravelI18n\Tests\Unit\Translations\FileHandlers;
 
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\Unit\Translations\TestCase;
-use Kodilab\LaravelI18n\Translations\FileHandlers\Json;
+use Kodilab\LaravelI18n\Translations\FileHandlers\JsonFile;
 
 class JsonTest extends TestCase
 {
@@ -23,7 +23,7 @@ class JsonTest extends TestCase
 
         $this->addTranslationsToFile($json_path, $translations);
 
-        $jsonHandler = new Json($json_path);
+        $jsonHandler = new JsonFile($json_path);
 
         $this->assertEquals($translations, $jsonHandler->content);
     }

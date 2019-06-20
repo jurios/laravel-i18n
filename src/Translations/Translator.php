@@ -6,7 +6,7 @@ namespace Kodilab\LaravelI18n\Translations;
 
 use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Models\Locale;
-use Kodilab\LaravelI18n\Translations\FileHandlers\Json;
+use Kodilab\LaravelI18n\Translations\FileHandlers\JsonFile;
 
 class Translator
 {
@@ -54,7 +54,7 @@ class Translator
             . '.json';
 
         $result = new Collection();
-        $handler = new Json($path);
+        $handler = new JsonFile($path);
         $translations = $handler->translations;
 
 

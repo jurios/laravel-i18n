@@ -4,7 +4,7 @@
 namespace Kodilab\LaravelI18n\Translations\FileHandlers;
 
 
-class Json
+class JsonFile
 {
     /** @var string */
     protected $path;
