@@ -59,6 +59,17 @@ class ArrayTranslator
     }
 
     /**
+     * Finds a translation
+     *
+     * @param string $original
+     * @return mixed
+     */
+    public function find(string $original)
+    {
+        return $this->translations->where('original', $original)->first();
+    }
+
+    /**
      * Returns the array translation paths from the locale. It looks for the simple locale definition and region-scoped
      * locale
      *

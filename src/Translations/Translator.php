@@ -6,6 +6,7 @@ namespace Kodilab\LaravelI18n\Translations;
 
 use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Translations\ArrayTranslations\ArrayTranslator;
 use Kodilab\LaravelI18n\Translations\FileHandlers\JsonFile;
 
 class Translator
@@ -38,6 +39,55 @@ class Translator
         if (property_exists($this, $name)) {
             return $this->$name;
         }
+    }
+
+    /**
+     * Finds a translation
+     *
+     * @param string $original
+     * @return mixed
+     */
+    public function find(string $original)
+    {
+        return $this->translations->where('original', $original)->first();
+    }
+
+    /**
+     * Sync the translations with the originals
+     *
+     * @param array $originals
+     */
+    public function sync(array $originals)
+    {
+        $new_translations = new Collection();
+
+        foreach ($originals as $original) {
+
+            $translation = $this->getExistingTranslationText($original, true);
+
+            $new_translations->put($original, new Translation($original, $translation));
+        }
+
+        $this->translations = $new_translations;
+    }
+
+    /**
+     * Returns the translated text in case the original has been already translated in the json file or in
+     * the locale array files
+     *
+     * @param string $original
+     * @param bool $lookArrays
+     * @return |null
+     */
+    private function getExistingTranslationText(string $original, bool $lookArrays = false)
+    {
+        if (!is_null($occurrence = $this->find($original))) {
+            return $occurrence->translation;
+        }
+
+        $arrayTranslator = new ArrayTranslator($this->locale);
+
+        return !is_null($occurrence = $arrayTranslator->find($original)) ? $occurrence->translation : null;
     }
 
     /**

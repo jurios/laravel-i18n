@@ -66,4 +66,106 @@ class TranslatorTest extends TestCase
         $this->assertTrue(isset($translator->translations[$original_only_fallback]));
         $this->assertTrue($translator->translations[$original_only_fallback]->isEmpty());
     }
+
+    public function test_sync_will_add_new_originals()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+            $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
+        ]);
+
+        $translator = new Translator($locale);
+
+        $original = $this->faker->unique()->paragraph;
+
+        $translator->sync([$original]);
+
+        $this->assertNotNull($translator->translations[$original]);
+    }
+
+    public function test_find_will_returns_the_translation()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->unique()->paragraph;
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+            $original => $translation
+        ]);
+
+        $translator = new Translator($locale);
+
+        $result = $translator->find($original);
+
+        $this->assertEquals($translation, $result->translation);
+        $this->assertEquals($original, $result->original);
+    }
+
+    public function test_sync_will_keep_the_existing_translations()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->unique()->paragraph;
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+            $original => $translation
+        ]);
+
+        $translator = new Translator($locale);
+
+        $translator->sync([$original]);
+
+        $this->assertNotNull($translator->translations[$original]);
+        $this->assertEquals($translation, $translator->translations[$original]->translation);
+    }
+
+    public function test_sync_will_remove_deprecated_translations()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->unique()->paragraph;
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+            $original => $translation
+        ]);
+
+        $translator = new Translator($locale);
+
+        $translator->sync([$this->faker->paragraph]);
+
+        $this->assertFalse(isset($translator->translations[$original]));
+    }
+
+    public function test_sync_will_use_the_array_translation_if_it_exists()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $scope = $this->faker->unique()->word;
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->unique()->paragraph;
+
+        mkdir($this->lang_path . DIRECTORY_SEPARATOR . $locale->iso);
+
+        $this->addTranslationsToFile(
+            $this->lang_path
+            . DIRECTORY_SEPARATOR
+            . $locale->iso
+            . DIRECTORY_SEPARATOR
+            . $scope
+            .'.php', [$original => $translation], 'array'
+        );
+
+        $translator = new Translator($locale);
+
+        $this->assertNull($translator->find($scope . "." . $original));
+
+        $translator->sync([$scope . "." . $original]);
+
+        $this->assertNotNull($translator->translations[$scope . "." . $original]);
+        $this->assertEquals($translation, $translator->translations[$scope . "." . $original]->translation);
+    }
 }

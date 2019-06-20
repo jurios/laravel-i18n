@@ -91,4 +91,31 @@ class ArrayTranslatorTest extends TestCase
         $this->assertEquals($specific_translation, $specific_translator->translations[$scope . "." . $original]->translation);
 
     }
+
+    public function test_find_will_returns_the_translation()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $scope = $this->faker->unique()->word;
+        $original = $this->faker->unique()->paragraph;
+        $translation = $this->faker->unique()->paragraph;
+
+        mkdir($this->lang_path . DIRECTORY_SEPARATOR . $locale->iso);
+
+        $this->addTranslationsToFile(
+            $this->lang_path
+            . DIRECTORY_SEPARATOR
+            . $locale->iso
+            . DIRECTORY_SEPARATOR
+            . $scope
+            .'.php', [$original => $translation], 'array'
+        );
+
+        $translator = new ArrayTranslator($locale);
+
+        $result = $translator->find($scope . "." . $original);
+
+        $this->assertEquals($translation, $result->translation);
+        $this->assertEquals($scope . "." . $original, $result->original);
+    }
 }
