@@ -8,9 +8,11 @@ use Kodilab\LaravelI18n\Linguist;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Translations\ArrayTranslations\ArrayTranslations;
 use Kodilab\LaravelI18n\Translations\ArrayTranslations\ArrayTranslationCollector;
+use Kodilab\LaravelI18n\Translations\ArrayTranslations\ArrayTranslator;
 use Kodilab\LaravelI18n\Translations\Synchronizer;
 use Kodilab\LaravelI18n\Translations\Translation;
 use Kodilab\LaravelI18n\Translations\TranslationsManager;
+use Kodilab\LaravelI18n\Translations\Translator;
 
 class Sync extends Command
 {
@@ -55,39 +57,33 @@ class Sync extends Command
      */
     public function handle()
     {
-        $locale = Locale::getFallbackLocale();
+        $originals = $this->getOriginals();
 
-        $array_translations = (new ArrayTranslationCollector())->collect();
-
-        $parsed_translations = $this->linguist->texts();
-
-        $translations = array_merge($array_translations, $parsed_translations);
-
-        $fallback_manager = new TranslationsManager($locale);
-        $synchronizer = new Synchronizer($fallback_manager, $translations);
-
-        //Only add new translations to the fallback locale as we guess is the original locale of the text
-        $fallback_manager->merge($synchronizer->new());
-
-        //For deprecated, they will be removed from all locale files
-        $this->removeDeprecatedTranslations($synchronizer->deprecated());
-    }
-
-    /**
-     * Remove deprecated_translation from the all locale's file
-     *
-     * @param array $deprecated_translations
-     */
-    private function removeDeprecatedTranslations(array $deprecated_translations)
-    {
         /** @var Locale $locale */
         foreach (Locale::all() as $locale) {
-            $manager = new TranslationsManager($locale);
+            $translator = new Translator($locale);
 
-            /** @var Translation $deprecated */
-            foreach ($deprecated_translations as $deprecated) {
-                $manager->delete($deprecated->original);
+            $translator->sync($originals);
+        }
+    }
+
+    private function getOriginals()
+    {
+        $originals = [];
+        $parsed_translations = $this->linguist->texts();
+
+        /** @var Locale $locale */
+        foreach (Locale::all() as $locale) {
+            $array_translations = (new ArrayTranslator($locale))->translations;
+
+            $translations = array_merge($parsed_translations, $array_translations->all());
+
+            /** @var Translation $translation */
+            foreach ($translations as $translation) {
+                $originals[$translation->original] = $translation->original;
             }
         }
+
+        return array_keys($originals);
     }
 }

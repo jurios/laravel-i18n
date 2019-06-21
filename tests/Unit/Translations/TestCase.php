@@ -42,18 +42,49 @@ class TestCase extends \Kodilab\LaravelI18n\Tests\TestCase
         }
     }
 
-    protected function generateRandomTranslationFile(Locale $locale, int $count = 10)
+    /**
+     * Add a raw translation array to the file
+     *
+     * @param string $path
+     * @param array $translations
+     */
+    protected function addTranslationsToFile(string $path, array $translations, string $format = 'json')
     {
-        $translations_path = $this->lang_path . DIRECTORY_SEPARATOR . $locale->reference . '.json';
+        if ($format === 'json') {
+            $content = json_encode($translations, JSON_PRETTY_PRINT);
+        }
+        else {
+            $content = exportArrayToString($translations);
+        }
 
+        file_put_contents($path, $content);
+    }
+
+    /**
+     * Add random raw translations to the file
+     *
+     * @param string $path
+     * @param int $count
+     */
+    protected function fillFileWithRandomTranslations(string $path, int $count = 10, string $format = 'json')
+    {
         $translations = [];
 
         for ($i = 0; $i < $count; $i ++) {
             $translations[$this->faker->unique()->paragraph] = $this->faker->paragraph;
         }
 
-        $translations_json = json_encode($translations, JSON_PRETTY_PRINT);
+        $this->addTranslationsToFile($path, $translations, $format);
+    }
 
-        file_put_contents($translations_path, $translations_json);
+    /**
+     * Returns the json file path for the given locale
+     *
+     * @param Locale $locale
+     * @return string
+     */
+    protected function getJSONPathFromLocale(Locale $locale)
+    {
+        return $this->lang_path . DIRECTORY_SEPARATOR . $locale->reference . '.json';
     }
 }

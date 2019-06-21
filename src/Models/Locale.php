@@ -2,18 +2,13 @@
 
 namespace Kodilab\LaravelI18n\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
-use Kodilab\LaravelFilters\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
-use Kodilab\LaravelI18n\Exceptions\MissingLocaleException;
 use Kodilab\LaravelI18n\Translations\TranslationsManager;
+use Kodilab\LaravelI18n\Translations\Translator;
 
 class Locale extends Model
 {
-
-    const ISO_639_1_SIZE = ["min" => 2, "max" => 3];
 
     protected $table;
 
@@ -89,24 +84,16 @@ class Locale extends Model
         return $fallback_locale;
     }
 
+    /**
+     * Returns the translation collection of the locale
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws MissingFallbackLocaleException
+     */
     public function getTranslationsAttribute()
     {
-        $manager = new TranslationsManager($this);
+        $translator = new Translator($this);
 
-        return $manager->translations;
-    }
-
-    public function translation(string $original)
-    {
-        $manager = new TranslationsManager($this);
-
-        return $manager->find($original);
-    }
-
-    public function getPercAttribute()
-    {
-        $manager = new TranslationsManager($this);
-
-        return $manager->percentage;
+        return $translator->translations;
     }
 }

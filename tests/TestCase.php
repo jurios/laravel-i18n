@@ -67,6 +67,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $config = include 'config/config.php';
 
         $app['config']->set('i18n', $config);
+        $app['config']->set('i18n.lang_path', $this->resources_path . DIRECTORY_SEPARATOR . 'lang');
     }
 
     private function createResourcesDirectory()

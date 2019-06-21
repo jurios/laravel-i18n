@@ -29,6 +29,72 @@ if (!function_exists('exportToPlainTranslationArray')) {
     }
 }
 
+if (!function_exists('exportTranslationCollectionToRaw')) {
+    function exportTranslationCollectionToRaw(\Illuminate\Support\Collection $translations)
+    {
+        $raw = [];
+
+        /** @var Translation $translation */
+        foreach ($translations as $translation) {
+            $raw[$translation->original] = $translation->translation;
+        }
+
+        return $raw;
+    }
+}
+
+if (!function_exists('exportArrayToFile')) {
+    function exportArrayToString(array $array)
+    {
+        $content = "<?php". PHP_EOL . PHP_EOL . "return [" . PHP_EOL;
+        $content = $content . printArray($array, 1);
+        $content = $content . PHP_EOL .PHP_EOL . "];";
+        return $content;
+    }
+}
+
+if (!function_exists('printArray')) {
+    function printArray(array $array, $level)
+    {
+        $content = '';
+        for ($i = 0; $i < count($array); $i++) {
+            $key = array_keys($array)[$i];
+            if (is_array($array[$key])) {
+
+                $content = $content . printTab($level + 1);
+                $content = $content . "'" . $key . "'" . $this->printTab(1) . "=> [" . PHP_EOL;
+                $content = $content . printArray($array[$key], $level + 1);
+                $content = $content . printTab($level + 1) . "], \n";
+
+            } else {
+
+                $content = $content . printItem($key, $array[$key], $level + 1);
+            }
+        }
+        return $content;
+    }
+}
+
+if (!function_exists('printTab')) {
+    function printTab($times)
+    {
+        $content = "";
+        for ($i = 0; $i < $times; $i++) {
+            $content = $content . "    ";
+        }
+        return $content;
+    }
+}
+
+if (!function_exists('printItem')) {
+    function printItem($key, $value, $level)
+    {
+        $content = printTab($level);
+        $content = $content . "'" . $key . "'" . printTab(1) . "=> '" . $value . "'," . PHP_EOL;
+        return $content;
+    }
+}
+
 if (!function_exists('getQueryString')) {
     function getQueryString(string $query, $default = null)
     {

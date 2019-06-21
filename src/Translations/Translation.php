@@ -14,10 +14,15 @@ class Translation implements Arrayable
     /** @var string */
     public $translation;
 
-    public function __construct(string $original, string $translation)
+    public function __construct(string $original, string $translation = null)
     {
         $this->original = $original;
         $this->translation = $translation;
+    }
+
+    public function isEmpty()
+    {
+        return is_null($this->translation);
     }
 
     public function toArray()
