@@ -6,10 +6,10 @@ class TranslationController extends I18nController
 {
     public function index(\Kodilab\LaravelI18n\Models\Locale $locale)
     {
-        $fallback = \Kodilab\LaravelI18n\Models\Locale::getFallbackLocale();
+        $fallback_locale = \Kodilab\LaravelI18n\Models\Locale::getFallbackLocale();
 
         return view(self::VIEW_PATH . '.editor.locales.translations.index',
-            compact('locale' , 'fallback')
+            compact('locale', 'fallback_locale')
         );
     }
 

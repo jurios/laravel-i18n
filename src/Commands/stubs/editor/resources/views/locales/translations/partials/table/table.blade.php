@@ -21,13 +21,13 @@
 @endsection
 
 @section('table-body-' . $id)
-    @foreach($fallback->translations as $fallback_translation)
+    @foreach($locale->translations as $translation)
         <tr>
             <td>
-                <textarea class="form-control">{{ $fallback_translation->translation }}</textarea>
+                <textarea class="form-control">{{ $fallback_locale->translations->where('original', $translation->original)->first()->translation }}</textarea>
             </td>
             <td>
-                <textarea class="form-control" name="translation">{{ !is_null($translation = $locale->translation($fallback_translation->original)) ? $translation->translation : "" }}</textarea>
+                <textarea class="form-control" name="translation">{{ $translation->translation }}</textarea>
             </td>
             <td class="table--actions">
                 <form class="line-update-form"
@@ -38,7 +38,7 @@
                         <button type="submit" class="btn btn-success btn-sm">Save</button>
                     </div>
                     <input type="hidden" name="translation" value="">
-                    <input type="hidden" name="original" value="{{$fallback_translation->original}}">
+                    <input type="hidden" name="original" value="{{$translation->original}}">
                 </form>
             </td>
         </tr>
