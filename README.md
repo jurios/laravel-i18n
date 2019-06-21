@@ -53,8 +53,8 @@ defined on Laravel configuration in the `config/app.php` file.
 
 The fallback locale in `laravel-i18n` has the same meaning as the `fallback_locale` for the Laravel localization system:
 Is the language which will be used when a translation is not defined for a given language.
-As `laravel-i18n` will consider the texts found in the project as a translation of the `fallback_locale` of the text, is
-a good practice define in your `config/app.php` the same `fallback_locale` as your language used in your codebase.
+As `laravel-i18n` will consider the texts found in the project written in `fallback_locale`, is
+a good practice define in your `config/app.php` the same `fallback_locale` parameter as your language used in your codebase.
 
 Once you have the desired `fallback_locale` in your `config/app.php`, let's install the `laravel-i18n` package:
 
@@ -62,19 +62,23 @@ Once you have the desired `fallback_locale` in your `config/app.php`, let's inst
 php artisan make:i18n
 ```
 
-This will add a new locale in the `i18n_locale`.
+This will add a new locale in the `i18n_locale` configured as `fallback` based on the `fallback_locale` parameter in
+your `config/app.php` file.
 
 #### Sync process 
 
-Once we have at least one locale (and this locale is the fallback) in our `i18n_locales` table, 
-we can start the sync process.
+Once we have a `fallback_locale` (at least, one `locale` must be defined and must be defined as `fallback`) in our 
+`i18n_locales` table, we can start the sync process.
 
-As `laravel-i18n` considers the `locale_fallback` locale as the language used in our codebase, the idea behind `sync` 
-is keep updated the `lang/{locale_fallback}.json` file. The `sync` process will detect the new translatable texts 
-from our codebase (calls to `__()` function) & all 3th-party translations exported in`lang/{locale}/*.php` files 
-and will add them into the `lang/{locale_fallback}.json` file. 
-What's more will detect the deprecated translations in the `lang/{locale_fallback}.json` file and will remove them from 
-each `lang/{locale}.json` file. 
+The idea behind `sync` is keep updated all `lang/{locale}.json` files (one for each locale). The `sync` process will 
+detect the translatable texts from our codebase (calls to `__()` function) & all 3th-party translations exported in 
+`lang/{locale}/*.php` files and add them into the `lang/{locale}.json` file. 
+What's more will detect the deprecated translations already defined in the `lang/{locale}.json` files and will remove 
+them. 
+
+As explained before, `laravel-i18n` considers `fallback_locale` as the language used in our codebase. For that reason,
+all new translatable texts detected during the sync process will be translated with the same text in 
+the `lang/{fallback_locale}.json` file.
 
 You can start a sync process with the command: 
 
@@ -84,20 +88,12 @@ php artisan i18n:sync
 
 This process should fired as frequently as possible. It's recommended execute this process every deployment.
 
-**Important:** New texts are added only in the fallback locale json file. If you want to know why, please take a look
-to the next section. 
-
 ##### Sync detailed
 
 What the sync process does is:
 
-1. Look for new texts exported into the `lang/{locale}/*.php` files and add them to the **fallback locale translation file (only)**
-2. Look for the calls to the translation function (by default, `__()`) in the project codebase and add them to the **fallback locale translation file (only)**
-3. Remove deprecated transalations which are not present neither in codebase or exported translations from **all** `{locale}.json` files.
-
-The reason why new texts are only included in the fallback locale is because they need to be translated in order to add
-them in a specific language. (They can't be added with an empty ("") translation because Laravel will consider "" as the translation
-As a result, you will see only "blank" spaces instead of default text for untranslated texts).
-
-`laravel-i18n` will provide commands in order to list what texts remains untranslated for each locale in order to let you identify them
-fastly (WIP). In the editor (WIP) you will be able to list them too.
+1. Look for new texts exported into the `lang/{locale}/*.php`
+2. Look for the calls to the translation function (by default, `__()`) in the project codebase
+3. Add the results into the JSON files with an empty (`null`) translation except in the `fallback_locale` JSON file
+where the translation is the same as the original text.
+3. Remove deprecated transalations which are not present neither in codebase or exported translations.
