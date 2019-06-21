@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n\Tests\Unit\Translations;
 
 
 use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Translations\Translation;
 use Kodilab\LaravelI18n\Translations\Translator;
 
 class TranslatorTest extends TestCase
@@ -167,5 +168,34 @@ class TranslatorTest extends TestCase
 
         $this->assertNotNull($translator->translations[$scope . "." . $original]);
         $this->assertEquals($translation, $translator->translations[$scope . "." . $original]->translation);
+    }
+
+    public function test_sync_will_use_original_as_translation_if_it_is_new_if_the_locale_is_fallback()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+            $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
+        ]);
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($this->fallback_locale), [
+            $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
+        ]);
+
+        $translator = new Translator($locale);
+
+        $original = $this->faker->unique()->paragraph;
+
+        $translator->sync([$original]);
+
+        $this->assertNotNull($translator->translations[$original]);
+        $this->assertNull($translator->translations[$original]->translation);
+
+        $translator = new Translator($this->fallback_locale);
+
+        $translator->sync([$original]);
+
+        $this->assertNotNull($translator->translations[$original]);
+        $this->assertEquals($original, $translator->translations[$original]->translation);
     }
 }

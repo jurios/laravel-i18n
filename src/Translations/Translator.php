@@ -87,7 +87,13 @@ class Translator
 
         $arrayTranslator = new ArrayTranslator($this->locale);
 
-        return !is_null($occurrence = $arrayTranslator->find($original)) ? $occurrence->translation : null;
+        $translation = !is_null($occurrence = $arrayTranslator->find($original)) ? $occurrence->translation : null;
+
+        if (is_null($translation) && $this->locale->isFallback()) {
+            return $original;
+        }
+
+        return $translation;
     }
 
     /**
