@@ -24,6 +24,13 @@ class Translator
     protected $translations;
 
     /**
+     * JSON file handler
+     *
+     * @var JsonFile
+     */
+    protected $handler;
+
+    /**
      * Translator constructor.
      * @param Locale $locale
      * @throws \Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException
@@ -31,6 +38,7 @@ class Translator
     public function __construct(Locale $locale)
     {
         $this->locale = $locale;
+        $this->handler = new JsonFile($this->getJSONFilePath());
         $this->translations = $this->getTranslations();
     }
 
@@ -69,6 +77,26 @@ class Translator
         }
 
         $this->translations = $new_translations;
+
+        $this->save();
+    }
+
+    public function save()
+    {
+        $raw_translations = exportTranslationCollectionToRaw($this->translations);
+
+        $this->handler->save($raw_translations);
+    }
+
+    /**
+     * Refresh the translation collection from the file
+     *
+     * @throws \Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException
+     */
+    public function refresh()
+    {
+        $this->handler->refresh();
+        $this->translations = $this->getTranslations();
     }
 
     /**
@@ -104,15 +132,9 @@ class Translator
      */
     private function getTranslations()
     {
-        $path = $path = config('i18n.lang_path', resource_path('lang'))
-            . DIRECTORY_SEPARATOR
-            . $this->locale->reference
-            . '.json';
-
         $result = new Collection();
-        $handler = new JsonFile($path);
-        $translations = $handler->translations;
 
+        $translations = $this->handler->translations;
 
         if (!$this->locale->isFallback()) {
             $result = $this->getFallbackTranslationsAsEmpty();
@@ -144,5 +166,13 @@ class Translator
         }
 
         return $result;
+    }
+
+    private function getJSONFilePath()
+    {
+        return config('i18n.lang_path', resource_path('lang'))
+            . DIRECTORY_SEPARATOR
+            . $this->locale->reference
+            . '.json';
     }
 }

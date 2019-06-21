@@ -29,6 +29,20 @@ if (!function_exists('exportToPlainTranslationArray')) {
     }
 }
 
+if (!function_exists('exportTranslationCollectionToRaw')) {
+    function exportTranslationCollectionToRaw(\Illuminate\Support\Collection $translations)
+    {
+        $raw = [];
+
+        /** @var Translation $translation */
+        foreach ($translations as $translation) {
+            $raw[$translation->original] = $translation->translation;
+        }
+
+        return $raw;
+    }
+}
+
 if (!function_exists('exportArrayToFile')) {
     function exportArrayToString(array $array)
     {

@@ -198,4 +198,22 @@ class TranslatorTest extends TestCase
         $this->assertNotNull($translator->translations[$original]);
         $this->assertEquals($original, $translator->translations[$original]->translation);
     }
+
+    public function test_sync_will_save_changes_on_json_file()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+            $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
+        ]);
+
+        $translator = new Translator($locale);
+
+        $original = $this->faker->unique()->paragraph;
+
+        $translator->sync([$original]);
+        $translator->refresh();
+
+        $this->assertNotNull($translator->find($original));
+    }
 }
