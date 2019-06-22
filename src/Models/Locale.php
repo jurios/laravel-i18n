@@ -96,4 +96,32 @@ class Locale extends Model
 
         return $translator->translations;
     }
+
+    /**
+     * Find a translation by original text
+     *
+     * @param string $original
+     * @return mixed
+     * @throws MissingFallbackLocaleException
+     */
+    public function translation(string $original)
+    {
+        $translator = new Translator($this);
+
+        return $translator->find($original);
+    }
+
+    /**
+     * Updates a translation
+     *
+     * @param string $original
+     * @param string $translation
+     * @throws MissingFallbackLocaleException
+     */
+    public function updateTranslation(string $original, string $translation)
+    {
+        $translator = new Translator($this);
+
+        $translator->update($original, $translation);
+    }
 }

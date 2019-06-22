@@ -21,7 +21,7 @@
 @endsection
 
 @section('table-body-' . $id)
-    @foreach($locale->translations as $translation)
+    @foreach($translations as $translation)
         <tr>
             <td>
                 <textarea class="form-control">{{ $fallback_locale->translations->where('original', $translation->original)->first()->translation }}</textarea>
@@ -46,5 +46,6 @@
 @endsection
 
 @section('table-footer-' . $id)
+    {{ $translations->links() }}
 @endsection
 

@@ -81,6 +81,10 @@ class Translator
         $this->save();
     }
 
+    /**
+     * Save the translation collection into the file
+     *
+     */
     public function save()
     {
         $raw_translations = exportTranslationCollectionToRaw($this->translations);
@@ -97,6 +101,23 @@ class Translator
     {
         $this->handler->refresh();
         $this->translations = $this->getTranslations();
+    }
+
+    /**
+     * Updates a translation
+     *
+     * @param string $original
+     * @param string $translation
+     * @throws \Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException
+     */
+    public function update(string $original, string $translation)
+    {
+        if (isset($this->translations[$original])) {
+            $this->translations[$original]->translation = $translation;
+        }
+
+        $this->save();
+        $this->refresh();
     }
 
     /**
@@ -168,6 +189,11 @@ class Translator
         return $result;
     }
 
+    /**
+     * Returns the JSON file path
+     *
+     * @return string
+     */
     private function getJSONFilePath()
     {
         return config('i18n.lang_path', resource_path('lang'))
