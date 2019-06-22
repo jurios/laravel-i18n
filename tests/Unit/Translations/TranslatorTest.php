@@ -260,4 +260,32 @@ class TranslatorTest extends TestCase
 
         $this->assertEquals($translation2, $translator->find($original)->translation);
     }
+
+    public function test_percentage_returns_the_translated_percentage()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+            $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
+        ]);
+
+        $translator = new Translator($locale);
+
+        $this->assertEquals(100, $translator->percentage);
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+            $this->faker->unique()->paragraph => $this->faker->unique()->paragraph,
+            $this->faker->unique()->paragraph => null
+        ]);
+
+        $translator = new Translator($locale);
+
+        $this->assertEquals(50, $translator->percentage);
+
+        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), []);
+
+        $translator = new Translator($locale);
+
+        $this->assertEquals(100, $translator->percentage);
+    }
 }

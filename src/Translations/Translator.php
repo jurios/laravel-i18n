@@ -47,6 +47,10 @@ class Translator
         if (property_exists($this, $name)) {
             return $this->$name;
         }
+
+        if ($name === 'percentage') {
+            return $this->getPercentage();
+        }
     }
 
     /**
@@ -118,6 +122,27 @@ class Translator
 
         $this->save();
         $this->refresh();
+    }
+
+    private function getPercentage()
+    {
+        $not_null_translations_count = 0;
+
+        foreach ($this->translations as $translation) {
+
+            if (!$translation->isEmpty()) {
+                $not_null_translations_count++;
+            }
+        }
+
+        if (count($this->translations) === 0) {
+            return 100;
+        }
+
+        $perc = ($not_null_translations_count * 100) / count($this->translations);
+
+        return (int) $perc;
+
     }
 
     /**

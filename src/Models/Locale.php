@@ -3,6 +3,7 @@
 namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
 use Kodilab\LaravelI18n\Translations\TranslationsManager;
 use Kodilab\LaravelI18n\Translations\Translator;
@@ -123,5 +124,28 @@ class Locale extends Model
         $translator = new Translator($this);
 
         $translator->update($original, $translation);
+    }
+
+    public function getPercentageAttribute()
+    {
+        $translator = new Translator($this);
+
+        return $translator->percentage;
+    }
+
+    public function getTranslatedAttribute()
+    {
+        $translator = new Translator($this);
+
+        $result = new Collection();
+
+        foreach ($translator->translations as $translation)
+        {
+            if (!$translation->isEmpty()) {
+                $result->put($translation->original, $translation);
+            }
+        }
+
+        return $result;
     }
 }

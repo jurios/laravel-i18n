@@ -93,7 +93,7 @@
                                 Time zone
                             </label>
                             <div class="h4">
-                                {{ $locale->carbon_tz }}
+                                {{ !is_null($locale->carbon_tz) ?  $locale->carbon_tz : config('app.timezone')}}
                             </div>
                         </div>
                     </div>

@@ -149,16 +149,25 @@
                                         Time zone
                                     </label>
 
-                                    <vue-select classes="form-control"
-                                                :options="{{ json_encode(DateTimeZone::listIdentifiers()) }}"
-                                                value="{{ old('carbon_tz', $locale->carbon_tz) }}"
-                                                placeholder="Use the default time zone" name="carbon_tz"
-                                                name="carbon_tz"
-                                                >
-                                    </vue-select>
-                                    @if($errors->has('carbon_locale'))
+                                    <select id="input_enabled" name="carbon_tz" class="form-control">
+
+                                        <option value=""
+                                                {{ old('carbon_tz', $locale->carbon_tz) === null ? 'selected' : '' }}>
+                                            {{ __('Default') }}
+                                        </option>
+
+                                        @foreach(DateTimeZone::listIdentifiers() as $timezone)
+                                            <option value="{{ $timezone }}"
+                                                    {{ old('carbon_tz', $locale->carbon_tz) === $timezone ? 'selected' : '' }}>
+                                                {{ $timezone }}
+                                            </option>
+                                        @endforeach
+
+                                    </select>
+
+                                    @if($errors->has('carbon_tz'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('carbon_locale') }}
+                                            {{ $errors->first('carbon_tz') }}
                                         </div>
                                     @endif
                                 </div>
