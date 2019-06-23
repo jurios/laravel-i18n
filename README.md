@@ -105,7 +105,7 @@ You should follow the [Laravel localization instructions](https://laravel.com/do
 [middleware](https://laravel.com/docs/5.8/middleware) which extends `\Kodilab\LaravelI18n\Middleware\SetLocale` and define
 the `getLocale()` function which must return a `Locale` instance
 
-For example, in this case you are going to get the locale from the User model (we must create a relationship between locales and users first):
+For example, in this case we are going to get the locale from the User model (we must create a relationship between locales and users first):
 
 ```
 class Example extends \Kodilab\LaravelI18n\Middleware\SetLocale
