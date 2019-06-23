@@ -101,7 +101,25 @@ where the translation is the same as the original text.
 #### Set the locale for each request
 You should follow the [Laravel localization instructions](https://laravel.com/docs/5.8/localization#configuring-the-locale)
 
-`laravel-i18n` will provide an extensible `middleware` (WIP) for set the locale and timezone easily.
+`laravel-i18n` provides an extensible `middleware` which helps you to set the locale and timezone easily. Just create a
+[middleware](https://laravel.com/docs/5.8/middleware) which extends `\Kodilab\LaravelI18n\Middleware\SetLocale` and define
+the `getLocale()` function which must return a `Locale` instance
+
+For example, in this case you are going to get the locale from the User model (we must create a relationship between locales and users first):
+
+```
+class Example extends \Kodilab\LaravelI18n\Middleware\SetLocale
+{
+    protected function getLocale()
+    {
+        //You can access the request using $this->request
+        
+        return Auth::user()->locale;
+    }
+}
+```
+
+For each request, it will load the locale translations, timezone and currency configuration of the locale returned.
 
 ### Editor
 You can, optionally, install the editor. The editor is a collection of templates and controllers which will be exported
