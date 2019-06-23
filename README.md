@@ -14,10 +14,10 @@ system.
 
 ### Features
 
-* Automatically adds the new translatable text (detected by parsing the project texts and 3th party exported translations)
-* Automatically removes deprecated translations in order to keep it clean
-* Web editor to manage languages and translations from your templates (WIP)
-* Utils for list remaining translations for each locale (WIP)
+* Translatable texts detection (project files and 3th party exported translations also) and deprecated translations detection
+through a [sync process](#sync-process)
+* Configure language, currency (WIP) and timezone for each locale
+* Optional web editor to manage locales and translations
 
 ### Installation
 
@@ -46,7 +46,7 @@ In order to create the table, just apply the migrations:
 php artisan migrate
 ```
 
-#### Install
+### Install
 
 The install command will create the fallback locale based on the `fallback_locale` parameter 
 defined on Laravel configuration in the `config/app.php` file.
@@ -97,3 +97,44 @@ What the sync process does is:
 3. Add the results into the JSON files with an empty (`null`) translation except in the `fallback_locale` JSON file
 where the translation is the same as the original text.
 3. Remove deprecated transalations which are not present neither in codebase or exported translations.
+
+#### Set the locale for each request
+You should follow the [Laravel localization instructions](https://laravel.com/docs/5.8/localization#configuring-the-locale)
+
+`laravel-i18n` will provide an extensible `middleware` (WIP) for set the locale and timezone easily.
+
+### Editor
+You can, optionally, install the editor. The editor is a collection of templates and controllers which will be exported
+to your project in order to modify them as you want. By default, the templates uses the assets provided by Laravel.
+ 
+Modify the template as you want in order to integrate the editor into your project.
+
+You can install the editor with:
+
+```
+php artisan i18n:editor
+```
+
+This will make some changes in your project:
+
+1. The web editor controllers will be added in `app\Http\Controllers\I18n`
+2. The web editor templates will be added in `resources/vendor/i18n`
+3. A new entry in your `routes/web.php` will be added with all the routes needed by the editor. You can put the call to
+the routes wherever you want in your `routes/web.php`.
+
+These are the default routes created by `php artisan i18n:editor`:
+
+| Method | Path                                      | Name                             | Controller
+| -------| ----------------------------------------- | -------------------------------- | -------------------------------------------------------
+| GET    | i18n                                      | i18n.dashboard                   | App\Http\Controllers\I18n\DashboardController@dashboard
+| GET    | i18n/locales                              | i18n.locales.index               | App\Http\Controllers\I18n\LocaleController@index
+| POST   | i18n/locales                              | i18n.locales.store               | App\Http\Controllers\I18n\LocaleController@store
+| GET    | i18n/locales/create                       | i18n.locales.create              | App\Http\Controllers\I18n\LocaleController@create
+| DELETE | i18n/locales/{locale}                     | i18n.locales.destroy             | App\Http\Controllers\I18n\LocaleController@destroy
+| PATCH  | i18n/locales/{locale}                     | i18n.locales.update              | App\Http\Controllers\I18n\LocaleController@update
+| GET    | i18n/locales/{locale}                     | i18n.locales.show                | App\Http\Controllers\I18n\LocaleController@show
+| GET    | i18n/locales/{locale}/edit                | i18n.locales.edit                | App\Http\Controllers\I18n\LocaleController@edit
+| GET    | i18n/locales/{locale}/translations        | i18n.locales.translations.index  | App\Http\Controllers\I18n\TranslationController@index
+| PATCH  | i18n/locales/{locale}/translations/update | i18n.locales.translations.update | App\Http\Controllers\I18n\TranslationController@update
+
+Fel free to modify all you need in order to full integrate the editor to your needs.
