@@ -16,13 +16,14 @@
         "illuminate/http": "5.5.*|5.6.*|5.7.*|5.8.*",
         "illuminate/pagination": "5.5.*|5.6.*|5.7.*|5.8.*",
         "illuminate/console": "5.5.*|5.6.*|5.7.*|5.8.*",
-        "kodilab/laravel-filters": "dev-master"
+        "kodilab/laravel-filters": "^1.0.0"
     },
     "require-dev": {
         "orchestra/testbench": "~3.0",
         "fzaninotto/faker": "^1.4",
         "phpunit/phpunit": "^7.0"
     },
+    "minimum-stability": "rc",
     "autoload": {
         "psr-4": {
             "Kodilab\\LaravelI18n\\": "src",

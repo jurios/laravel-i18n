@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf5ca98378b01bdf4e03a3af3a505590",
+    "content-hash": "33041597b4a7c5fef91253293adcda21",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -286,23 +286,20 @@
         },
         {
             "name": "kodilab/laravel-filters",
-            "version": "dev-master",
+            "version": "v1.0.0-rc1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jurios/laravel-filters.git",
-                "reference": "a312f993a8d476c557d6491d339e8c2bc69aa0c9"
+                "reference": "712bf4c8fbcceba92e0264eaeadfeae84a4a40c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jurios/laravel-filters/zipball/a312f993a8d476c557d6491d339e8c2bc69aa0c9",
-                "reference": "a312f993a8d476c557d6491d339e8c2bc69aa0c9",
+                "url": "https://api.github.com/repos/jurios/laravel-filters/zipball/712bf4c8fbcceba92e0264eaeadfeae84a4a40c5",
+                "reference": "712bf4c8fbcceba92e0264eaeadfeae84a4a40c5",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "5.5.*|5.6.*|5.7.*|5.8.*",
                 "illuminate/database": "5.5.*|5.6.*|5.7.*|5.8.*",
-                "illuminate/http": "5.5.*|5.6.*|5.7.*|5.8.*",
-                "illuminate/pagination": "5.5.*|5.6.*|5.7.*|5.8.*",
                 "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*",
                 "php": ">=7.0"
             },
@@ -341,7 +338,7 @@
                 "laravel",
                 "query"
             ],
-            "time": "2019-03-22T07:56:37+00:00"
+            "time": "2019-06-06T06:18:06+00:00"
         },
         {
             "name": "laravel/framework",
@@ -4028,10 +4025,8 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {
-        "kodilab/laravel-filters": 20
-    },
+    "minimum-stability": "RC",
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
