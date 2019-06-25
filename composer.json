@@ -23,7 +23,7 @@
         "fzaninotto/faker": "^1.4",
         "phpunit/phpunit": "^7.0"
     },
-    "minimum-stability": "rc",
+    "minimum-stability": "RC",
     "autoload": {
         "psr-4": {
             "Kodilab\\LaravelI18n\\": "src",
