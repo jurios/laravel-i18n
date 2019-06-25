@@ -68,13 +68,6 @@
                     <span class="badge badge-success">
                         Enabled
                     </span>
-                    {{--<a href="" title="Disable this locale" @ajaxmodal
-                       data-ajax-url="{{ route('i18n.locales.disable.dialog', [
-                                'locale' => $locale,
-                                'from' => \Illuminate\Support\Facades\Request::fullUrl()
-                            ]) }}">
-                        <i class="fas fa-toggle-on text-success"></i>
-                    </a>--}}
                 @else
                     <span class="badge badge-danger">
                         Disabled
@@ -85,12 +78,14 @@
                 <a href="{{ route('i18n.locales.show', compact('locale')) }}">See</a>
                 <a href="{{ route('i18n.locales.edit', compact('locale')) }}">Edit</a>
                 @unless($locale->isFallback())
-                    <a class="locale-destroy-button" href="javascript:;"
-                        data-locale-id="{{ $locale->id }}"
-                        data-locale-reference="{{ $locale->reference }}"
-                        data-locale-description="{{ $locale->description }}">
-                        {{ __('Destroy') }}
-                    </a>
+                    <form action="{{ route('i18n.locales.destroy', compact('locale')) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" hidden></button>
+                        <a class="locale-destroy-button" href="javascript:;">
+                            {{ __('Destroy') }}
+                        </a>
+                    </form>
                 @endunless
             </td>
         </tr>

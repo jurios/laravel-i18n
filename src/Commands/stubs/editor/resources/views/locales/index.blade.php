@@ -16,36 +16,19 @@
 
 @push('inline-scripts')
 <script>
-    (function ($) {
+    (function () {
+        const destroy_buttons = document.querySelectorAll('.locale-destroy-button');
 
-        $('document').ready(function () {
-            $('.locale-destroy-button').on('click', function () {
-                const id = $(this).data('locale-id');
-                const reference = $(this).data('locale-reference');
-                const description = $(this).data('locale-description');
-
-                result = confirm("{{ __('Are you sure want to remove the locale') }}" + " " + reference + ": " + description + "?");
+        destroy_buttons.forEach(function (item) {
+            item.onclick = function (e) {
+                const source = e.target;
+                result = confirm("{{ __('Are you sure want to remove the locale?') }}");
 
                 if (result === true) {
-
-                    var url = "{{route('i18n.locales.destroy', ['locale' => '%ID%'])}}".replace('%ID%', id);
-
-                    $.ajax(url, {
-                        method: "POST",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: {
-                            '_method': 'DELETE'
-                        }
-                    }).done(function (data) {
-                        const url = "{{ route('i18n.locales.index') }}"
-                        window.location.replace(url);
-                    });
-
+                    source.parentNode.submit();
                 }
-            })
-        });
-    })(jQuery);
+            }
+        })
+    })();
 </script>
 @endpush
