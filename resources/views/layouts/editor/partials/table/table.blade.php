@@ -4,10 +4,29 @@
 
 <div id="{{ $id }}" class="card card-table">
     <div class="card-header d-flex flex-row justify-content-between align-content-center">
-        <div class="card-title pt-2">
-            @yield('table-filters-header-' . $id)
+        <div class="card-title pt-2 w-100">
+            <div class="row">
+                <div class="h2 col-md-11">
+                    @yield('table-title-' . $id)
+                </div>
+                <div class="float-right col-md-1">
+                    <a href="javascript:;" class="btn btn-sm btn-outline-info btn-filters"
+                       data-card-id="{{ $id }}" title="More filters">
+                        {{ __('Filters') }}
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <small class="col-md-12">
+                    {{ __('Filters:') }}
+                </small>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    @yield('table-filters-list-' . $id)
+                </div>
+            </div>
         </div>
-        <a href="javascript:;" class="btn btn-sm btn-outline-info btn-filters" data-card-id="{{ $id }}" title="More filters"><i class="fa fa-search"></i> Filters</a>
     </div>
     <div class="card-body">
         @if(isset($action))
@@ -18,9 +37,11 @@
                             <div class="card-body">
                                 @yield('filters')
                             </div>
-                            <div class="card-footer text-right">
-                                <div class="d-flex">
-                                    <button type="submit" class="btn btn-primary ml-auto">Apply</button>
+                            <div class="card-footer">
+                                <div class="d-flex text-right">
+                                    <button type="submit" class="btn btn-primary ml-auto">
+                                        {{ __('Apply filters') }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
