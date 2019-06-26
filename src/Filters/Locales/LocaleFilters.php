@@ -4,7 +4,7 @@
 namespace Kodilab\LaravelI18n\Filters\Locales;
 
 
-use Kodilab\LaravelFilters\QueryFilters;
+use Kodilab\LaravelFilters\Filters\QueryFilters;
 use Kodilab\LaravelI18n\Models\Locale;
 
 class LocaleFilters extends QueryFilters
