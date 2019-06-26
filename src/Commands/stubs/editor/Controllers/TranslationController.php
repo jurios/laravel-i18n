@@ -8,7 +8,7 @@ class TranslationController extends I18nController
     {
         $fallback_locale = \Kodilab\LaravelI18n\Models\Locale::getFallbackLocale();
 
-        $results = $locale->translations;
+        $results = $locale->translations->filters(\Kodilab\LaravelFilters\Filters\CollectionFilters::class, $request->all());
 
         $translations = $this->getPaginatedTranslations($request, $results, 10);
         $translations->withPath(route('i18n.locales.translations.index', compact('locale')));
@@ -46,7 +46,7 @@ class TranslationController extends I18nController
     private function getPaginatedTranslations(
         \Illuminate\Http\Request $request, \Illuminate\Support\Collection $translations, int $per_page = 10)
     {
-        $currentPage = $request->filled('page') ? $request->input('page') : 1;
+        $currentPage = $request->filled('page') ? $request->input('page') : 0;
         $per_page = 10;
 
         $result = new \Illuminate\Pagination\LengthAwarePaginator(

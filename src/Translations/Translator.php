@@ -4,7 +4,6 @@
 namespace Kodilab\LaravelI18n\Translations;
 
 
-use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Translations\ArrayTranslations\ArrayTranslator;
 use Kodilab\LaravelI18n\Translations\FileHandlers\JsonFile;

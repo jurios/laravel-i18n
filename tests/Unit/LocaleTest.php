@@ -4,8 +4,8 @@
 namespace Kodilab\LaravelI18n\Tests\Unit;
 
 
-use Illuminate\Support\Collection;
 use Kodilab\LaravelI18n\Tests\Unit\Translations\TestCase;
+use Kodilab\LaravelI18n\Translations\Collection;
 
 class LocaleTest extends TestCase
 {
