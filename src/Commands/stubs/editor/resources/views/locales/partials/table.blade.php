@@ -144,5 +144,5 @@
 @endsection
 
 @section('table-footer-' . $id)
-    {{ $locales->links() }}
+    {{ $locales->appends(\Illuminate\Support\Facades\Request::all())->links() }}
 @endsection

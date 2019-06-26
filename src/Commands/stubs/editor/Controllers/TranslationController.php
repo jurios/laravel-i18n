@@ -8,7 +8,7 @@ class TranslationController extends I18nController
     {
         $fallback_locale = \Kodilab\LaravelI18n\Models\Locale::getFallbackLocale();
 
-        $results = $locale->translations->filters(\Kodilab\LaravelFilters\Filters\CollectionFilters::class, $request->all());
+        $results = $locale->translations->filters(\Kodilab\LaravelI18n\Filters\Translations\TranslationFilters::class, $request->all());
 
         $translations = $this->getPaginatedTranslations($request, $results, 10);
         $translations->withPath(route('i18n.locales.translations.index', compact('locale')));
