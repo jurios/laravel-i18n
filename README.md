@@ -16,7 +16,7 @@ system.
 
 * Translatable texts detection (project files and 3th party exported translations also) and deprecated translations detection
 through a [sync process](#sync-process)
-* Configure language, currency (WIP) and timezone for each locale
+* Configure language, currency and timezone for each locale
 * Optional web editor to manage locales and translations
 
 ### Installation
@@ -120,6 +120,22 @@ class Example extends \Kodilab\LaravelI18n\Middleware\SetLocale
 ```
 
 For each request, it will load the locale translations, timezone and currency configuration of the locale returned.
+
+### Currency
+`laravel-i18n` provides a helper function in order to show currency values localized:
+Each locale has its own currency format configuration where you can define currency symbol, currency symbol position,
+number of decimals, decimals separator and thousands separator.
+
+Then, when you want to display a currency value just use the helper:
+
+```
+currency(float $value, bool $show_symbol = true, \Kodilab\LaravelI18n\Models\Locale $locale = null)
+```
+
+* **value**: The value to be displayed
+* **show_symbol**: If the locale has a symbol defined, then show it in the position defined in the locale configuration
+* **locale**: Which locale configuration are being used to display it. If it is `null` then the locale used in the request
+                will be used. If it can't find the locale used then the `fallback_locale` is used.
 
 ### Editor
 You can, optionally, install the editor. The editor is a collection of templates and controllers which will be exported

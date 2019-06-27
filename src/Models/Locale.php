@@ -89,6 +89,14 @@ class Locale extends Model
         return $fallback_locale;
     }
 
+    public static function getLocale(string $reference)
+    {
+        $iso = explode("_", $reference)[0];
+        $region = isset(($splitted = explode("_", $reference))[1]) ? $splitted[1] : null;
+
+        return self::where('iso', $iso)->where('region', $region)->first();
+    }
+
     /**
      * Returns the translation collection of the locale
      *
