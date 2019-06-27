@@ -167,5 +167,5 @@ project.
 If you want to restore all files, just use this command:
 
 ```
-php artisan i18n:editor --force
+php artisan i18n:editor --reinstall
 ```
