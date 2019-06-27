@@ -65,6 +65,48 @@ php artisan make:i18n
 This will add a new locale in the `i18n_locale` configured as `fallback` based on the `fallback_locale` parameter in
 your `config/app.php` file.
 
+### Create new Locales
+In order to create new locales, `laravel-i18n` provides some tools to make locale and remove them easily:
+
+```
+\Kodilab\LaravelI18n\Facade::createLocale(array $data = []);
+\Kodilab\LaravelI18n\Facade::removeLocale(string $reference);
+``` 
+
+##### Facade::createLocale(array data = [])
+Here is the schema of `$data`: 
+
+```
+[
+        'iso' => ISO language code like 'ca' or 'en',
+        'region' => Country code like 'GB' or 'DE',
+        'description' => Brief description,
+        'laravel_locale' => Laravel locale, usually the same as iso (you can leave it blank),
+        'currency_number_decimals' => Number of decimals when render currency (2),
+        'currency_decimals_punctuation' => Punctuation for decimals ("."),
+        'currency_thousands_separator' => Thousands separator (","),
+        'currency_symbol' => Currency symbol ("€" or "$", for example),
+        'currency_symbol_position' => 'after|before',
+        'carbon_locale' => "Carbon locale, usually the same as iso (you can leave it blank),
+        'carbon_tz' => Timezone ("Europe/Madrid", for example),
+        'enabled' => true|false,
+        'fallback' => false
+    ]
+```
+
+##### Facade::removeLocale(string $reference);
+The `Locale's reference` is a concatenation of `iso` and `region` in a particular format.
+For a `Locale` which `iso = en` and `region = GB`, for example, the reference is `en_GB`.
+A `iso` is always in lowercase and `region` in uppercase.
+
+If a `Locale` does not have a region, then `reference = iso`.
+
+So, for removing the `Locale` which `iso="en"` and `region="GB"`, removeLocale should be called like this:
+
+```
+Facade::removeLocale('en_GB');
+```
+
 #### Sync process 
 
 Once we have a `fallback_locale` (at least, one `locale` must be defined and must be defined as `fallback`) in our 

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Kodilab\LaravelFilters\Traits\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
-use Kodilab\LaravelI18n\Translations\TranslationsManager;
 use Kodilab\LaravelI18n\Translations\Translator;
 
 class Locale extends Model
@@ -54,6 +53,12 @@ class Locale extends Model
                 $model->enabled = true;
             }
 
+        });
+
+        self::creating(function (Locale $model) {
+            if (!is_null(Locale::getLocale($model->reference))) {
+                throw new \Exception('Locale ' . $model->reference . 'already exists.');
+            }
         });
     }
 

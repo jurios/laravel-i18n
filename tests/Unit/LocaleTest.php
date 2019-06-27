@@ -37,4 +37,31 @@ class LocaleTest extends TestCase
 
         $this->assertEquals($locale->id, $result->id);
     }
+
+    public function test_locale_with_same_reference_can_not_be_persisted()
+    {
+        $this->expectException(\Exception::class);
+
+        $locale = factory(Locale::class)->create();
+
+        factory(Locale::class)->create(['iso' => $locale->iso, 'region' => $locale->region]);
+    }
+
+    public function test_locale_with_same_reference_and_empty_region_can_not_be_persisted()
+    {
+        $this->expectException(\Exception::class);
+
+        $locale = factory(Locale::class)->create(['region' => null]);
+
+        factory(Locale::class)->create(['iso' => $locale->iso, 'region' => null]);
+    }
+
+    public function test_locale_with_same_reference_and_different_region_can_be_persisted()
+    {
+        $locale = factory(Locale::class)->create(['region' => null]);
+
+        $locale2 = factory(Locale::class)->create(['iso' => $locale->iso]);
+
+        $this->assertEquals($locale2->id, Locale::getLocale($locale2->reference)->id);
+    }
 }

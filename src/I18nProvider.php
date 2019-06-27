@@ -31,11 +31,13 @@ class I18nProvider extends ServiceProvider
     public function boot(\Illuminate\Routing\Router $router)
     {
         $config_path = __DIR__ . '/../config/config.php';
+        $factories_path = __DIR__ . '/../database/factories';
         $migrations_path = __DIR__ . '/../database/migrations';
         $views_path = __DIR__ . '/../resources/views';
 
         $this->publishes([
-            $config_path => config_path('i18n.php')
+            $config_path => config_path('i18n.php'),
+            $factories_path => database_path('factories')
         ], 'laravel-i18n-config');
 
         $this->loadViewsFrom($views_path, 'i18n');
