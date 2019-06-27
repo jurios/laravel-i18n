@@ -36,6 +36,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('i18n.locales.index') }}">{{ __('Locales') }}</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('i18n.sync') }}">{{ __('Start Sync') }}</a>
+                    </li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
