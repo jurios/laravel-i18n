@@ -4,23 +4,74 @@
     @php($id = Str::random(10))
 @endif
 
+@section('table-title-' . $id)
+    {{ __('Locales') }}
+@endsection
+
 @php($action = route('i18n.locales.index'))
 
-@section('table-filters-header-' . $id)
-    @if(hasQueryString('name'))
+@section('table-filters-list-' . $id)
+    @if(filledQueryString('term'))
         <span class="badge badge-success">
-            {{__('Name')}}:'<i>{{getQueryString('name')}}</i>'
+            {{__('Term')}}:'<i>{{getQueryString('term')}}</i>'
         </span>
     @endif
+
+    @if(filledQueryString('status'))
+        <span class="badge badge-success">
+            {{__('Status')}}:'<i>{{getQueryString('status')}}</i>'
+        </span>
+    @endif
+
+    @if(filledQueryString('translations'))
+        <span class="badge badge-success">
+            {{__('Translations')}}:'<i>{{getQueryString('translations')}}</i>'
+        </span>
+    @endif
+
 @endsection
 
 @section('filters')
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-4">
             <div class="form-group">
-                <label class="form-label">{{ __('Name:') }}</label>
-                <input class="form-control" name="name" placeholder="Language name" type="text"
-                       value="{{ getQueryString('name', null) }}">
+                <label class="form-label">{{ __('Term:') }}</label>
+                <input class="form-control" name="term" placeholder="Search a term" type="text"
+                       value="{{ getQueryString('term', null) }}">
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label class="form-label">{{ __('Status:') }}</label>
+                <select class="form-control" name="status">
+                    <option value="" {{ is_null(getQueryString('status', null)) ? 'selected' : '' }}>
+                        {{ __('All') }}
+                    </option>
+                    <option value="enabled" {{ getQueryString('status') === 'enabled' ? 'selected' : '' }}>
+                        {{ __('Enabled') }}
+                    </option>
+                    <option value="disabled" {{ getQueryString('status') === 'disabled' ? 'selected' : '' }}>
+                        {{ __('Disabled') }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label class="form-label">{{ __('Translations:') }}</label>
+                <select class="form-control" name="translations">
+                    <option value="" {{ is_null(getQueryString('translations', null)) ? 'selected' : '' }}>
+                        {{ __('All') }}
+                    </option>
+                    <option value="translated" {{ getQueryString('translations') === 'translated' ? 'selected' : '' }}>
+                        {{ __('Translated') }}
+                    </option>
+                    <option value="untranslated" {{ getQueryString('translations') === 'untranslated' ? 'selected' : '' }}>
+                        {{ __('Untranslated') }}
+                    </option>
+                </select>
             </div>
         </div>
     </div>
@@ -28,7 +79,7 @@
 
 @section('table-head-' . $id)
     <tr>
-        <th>Reference</th>
+        <th>ISO</th>
         <th>Region</th>
         <th>Description</th>
         <th>Fallback</th>
@@ -93,5 +144,5 @@
 @endsection
 
 @section('table-footer-' . $id)
-    {{ $locales->links() }}
+    {{ $locales->appends(\Illuminate\Support\Facades\Request::all())->links() }}
 @endsection

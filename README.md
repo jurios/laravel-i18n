@@ -124,16 +124,21 @@ For each request, it will load the locale translations, timezone and currency co
 ### Editor
 You can, optionally, install the editor. The editor is a collection of templates and controllers which will be exported
 to your project in order to modify them as you want. By default, the templates uses the assets provided by Laravel.
- 
-Modify the template as you want in order to integrate the editor into your project.
 
+##### Features
+
+* List, search, create and edit and remove locales
+* List, search and edit locale translations
+* Full integrable with your project
+
+#### Install & Customize your editor
 You can install the editor with:
 
 ```
 php artisan i18n:editor
 ```
 
-This will make some changes in your project:
+This will add some files into your project:
 
 1. The web editor controllers will be added in `app\Http\Controllers\I18n`
 2. The web editor templates will be added in `resources/vendor/i18n`
@@ -155,4 +160,12 @@ These are the default routes created by `php artisan i18n:editor`:
 | GET    | i18n/locales/{locale}/translations        | i18n.locales.translations.index  | App\Http\Controllers\I18n\TranslationController@index
 | PATCH  | i18n/locales/{locale}/translations/update | i18n.locales.translations.update | App\Http\Controllers\I18n\TranslationController@update
 
-Fel free to modify all you need in order to full integrate the editor to your needs.
+As all editor files are being exported into your project you can modify the templates and also the controllers. Therefore you can
+customize the editor as you want. Feel free to change any of those files exported in order to make the editor fit your
+project.
+
+If you want to restore all files, just use this command:
+
+```
+php artisan i18n:editor --force
+```

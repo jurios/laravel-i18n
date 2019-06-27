@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Kodilab\LaravelFilters\Traits\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
 use Kodilab\LaravelI18n\Translations\TranslationsManager;
 use Kodilab\LaravelI18n\Translations\Translator;
@@ -11,10 +12,13 @@ use Kodilab\LaravelI18n\Translations\Translator;
 class Locale extends Model
 {
 
+    use Filterable;
+
     protected $table;
 
     protected $fillable = [
         'iso',
+        'region',
         'description',
         'laravel_locale',
         'currency_number_decimals',

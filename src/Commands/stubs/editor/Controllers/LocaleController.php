@@ -4,9 +4,11 @@ namespace {{namespace}}Http\Controllers\i18n;
 
 class LocaleController extends I18nController
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $locales = \Kodilab\LaravelI18n\Models\Locale::paginate(10);
+        $locales = \Kodilab\LaravelI18n\Models\Locale::
+            filters(\Kodilab\LaravelI18n\Filters\Locales\LocaleFilters::class, $request->all())
+            ->paginate(10);
 
         return view(self::VIEW_PATH . '.editor.locales.index', compact('locales'));
     }
