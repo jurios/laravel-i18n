@@ -18,8 +18,10 @@ class Editor extends Command
      * @var string
      */
     protected $signature = 'i18n:editor
-                                {--views : Only scaffold the authentication views}
-                                {--force : Overwrite existing views by default}';
+                                {--views : Only scaffold the editor views}
+                                {--controllers : Only scaffold the controllers views}
+                                {--force : Overwrite existing items by default}
+                                {--reinstall : Only scaffold the controllers views}';
 
     /**
      * The console command description.
@@ -61,7 +63,15 @@ class Editor extends Command
     {
         $this->createDirectories();
 
-        $this->exportViews();
+        if ($this->option('reinstall')) {
+            $this->input->setOption('force', true);
+            $this->input->setOption('controllers', false);
+            $this->input->setOption('views', false);
+        }
+
+        if (! $this->option('controllers')) {
+            $this->exportViews();
+        }
 
         if (! $this->option('views')) {
 
