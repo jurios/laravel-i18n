@@ -74,24 +74,18 @@ class Editor extends Command
         }
 
         if (! $this->option('views')) {
-
-            foreach ($this->controllers as $stub => $final) {
-                file_put_contents(
-                    app_path('Http/Controllers/I18n/'. $final),
-                    $this->compileControllerStub($stub)
-                );
-            }
-
-            file_put_contents(
-                base_path('routes/web.php'),
-                file_get_contents(__DIR__.'/stubs/editor/routes/web.php'),
-                FILE_APPEND
-            );
+            $this->exportControllers();
         }
+
+        file_put_contents(
+            base_path('routes/web.php'),
+            file_get_contents(__DIR__.'/stubs/editor/routes/web.php'),
+            FILE_APPEND
+        );
     }
 
     /**
-     * Export the authentication views.
+     * Export the editor views.
      *
      * @return void
      */
@@ -107,6 +101,27 @@ class Editor extends Command
             copy(
                 __DIR__.'/stubs/editor/resources/views/'.$key,
                 $view
+            );
+        }
+    }
+
+    /**
+     * Export the editor controllers.
+     *
+     * @return void
+     */
+    protected function exportControllers()
+    {
+        foreach ($this->controllers as $stub => $final) {
+            if (file_exists($file = app_path('Http/Controllers/i18n/' . $final)) && ! $this->option('force')) {
+                if (! $this->confirm("The [{$final}] controller already exists. Do you want to replace it?")) {
+                    continue;
+                }
+            }
+
+            file_put_contents(
+                app_path('Http/Controllers/I18n/'. $final),
+                $this->compileControllerStub($stub)
             );
         }
     }
