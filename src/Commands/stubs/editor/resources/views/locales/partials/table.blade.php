@@ -112,6 +112,10 @@
 
                 @include('vendor.i18n.editor.locales.partials.progress_bar')
 
+                <div class="text-center">
+                    <a href="{{ route('i18n.locales.translations.index', compact('locale')) }}">{{ __('Translations') }}</a>
+                </div>
+
             </td>
 
             <td class="text-center">

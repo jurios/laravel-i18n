@@ -131,7 +131,7 @@
                             <div class="text-center">This is how you would see the currency value of one thousand on
                                 your website
                             </div>
-                            {{--<div id="currency_status" class="text-center h3">{{ currency(1000, $locale, true) }}</div>--}}
+                            <div id="currency_status" class="text-center h3">{{ currency(1000, true, $locale) }}</div>
                         </div>
                     </div>
                 </div>
@@ -145,6 +145,10 @@
                     <div class="row">
                         <div id="translation_progress" class="col-lg-8 offset-lg-2 mb-5">
                             @include('vendor.i18n.editor.locales.partials.progress_bar')
+
+                            <div class="text-center">
+                                <a href="{{ route('i18n.locales.translations.index', compact('locale')) }}">{{ __('Translations') }}</a>
+                            </div>
                         </div>
                     </div>
 
