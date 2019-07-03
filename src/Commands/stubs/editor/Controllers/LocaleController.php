@@ -39,7 +39,7 @@ class LocaleController extends I18nController
             'currency_symbol' => $request->input('currency_symbol'),
             'currency_symbol_position' => $request->input('currency_symbol_position'),
             'carbon_locale' => $request->input('carbon_locale'),
-            'carbon_tz' => $request->input('carbon_tz')
+            'tz' => $request->input('tz')
         ]);
         $request->session()->flash('status', [
             'level' => 'success',
@@ -68,7 +68,7 @@ class LocaleController extends I18nController
             'currency_symbol' => $request->input('currency_symbol'),
             'currency_symbol_position' => $request->input('currency_symbol_position'),
             'carbon_locale' => $request->input('carbon_locale'),
-            'carbon_tz' => $request->input('carbon_tz')
+            'tz' => $request->input('tz')
         ]);
         $request->session()->flash('status', [
             'level' => 'success',

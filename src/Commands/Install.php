@@ -67,7 +67,7 @@ class Install extends Command
                 'currency_symbol' => null,
                 'currency_symbol_position' => 'before',
                 'carbon_locale' => config('app.fallback_locale'),
-                'carbon_tz' => null,
+                'tz' => null,
                 'enabled' => true,
                 'fallback' => true
             ]);

@@ -57,7 +57,7 @@ class Facade extends \Illuminate\Support\Facades\Facade
             'currency_symbol'                   => isset($data['currency_symbol']) ? $data['currency_symbol'] : null,
             'currency_symbol_position'          => isset($data['currency_symbol_position']) ? $data['currency_symbol_position'] : 'after',
             'carbon_locale'                     => isset($data['carbon_locale']) ? $data['carbon_locale'] : null,
-            'carbon_tz'                         => isset($data['carbon_tz']) ? $data['carbon_tz'] : null,
+            'tz'                                => isset($data['tz']) ? $data['tz'] : null,
             'enabled'                           => isset($data['enabled']) ? $data['enabled'] : false,
             'fallback'                          => isset($data['fallback']) ? $data['fallback'] : false
         ]);

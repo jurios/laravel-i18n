@@ -49,10 +49,10 @@ abstract class SetLocale
     protected function setLocale(Locale $locale)
     {
         App::setLocale($locale->reference);
-        date_default_timezone_set(!is_null($locale->carbon_tz) ? $locale->carbon_tz : config('app.timezone'));
+        date_default_timezone_set(!is_null($locale->tz) ? $locale->tz : config('app.timezone'));
 
         config([
-            'app.timezone' => !is_null($locale->carbon_tz) ? $locale->carbon_tz : config('app.timezone'),
+            'app.timezone' => !is_null($locale->tz) ? $locale->tz : config('app.timezone'),
         ]);
     }
 

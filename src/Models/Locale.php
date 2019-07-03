@@ -26,7 +26,7 @@ class Locale extends Model
         'currency_symbol',
         'currency_symbol_position',
         'carbon_locale',
-        'carbon_tz',
+        'tz',
         'fallback',
         'enabled'
     ];

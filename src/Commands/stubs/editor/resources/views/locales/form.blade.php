@@ -145,29 +145,29 @@
                             <div class="col-md-12">
 
                                 <div class="form-group">
-                                    <label for="input_carbon_tz">
+                                    <label for="input_tz">
                                         Time zone
                                     </label>
 
-                                    <select id="input_enabled" name="carbon_tz" class="form-control">
+                                    <select id="input_tz" name="tz" class="form-control">
 
                                         <option value=""
-                                                {{ old('carbon_tz', $locale->carbon_tz) === null ? 'selected' : '' }}>
+                                                {{ old('tz', $locale->tz) === null ? 'selected' : '' }}>
                                             {{ __('Default') }}
                                         </option>
 
                                         @foreach(DateTimeZone::listIdentifiers() as $timezone)
                                             <option value="{{ $timezone }}"
-                                                    {{ old('carbon_tz', $locale->carbon_tz) === $timezone ? 'selected' : '' }}>
+                                                    {{ old('tz', $locale->tz) === $timezone ? 'selected' : '' }}>
                                                 {{ $timezone }}
                                             </option>
                                         @endforeach
 
                                     </select>
 
-                                    @if($errors->has('carbon_tz'))
+                                    @if($errors->has('tz'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('carbon_tz') }}
+                                            {{ $errors->first('tz') }}
                                         </div>
                                     @endif
                                 </div>

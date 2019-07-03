@@ -88,7 +88,7 @@ Here is the schema of `$data`:
         'currency_symbol' => Currency symbol ("€" or "$", for example),
         'currency_symbol_position' => 'after|before',
         'carbon_locale' => "Carbon locale, usually the same as iso (you can leave it blank),
-        'carbon_tz' => Timezone ("Europe/Madrid", for example),
+        'tz' => Timezone ("Europe/Madrid", for example),
         'enabled' => true|false,
         'fallback' => false
     ]

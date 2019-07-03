@@ -31,7 +31,7 @@ class KodilabLaravelI18nCreateLocalesTable extends Migration
             $table->enum('currency_symbol_position', ['after', 'before'])->nullable(false)->default('after');
 
             $table->string('carbon_locale')->nullable(true)->default(null);
-            $table->string('carbon_tz')->nullable(true)->default(null);
+            $table->string('tz')->nullable(true)->default(null);
 
             $table->boolean('enabled')->nullable(false)->default(false);
             $table->boolean('fallback')->nullable(false)->default(false);
