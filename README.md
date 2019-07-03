@@ -145,7 +145,7 @@ You should follow the [Laravel localization instructions](https://laravel.com/do
 
 `laravel-i18n` provides an extensible `middleware` which helps you to set the locale and timezone easily. Just create a
 [middleware](https://laravel.com/docs/5.8/middleware) which extends `\Kodilab\LaravelI18n\Middleware\SetLocale` and define
-the `getLocale()` function which must return a `Locale` instance
+the `getLocale()` function which must return a `Locale` instance which will be used by `laravel-i18n` for the translations. 
 
 For example, in this case we are going to get the locale from the User model (we must create a relationship between locales and users first):
 
@@ -161,7 +161,17 @@ class Example extends \Kodilab\LaravelI18n\Middleware\SetLocale
 }
 ```
 
-For each request, it will load the locale translations, timezone and currency configuration of the locale returned.
+Apart from `getLocale()`, you can override `setLocale(Locale $locale)` and `setTimezone(Locale $locale)`. These methods
+are responsible of how the locale and the timezone are set into the configuration:
+
+`setLocale(Locale $locale)` where `$locale` is the locale returned by `getLocale()` sets the locale value (`iso` field)
+into the configuration using the `app.locale` parameter (which is used for the translations). 
+
+`setTimezone(Locale $locale)` where `$locale` is the locale returned by `getLocale()` calls to 
+`date_default_timezone_set` using the `timezone` defined in the locale (`tz` field). This timezone will be used 
+for time values. 
+
+If you want to modify how this values are set, just override the function you want.
 
 ### Currency
 `laravel-i18n` provides a helper function in order to show currency values localized:

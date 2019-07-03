@@ -16,6 +16,11 @@ abstract class SetLocale
     protected $request;
 
     /**
+     * @var Locale
+     */
+    protected $locale;
+
+    /**
      * SetLocale constructor.
      */
     public function __construct()
@@ -34,9 +39,10 @@ abstract class SetLocale
     {
         $this->request = $request;
 
-        $locale = $this->getLocale();
+        $this->locale = $this->getLocale();
 
-        $this->setLocale($locale);
+        $this->setLocale($this->locale);
+        $this->setTimezone($this->locale);
 
         return $next($request);
     }
@@ -49,6 +55,15 @@ abstract class SetLocale
     protected function setLocale(Locale $locale)
     {
         App::setLocale($locale->reference);
+    }
+
+    /**
+     * Set the timezone into the runtime configuration
+     *
+     * @param Locale $locale
+     */
+    protected function setTimezone(Locale $locale)
+    {
         date_default_timezone_set(!is_null($locale->tz) ? $locale->tz : config('app.timezone'));
 
         config([
