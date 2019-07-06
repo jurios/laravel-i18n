@@ -286,16 +286,16 @@
         },
         {
             "name": "kodilab/laravel-filters",
-            "version": "v1.0.0-rc2",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jurios/laravel-filters.git",
-                "reference": "3bb81640d2986d215415648931eecb68e4e0615c"
+                "reference": "78c7892b407069f1b93684c5b8edfec9de01f528"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jurios/laravel-filters/zipball/3bb81640d2986d215415648931eecb68e4e0615c",
-                "reference": "3bb81640d2986d215415648931eecb68e4e0615c",
+                "url": "https://api.github.com/repos/jurios/laravel-filters/zipball/78c7892b407069f1b93684c5b8edfec9de01f528",
+                "reference": "78c7892b407069f1b93684c5b8edfec9de01f528",
                 "shasum": ""
             },
             "require": {
@@ -338,7 +338,7 @@
                 "laravel",
                 "query"
             ],
-            "time": "2019-06-26T15:41:00+00:00"
+            "time": "2019-07-04T16:14:52+00:00"
         },
         {
             "name": "laravel/framework",
