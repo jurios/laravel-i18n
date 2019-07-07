@@ -145,15 +145,15 @@ php artisan i18n:sync
 
 This process should fired as frequently as possible. It's recommended execute this process every deployment.
 
-## 5 - Showing the localized version to the user
+## 5 - Showing translated texts in the request
 `laravel-i18n` uses the `Laravel` localization system under the hood for showing the translated texts in each request.
 So, in order to show a particular localized version for a request, you should follow the 
 [Laravel localization instructions](https://laravel.com/docs/5.8/localization#configuring-the-locale). You must use
-the Locale `reference` explained in the [Concepts section](#21---concepts). 
+the Locale `reference` explained in the [Concepts section](#21---concepts) as the value in the configuration. 
 
 
-`laravel-i18n` provides an extensible `middleware` which helps you to set the locale and timezone easily. Or you can
-use it as a reference to create your own. 
+What's more, `laravel-i18n` provides an extensible `middleware` which helps you to set the locale and timezone easily. 
+In case you want to create your own, you can use it as a reference. 
 
 If you want to extend the `middleware`, just create a [middleware](https://laravel.com/docs/5.8/middleware) 
 which extends `\Kodilab\LaravelI18n\Middleware\SetLocale` and define the `getLocale()` function which must 
@@ -174,11 +174,11 @@ class Example extends \Kodilab\LaravelI18n\Middleware\SetLocale
 }
 ```
 
-Apart from `getLocale()`, you can override `setLocale(Locale $locale)` and `setTimezone(Locale $locale)`. These methods
-are responsible of how the locale and the timezone are set into the configuration:
+Apart from `getLocale()`, you can optionally override `setLocale(Locale $locale)` and `setTimezone(Locale $locale)`. 
+These methods are responsible of how the locale and the timezone are set into the configuration:
 
-`setLocale(Locale $locale)` where `$locale` is the locale returned by `getLocale()` sets the locale value (`iso` field)
-into the configuration using the `app.locale` parameter (which is used for the translations). 
+`setLocale(Locale $locale)` where `$locale` is the locale returned by `getLocale()` sets the locale value 
+(`reference ` field) into the configuration using the `app.locale` parameter (which is used for the translations). 
 
 `setTimezone(Locale $locale)` where `$locale` is the locale returned by `getLocale()` calls to 
 `date_default_timezone_set` using the `timezone` defined in the locale (`tz` field). This timezone will be used 
