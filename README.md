@@ -24,7 +24,7 @@ detection through a [sync process](#4---sync-process) in order to keep translati
 First, include the package to your project:
 
 ```
-composer require kodilab/laravel-i18n dev-master
+composer require kodilab/laravel-i18n
 ``` 
 
 Once you have `laravel-i18n`, you must publish the config files with:
