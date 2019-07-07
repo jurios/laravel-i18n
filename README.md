@@ -3,8 +3,6 @@
 [![Build Status](https://travis-ci.com/jurios/laravel-i18n.svg?branch=master)](https://travis-ci.com/jurios/laravel-i18n)
 
 ## Disclaimer
-This project is still in a pre-release stage. It should work but could contains unexpected bugs.
-
 Please, consider fill an issue if you see a bug or an unexpected behaviour. That would be really useful
 to make `laravel-i18n` better.
 
