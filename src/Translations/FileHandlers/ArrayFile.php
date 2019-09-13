@@ -4,6 +4,8 @@
 namespace Kodilab\LaravelI18n\Translations\FileHandlers;
 
 
+use Illuminate\Support\Arr;
+
 class ArrayFile
 {
     /** @var string */
@@ -30,21 +32,20 @@ class ArrayFile
         }
     }
 
+    /**
+     * Returns a "dot" notation array exported from the array translation file content
+     *
+     * @param string $path
+     * @return array
+     */
     private function getTranslations(string $path)
     {
         $raw_content = [];
 
-        if (file_exists($this->path)) {
-            $raw_content = require $this->path;
+        if (file_exists($path)) {
+            $raw_content = require $path;
         }
 
-        $translations = $this->exportArrayKeys($raw_content);
-
-        return $translations;
-    }
-
-    private function exportArrayKeys(array $raw)
-    {
-        return exportToPlainTranslationArray($this->file_name, $raw);
+        return Arr::dot($raw_content, $this->file_name . '.');
     }
 }

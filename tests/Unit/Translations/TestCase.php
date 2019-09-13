@@ -6,6 +6,7 @@ namespace Kodilab\LaravelI18n\Tests\Unit\Translations;
 
 use Illuminate\Foundation\Testing\WithFaker;
 use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Support\Arr;
 
 class TestCase extends \Kodilab\LaravelI18n\Tests\TestCase
 {
@@ -43,18 +44,18 @@ class TestCase extends \Kodilab\LaravelI18n\Tests\TestCase
     }
 
     /**
-     * Add a raw translation array to the file
+     * Print translations in a file in JSON or Array format
      *
      * @param string $path
      * @param array $translations
      */
-    protected function addTranslationsToFile(string $path, array $translations, string $format = 'json')
+    protected function printTranslationFile(string $path, array $translations, string $format = 'json')
     {
         if ($format === 'json') {
             $content = json_encode($translations, JSON_PRETTY_PRINT);
         }
         else {
-            $content = exportArrayToString($translations);
+            $content = "<?php". PHP_EOL . PHP_EOL . "return " . Arr::toString($translations);
         }
 
         file_put_contents($path, $content);
@@ -74,7 +75,7 @@ class TestCase extends \Kodilab\LaravelI18n\Tests\TestCase
             $translations[$this->faker->unique()->paragraph] = $this->faker->paragraph;
         }
 
-        $this->addTranslationsToFile($path, $translations, $format);
+        $this->printTranslationFile($path, $translations, $format);
     }
 
     /**

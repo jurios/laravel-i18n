@@ -115,7 +115,13 @@ class ArrayTranslator
                 $handler = new ArrayFile($file_path);
 
                 foreach ($handler->translations as $path => $translation) {
-                    $translations->put($path, new Translation($path, $translation));
+                    /*
+                     * ArrayFile uses Arr::dot() method. This method, could returns empty arrays. That's the reason
+                     * why where we check is string.
+                    */
+                    if (is_string($translation)) {
+                        $translations->put($path, new Translation($path, $translation));
+                    }
                 }
             }
 

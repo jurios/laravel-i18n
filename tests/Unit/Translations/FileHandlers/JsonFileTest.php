@@ -21,7 +21,7 @@ class JsonFileTest extends TestCase
             $translations[$this->faker->paragraph] = $this->faker->paragraph;
         }
 
-        $this->addTranslationsToFile($json_path, $translations);
+        $this->printTranslationFile($json_path, $translations);
 
         $jsonHandler = new JsonFile($json_path);
 

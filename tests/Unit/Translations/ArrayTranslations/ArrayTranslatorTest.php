@@ -66,7 +66,7 @@ class ArrayTranslatorTest extends TestCase
         mkdir($this->lang_path . DIRECTORY_SEPARATOR . $general_locale->iso);
         mkdir($this->lang_path . DIRECTORY_SEPARATOR . $specific_locale->reference);
 
-        $this->addTranslationsToFile(
+        $this->printTranslationFile(
             $this->lang_path
             . DIRECTORY_SEPARATOR
             . $general_locale->iso
@@ -75,7 +75,7 @@ class ArrayTranslatorTest extends TestCase
             .'.php', [$original => $general_translation], 'array'
         );
 
-        $this->addTranslationsToFile(
+        $this->printTranslationFile(
             $this->lang_path
             . DIRECTORY_SEPARATOR
             . $specific_locale->reference
@@ -102,7 +102,7 @@ class ArrayTranslatorTest extends TestCase
 
         mkdir($this->lang_path . DIRECTORY_SEPARATOR . $locale->iso);
 
-        $this->addTranslationsToFile(
+        $this->printTranslationFile(
             $this->lang_path
             . DIRECTORY_SEPARATOR
             . $locale->iso
