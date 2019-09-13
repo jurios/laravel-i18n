@@ -252,3 +252,104 @@ If you want to restore all files, just use this command:
 ```
 php artisan i18n:editor --reinstall
 ```
+
+#WIP
+
+## Model attribute translations
+`laravel-i18n` provides a clean solution for handle `Eloquent model` translatable attributes, also. In this case,
+translations will be persisted in database.
+
+### Requirements
+`laravel-i18n` needs an additional table for each `Model` you want to make translatable in order to persist translations. 
+
+By convention, the name of this table will be the name of the model + `_translations` (Therefore, if your model is `Car`, then the table where translations
+will be persisted is `car_translations`). Therefore, a migration must be created in order to create the tables.
+
+That new table will contains all translatable attribute of the `Model`. Thus, those attributes won't belong to the `model`
+table anymore.
+
+A wizard `Command` is provided in order to make this step easier and faster.
+
+
+You can generate the migration with this command:
+
+```
+php artisan i18n:modeltranslation
+```
+
+This command will ask you to choose which `Model` of your project do you want to add translations. Once you choose one,
+a customized migration will be generated with the needed relationships between that particular `model` and the `locale`
+models. You will need to add the columns which represents translatable attributes of the model only.   
+
+Then, you can migrate your database.
+```
+php artisan migrate
+```
+
+To read and write translations for that `Model` you must add the `HasTranslations` trait to your `Model` and add the
+translatable attributes into the model [`casts` array](https://laravel.com/docs/6.0/eloquent-mutators#attribute-casting)
+like so:
+
+```
+class Car extends Model {
+    use HasTranslations;
+
+    protected $casts = [
+        'description' => 'translatable'
+    ];
+}
+```
+
+#### Modify your __get($name) method
+**Only do this step in case your `Model` is extending the `__get($name)` method. Otherwise, no additional modifications
+are needed.**
+
+Add this code to your `__get($name)` method in order to make translated attributes accessible throught your `model``
+```
+public function __get($name)
+{
+    ....
+
+    if ($this->isTranslatableAttribute($name)) {
+        return $this->getTranslatedAttribute(Locale::getLocaleOrFallback(config('app.locale')), $name);
+    }
+
+    return parent::__get($name);
+}
+```
+
+### Operations with translatable attributes
+#### Read translatable attributes
+
+You can access to your translatable attributes as they were attributes of your `model`. When you get a translated attribute
+using this way, the locale loaded by `Laravel` will be used (if it does not exist, then the `fallback locale`will be used).
+
+```
+    $locale = config('app.locale'); // 'es'
+    $car->description // Spanish description
+```
+
+Another you to get your translation is using the `getTranslatedAttribute` method. This method allow us to define the
+`locale` used:
+
+```
+    $locale = Locale::getFallbackLocale(); // en
+    $car->getTranslatedAttribute($locale, 'description'); // Ensligh translation
+```
+
+#### Creating/Updating translations
+
+You can create/update a translation with `setTranslatedAttribute` or `setTranslatedAttributes` method:
+
+```
+    $en = Locale::getLocale('en_GB');
+    $es = Locale::getLocale('es_ES');
+
+    $car->setTranslatedAttribute($en, 'description', 'Brief description');
+    $car->setTranslatedAttribute($en, 'long_description', 'Long description');
+
+    $car->setTranslatedAttributes($es, [
+        'description' => 'Breve descripción', 
+        'long_description' => 'Descripción larga'
+    ]);
+```

@@ -82,6 +82,12 @@ class Locale extends Model
         return $this->fallback;
     }
 
+    /**
+     * Get the fallback locale. It does not exits, then an exception is sent.
+     *
+     * @return Locale
+     * @throws MissingFallbackLocaleException
+     */
     public static function getFallbackLocale()
     {
         /** @var Locale $fallback_locale */
@@ -94,12 +100,34 @@ class Locale extends Model
         return $fallback_locale;
     }
 
+    /**
+     * Returns a locale by reference. If it does not exist, then null is returned.
+     *
+     * @param string $reference
+     * @return mixed
+     */
     public static function getLocale(string $reference)
     {
         $iso = explode("_", $reference)[0];
         $region = isset(($splitted = explode("_", $reference))[1]) ? $splitted[1] : null;
 
         return self::where('iso', $iso)->where('region', $region)->first();
+    }
+
+    /**
+     * Returns a locale by reference. If it does not exist, then fallback locale is returned
+     *
+     * @param string $reference
+     * @return Locale
+     * @throws MissingFallbackLocaleException
+     */
+    public static function getLocaleOrFallback(string $reference)
+    {
+        if (!is_null($locale = self::getLocale($reference))) {
+            return $locale;
+        }
+
+        return self::getFallbackLocale();
     }
 
     /**

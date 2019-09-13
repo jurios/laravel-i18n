@@ -23,7 +23,7 @@ class LocaleTest extends TestCase
         $this->assertEquals(Collection::class, get_class($this->fallback_locale->translations));
     }
 
-    public function test_get_locale_returns_the_locale_which_reference_is_equal()
+    public function test_getLocale_returns_the_locale_which_reference_is_equal()
     {
         $locale = factory(Locale::class)->create();
 
@@ -36,6 +36,15 @@ class LocaleTest extends TestCase
         $result = Locale::getLocale($locale->reference);
 
         $this->assertEquals($locale->id, $result->id);
+    }
+
+    public function test_getLocaleOrFallback_should_return_the_locale_if_it_exists_or_the_fallback_locale()
+    {
+        $locale = factory(Locale::class)->create();
+
+        $this->assertEquals(Locale::getLocale($locale->reference), Locale::getLocaleOrFallback($locale->reference));
+
+        $this->assertTrue(Locale::getFallbackLocale()->is(Locale::getLocaleOrFallback('')));
     }
 
     public function test_locale_with_same_reference_can_not_be_persisted()
