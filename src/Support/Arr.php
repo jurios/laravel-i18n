@@ -79,7 +79,7 @@ class Arr extends \Illuminate\Support\Arr
     private static function printArrayItem($key, $value, $level)
     {
         $content = self::printArrayTab($level);
-        $content = $content . "'" . $key . "'" . printTab(1) . "=> '" . $value . "'," . PHP_EOL;
+        $content = $content . "'" . $key . "'" . self::printArrayTab(1) . "=> '" . $value . "'," . PHP_EOL;
         return $content;
     }
 }
