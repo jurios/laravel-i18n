@@ -42,7 +42,7 @@ class CreateTestTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('model_ones');
-        Schema::dropIfExists('model_one_translations');
+        Schema::dropIfExists('translatable_model_translations');
+        Schema::dropIfExists('translatable_models');
     }
 }
