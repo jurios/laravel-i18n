@@ -12,7 +12,7 @@ trait BuildsLocales
 {
     public static function getLocaleTable()
     {
-        return config('i18n.tables.locales');
+        return config('i18n.tables.locales', 'locales');
     }
 
     /**
@@ -53,13 +53,13 @@ trait BuildsLocales
         $iso = explode("_", $name)[0];
         $region = isset(($splitted = explode("_", $name))[1]) ? $splitted[1] : null;
 
-        $locale = DB::table(config('i18n.tables.locales'))
+        $locale = DB::table(config('i18n.tables.locales', 'locales'))
             ->where('iso', $iso)->where('region', $region)->get()->first();
 
         if ($locale->fallback) {
             throw new \RuntimeException('Fallback locale can not be removed');
         }
 
-        DB::table(config('i18n.tables.locales'))->delete($locale->id);
+        DB::table(config('i18n.tables.locales', 'locales'))->delete($locale->id);
     }
 }

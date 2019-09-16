@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kodilab\LaravelI18n\Commands;
+namespace Kodilab\LaravelI18n\Commands\Generators;
 
 
 use Illuminate\Console\Command;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Kodilab\LaravelI18n\Discover\ModelDiscover;
 
-class GenerateModelTranslation extends Command
+class ModelTranslation extends Command
 {
     use DetectsApplicationNamespace;
 
@@ -27,6 +27,13 @@ class GenerateModelTranslation extends Command
      * @var string
      */
     protected $description = 'Generates a new model translation';
+
+    /**
+     * Indicates whether the command should be shown in the Artisan command list.
+     *
+     * @var bool
+     */
+    protected $hidden = true;
 
     /** @var ModelDiscover */
     protected $discover;
@@ -95,7 +102,7 @@ class GenerateModelTranslation extends Command
                 $content
             );
 
-            //Sleep for 1 second in order to avoid the chance to create multiple migration files with the same tamestamp
+            //Sleep for 1 second in order to avoid the chance to create multiple migration files with the same timestamp
             sleep(1);
 
             $this->output->success(

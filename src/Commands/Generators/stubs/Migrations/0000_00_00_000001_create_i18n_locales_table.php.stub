@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class KodilabLaravelI18nCreateLocalesTable extends Migration
+class Createi18nLocalesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class KodilabLaravelI18nCreateLocalesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('i18n.tables.locales'), function (Blueprint $table) {
+        Schema::create(config('i18n.tables.locales', 'locales'), function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('iso')->nullable(false);
@@ -47,6 +47,6 @@ class KodilabLaravelI18nCreateLocalesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('i18n.tables.locales'));
+        Schema::dropIfExists(config('i18n.tables.locales', 'locales'));
     }
 }

@@ -19,7 +19,7 @@ class BuildsLocalesTest extends TestCase
         i18nBuilder::createLocale($data->toArray());
 
         $this->assertNotNull(
-            DB::table(config('i18n.tables.locales'))
+            DB::table(config('i18n.tables.locales', 'locales'))
                 ->where('iso', $data->iso)->where('region', $data->region)->get()->first()
         );
     }
@@ -52,7 +52,7 @@ class BuildsLocalesTest extends TestCase
 
         i18nBuilder::removeLocale($locale->name);
 
-        $this->assertNull(DB::table(config('i18n.tables.locales'))->find($locale->id));
+        $this->assertNull(DB::table(config('i18n.tables.locales', 'locales'))->find($locale->id));
     }
 
     public function test_removeLocale_should_not_remove_fallback_locale()

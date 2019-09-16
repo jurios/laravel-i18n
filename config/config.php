@@ -12,6 +12,6 @@ return [
     | Here you can edit the table's name
     */
     'tables' => [
-        'locales' => 'i18n_locales',
+        'locales' => 'locales',
     ],
 ];

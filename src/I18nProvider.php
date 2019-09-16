@@ -6,14 +6,11 @@ namespace Kodilab\LaravelI18n;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use Kodilab\LaravelI18n\Commands\Editor;
-use Kodilab\LaravelI18n\Commands\GenerateModelTranslation;
+use Kodilab\LaravelI18n\Commands\Generator;
+use Kodilab\LaravelI18n\Commands\Generators\Config;
+use Kodilab\LaravelI18n\Commands\Generators\ModelTranslation;
 use Kodilab\LaravelI18n\Commands\Install;
 use Kodilab\LaravelI18n\Commands\Sync;
-use \Illuminate\Support\Facades\Blade;
-use Kodilab\LaravelI18n\Middleware\Callback;
-use Kodilab\LaravelI18n\Middleware\SetLocale;
-use Kodilab\LaravelI18n\Middleware\SetLocaleByPath;
-use Kodilab\LaravelI18n\Middleware\SetLocaleByUserSession;
 
 class I18nProvider extends ServiceProvider
 {
@@ -33,23 +30,21 @@ class I18nProvider extends ServiceProvider
     {
         $config_path = __DIR__ . '/../config/config.php';
         $factories_path = __DIR__ . '/../database/factories';
-        $migrations_path = __DIR__ . '/../database/migrations';
         $views_path = __DIR__ . '/../resources/views';
 
         $this->publishes([
-            $config_path => config_path('i18n.php'),
             $factories_path => database_path('factories')
         ], 'laravel-i18n-config');
 
         $this->loadViewsFrom($views_path, 'i18n');
 
-        $this->loadMigrationsFrom($migrations_path);
-
         $this->commands([
             Install::class,
             Sync::class,
             Editor::class,
-            GenerateModelTranslation::class
+            ModelTranslation::class,
+            Config::class,
+            Generator::class
         ]);
     }
 

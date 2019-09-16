@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use Kodilab\LaravelFilters\Traits\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
 use Kodilab\LaravelI18n\i18n;
@@ -66,7 +67,7 @@ class Locale extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->table = config('i18n.tables.locale', 'i18n_locales');
+        $this->table = config('i18n.tables.locales','locales');
     }
 
     /**

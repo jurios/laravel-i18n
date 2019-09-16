@@ -29,7 +29,7 @@ class CreateTestTables extends Migration
             $table->foreign('model_id')->references('id')->on('translatable_models')->onDelete('cascade');
 
             $table->unsignedBigInteger('locale_id')->unique()->nullable(false)->default(null);
-            $table->foreign('locale_id')->references('id')->on(config('i18n.tables.locales'))->onDelete('cascade');
+            $table->foreign('locale_id')->references('id')->on(config('i18n.tables.locales', 'locales'))->onDelete('cascade');
 
             $table->timestamps();
         });
