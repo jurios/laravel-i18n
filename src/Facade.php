@@ -63,10 +63,10 @@ class Facade extends \Illuminate\Support\Facades\Facade
         ]);
     }
 
-    public static function removeLocale(string $reference)
+    public static function removeLocale(string $name)
     {
         /** @var Locale $locale */
-        $locale = Locale::getLocale($reference);
+        $locale = Locale::getLocale($name);
 
         if ($locale->isFallback()) {
             throw new \Exception('Fallback locale can not be deleted');

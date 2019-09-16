@@ -85,14 +85,15 @@ class Translator
     }
 
     /**
-     * Save the translation collection into the file
+     * Save the translation collection into the file. As the collection uses Translations classes,
+     * a mapping must be done
      *
      */
     public function save()
     {
-        $raw_translations = exportTranslationCollectionToRaw($this->translations);
-
-        $this->handler->save($raw_translations);
+        $this->handler->save($this->translations->map(function (Translation $item) {
+            return $item->translation;
+        })->toArray());
     }
 
     /**
@@ -222,7 +223,7 @@ class Translator
     {
         return config('i18n.lang_path', resource_path('lang'))
             . DIRECTORY_SEPARATOR
-            . $this->locale->reference
+            . $this->locale->name
             . '.json';
     }
 }

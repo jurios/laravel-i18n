@@ -56,8 +56,8 @@ class Locale extends Model
         });
 
         self::creating(function (Locale $model) {
-            if (!is_null(Locale::getLocale($model->reference))) {
-                throw new \Exception('Locale ' . $model->reference . 'already exists.');
+            if (!is_null(Locale::getLocale($model->name))) {
+                throw new \Exception('Locale ' . $model->name . 'already exists.');
             }
         });
     }
@@ -68,7 +68,7 @@ class Locale extends Model
         $this->table = config('i18n.tables.locale', 'i18n_locales');
     }
 
-    public function getReferenceAttribute()
+    public function getNameAttribute()
     {
         if (!is_null($this->region)) {
             return $this->iso . '_' . $this->region;
@@ -82,6 +82,12 @@ class Locale extends Model
         return $this->fallback;
     }
 
+    /**
+     * Get the fallback locale. It does not exits, then an exception is sent.
+     *
+     * @return Locale
+     * @throws MissingFallbackLocaleException
+     */
     public static function getFallbackLocale()
     {
         /** @var Locale $fallback_locale */
@@ -94,12 +100,34 @@ class Locale extends Model
         return $fallback_locale;
     }
 
-    public static function getLocale(string $reference)
+    /**
+     * Returns a locale by name. If it does not exist, then null is returned.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public static function getLocale(string $name)
     {
-        $iso = explode("_", $reference)[0];
-        $region = isset(($splitted = explode("_", $reference))[1]) ? $splitted[1] : null;
+        $iso = explode("_", $name)[0];
+        $region = isset(($splitted = explode("_", $name))[1]) ? $splitted[1] : null;
 
         return self::where('iso', $iso)->where('region', $region)->first();
+    }
+
+    /**
+     * Returns a locale by name. If it does not exist, then fallback locale is returned
+     *
+     * @param string $name
+     * @return Locale
+     * @throws MissingFallbackLocaleException
+     */
+    public static function getLocaleOrFallback(string $name)
+    {
+        if (!is_null($locale = self::getLocale($name))) {
+            return $locale;
+        }
+
+        return self::getFallbackLocale();
     }
 
     /**

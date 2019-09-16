@@ -17,7 +17,7 @@ class TranslatorTest extends TestCase
         $original_text = $this->faker->paragraph;
         $translation_text = $this->faker->paragraph;
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [$original_text => $translation_text]);
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [$original_text => $translation_text]);
 
         $translator = new Translator($locale);
 
@@ -33,7 +33,7 @@ class TranslatorTest extends TestCase
 
         $original_text = $this->faker->paragraph;
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [$original_text => null]);
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [$original_text => null]);
 
         $translator = new Translator($locale);
 
@@ -74,7 +74,7 @@ class TranslatorTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
         ]);
 
@@ -94,7 +94,7 @@ class TranslatorTest extends TestCase
         $original = $this->faker->unique()->paragraph;
         $translation = $this->faker->unique()->paragraph;
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $original => $translation
         ]);
 
@@ -113,7 +113,7 @@ class TranslatorTest extends TestCase
         $original = $this->faker->unique()->paragraph;
         $translation = $this->faker->unique()->paragraph;
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $original => $translation
         ]);
 
@@ -132,7 +132,7 @@ class TranslatorTest extends TestCase
         $original = $this->faker->unique()->paragraph;
         $translation = $this->faker->unique()->paragraph;
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $original => $translation
         ]);
 
@@ -153,7 +153,7 @@ class TranslatorTest extends TestCase
 
         mkdir($this->lang_path . DIRECTORY_SEPARATOR . $locale->iso);
 
-        $this->addTranslationsToFile(
+        $this->printTranslationFile(
             $this->lang_path
             . DIRECTORY_SEPARATOR
             . $locale->iso
@@ -176,11 +176,11 @@ class TranslatorTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
         ]);
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($this->fallback_locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($this->fallback_locale), [
             $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
         ]);
 
@@ -205,7 +205,7 @@ class TranslatorTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
         ]);
 
@@ -226,7 +226,7 @@ class TranslatorTest extends TestCase
         $original = $this->faker->unique()->paragraph;
         $translation = $this->faker->unique()->paragraph;
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $original => $translation
         ]);
 
@@ -249,7 +249,7 @@ class TranslatorTest extends TestCase
         $translation = $this->faker->unique()->paragraph;
         $translation2 = $this->faker->unique()->paragraph;
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $original => $translation
         ]);
 
@@ -265,7 +265,7 @@ class TranslatorTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $this->faker->unique()->paragraph => $this->faker->unique()->paragraph
         ]);
 
@@ -273,7 +273,7 @@ class TranslatorTest extends TestCase
 
         $this->assertEquals(100, $translator->percentage);
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), [
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), [
             $this->faker->unique()->paragraph => $this->faker->unique()->paragraph,
             $this->faker->unique()->paragraph => null
         ]);
@@ -282,7 +282,7 @@ class TranslatorTest extends TestCase
 
         $this->assertEquals(50, $translator->percentage);
 
-        $this->addTranslationsToFile($this->getJSONPathFromLocale($locale), []);
+        $this->printTranslationFile($this->getJSONPathFromLocale($locale), []);
 
         $translator = new Translator($locale);
 

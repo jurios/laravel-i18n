@@ -91,7 +91,7 @@ class ArrayTranslator
 
         if (!is_null($locale->region)) {
 
-            if (is_dir($path = config('i18n.lang_path', resource_path('lang')) . DIRECTORY_SEPARATOR . $locale->reference)) {
+            if (is_dir($path = config('i18n.lang_path', resource_path('lang')) . DIRECTORY_SEPARATOR . $locale->name)) {
                 $paths[] = $path;
             }
 
@@ -115,7 +115,13 @@ class ArrayTranslator
                 $handler = new ArrayFile($file_path);
 
                 foreach ($handler->translations as $path => $translation) {
-                    $translations->put($path, new Translation($path, $translation));
+                    /*
+                     * ArrayFile uses Arr::dot() method. This method, could returns empty arrays. That's the reason
+                     * why where we check is string.
+                    */
+                    if (is_string($translation)) {
+                        $translations->put($path, new Translation($path, $translation));
+                    }
                 }
             }
 

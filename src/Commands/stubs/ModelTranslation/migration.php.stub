@@ -1,0 +1,49 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class {{class}} extends Migration
+{
+
+    /** @var string */
+    protected $table;
+
+    public function __construct()
+    {
+        $this->table = "{{translation_table}}";
+    }
+
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create($this->table, function (Blueprint $table) {
+            $table->bigIncrements('id');
+
+            //TODO: You should add the model translatable fields here.
+
+            $table->unsignedBigInteger('model_id')->unique()->nullable(false)->default(null);
+            $table->foreign('model_id')->references('id')->on('{{table}}')->onDelete('cascade');
+
+            $table->unsignedBigInteger('locale_id')->unique()->nullable(false)->default(null);
+            $table->foreign('locale_id')->references('id')->on(config('i18n.tables.locales'))->onDelete('cascade');
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists($this->table);
+    }
+}
