@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Kodilab\LaravelFilters\Traits\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
+use Kodilab\LaravelI18n\i18n;
 use Kodilab\LaravelI18n\Translations\Translator;
 
 class Locale extends Model
@@ -68,13 +69,14 @@ class Locale extends Model
         $this->table = config('i18n.tables.locale', 'i18n_locales');
     }
 
+    /**
+     * Name attribute
+     *
+     * @return string
+     */
     public function getNameAttribute()
     {
-        if (!is_null($this->region)) {
-            return $this->iso . '_' . $this->region;
-        }
-
-        return $this->iso;
+        return i18n::generateName($this->iso, $this->region);
     }
 
     public function isFallback()
