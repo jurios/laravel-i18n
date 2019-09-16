@@ -86,6 +86,6 @@ class TestCase extends \Kodilab\LaravelI18n\Tests\TestCase
      */
     protected function getJSONPathFromLocale(Locale $locale)
     {
-        return $this->lang_path . DIRECTORY_SEPARATOR . $locale->reference . '.json';
+        return $this->lang_path . DIRECTORY_SEPARATOR . $locale->name . '.json';
     }
 }

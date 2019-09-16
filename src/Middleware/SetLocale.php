@@ -54,7 +54,7 @@ abstract class SetLocale
      */
     protected function setLocale(Locale $locale)
     {
-        App::setLocale($locale->reference);
+        App::setLocale($locale->name);
     }
 
     /**

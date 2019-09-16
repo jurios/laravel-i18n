@@ -223,7 +223,7 @@ class Translator
     {
         return config('i18n.lang_path', resource_path('lang'))
             . DIRECTORY_SEPARATOR
-            . $this->locale->reference
+            . $this->locale->name
             . '.json';
     }
 }

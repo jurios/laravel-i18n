@@ -13,7 +13,7 @@ class JsonFileTest extends TestCase
     public function test_content_is_equal_than_the_translation_defined_in_the_file()
     {
         $locale = factory(Locale::class)->create();
-        $json_path = $this->lang_path . DIRECTORY_SEPARATOR . $locale->reference . '.json';
+        $json_path = $this->lang_path . DIRECTORY_SEPARATOR . $locale->name . '.json';
 
         $translations = [];
 

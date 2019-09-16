@@ -31,13 +31,13 @@ class ArrayTranslatorTest extends TestCase
         $locale = factory(Locale::class)->create();
 
         mkdir($this->lang_path . DIRECTORY_SEPARATOR . $locale->iso);
-        mkdir($this->lang_path . DIRECTORY_SEPARATOR . $locale->reference);
+        mkdir($this->lang_path . DIRECTORY_SEPARATOR . $locale->name);
 
         $translator = new ArrayTranslator($locale);
 
         $this->assertEquals([
             $this->lang_path . DIRECTORY_SEPARATOR . $locale->iso,
-            $this->lang_path . DIRECTORY_SEPARATOR . $locale->reference,
+            $this->lang_path . DIRECTORY_SEPARATOR . $locale->name,
             ], $translator->paths);
     }
 
@@ -46,7 +46,7 @@ class ArrayTranslatorTest extends TestCase
         $locale = factory(Locale::class)->create();
         $filesystem = new Filesystem();
 
-        $filesystem->copyDirectory(resource_path('lang/en'), $this->lang_path . DIRECTORY_SEPARATOR . $locale->reference);
+        $filesystem->copyDirectory(resource_path('lang/en'), $this->lang_path . DIRECTORY_SEPARATOR . $locale->name);
 
         $translator = new ArrayTranslator($locale);
 
@@ -64,7 +64,7 @@ class ArrayTranslatorTest extends TestCase
         $specific_translation = $this->faker->unique()->paragraph;
 
         mkdir($this->lang_path . DIRECTORY_SEPARATOR . $general_locale->iso);
-        mkdir($this->lang_path . DIRECTORY_SEPARATOR . $specific_locale->reference);
+        mkdir($this->lang_path . DIRECTORY_SEPARATOR . $specific_locale->name);
 
         $this->printTranslationFile(
             $this->lang_path
@@ -78,7 +78,7 @@ class ArrayTranslatorTest extends TestCase
         $this->printTranslationFile(
             $this->lang_path
             . DIRECTORY_SEPARATOR
-            . $specific_locale->reference
+            . $specific_locale->name
             . DIRECTORY_SEPARATOR
             . $scope
             .'.php', [$original => $specific_translation], 'array'
