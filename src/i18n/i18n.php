@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kodilab\LaravelI18n;
+namespace Kodilab\LaravelI18n\i18n;
 
 
 class i18n

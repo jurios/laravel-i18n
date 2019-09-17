@@ -4,7 +4,7 @@
 namespace Kodilab\LaravelI18n\Tests\Unit;
 
 
-use Kodilab\LaravelI18n\i18n;
+use Kodilab\LaravelI18n\i18n\i18n;
 use Kodilab\LaravelI18n\Tests\Unit\Translations\TestCase;
 
 class I18nTest extends TestCase

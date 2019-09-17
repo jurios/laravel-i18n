@@ -3,7 +3,7 @@
 namespace Kodilab\LaravelI18n\Exceptions;
 
 
-use Kodilab\LaravelI18n\i18n;
+use Kodilab\LaravelI18n\i18n\i18n;
 use Throwable;
 
 class LocaleAlreadyExists extends \Exception
