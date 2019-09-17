@@ -7,7 +7,7 @@ namespace Kodilab\LaravelI18n\Tests\Unit\Discover;
 use Kodilab\LaravelI18n\Discover\ModelDiscover;
 use Kodilab\LaravelI18n\Tests\Unit\Discover\Fixtures\Models\ModelOne;
 use Kodilab\LaravelI18n\Tests\Unit\Discover\Fixtures\Models\ModelTwo;
-use Kodilab\LaravelI18n\Tests\Unit\Translations\TestCase;
+use Kodilab\LaravelI18n\Tests\TestCase;
 
 class ModelDiscoverTest extends TestCase
 {

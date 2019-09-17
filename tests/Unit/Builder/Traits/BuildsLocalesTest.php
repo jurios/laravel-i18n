@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Kodilab\LaravelI18n\Builder\i18nBuilder;
 use Kodilab\LaravelI18n\Exceptions\LocaleAlreadyExists;
 use Kodilab\LaravelI18n\Models\Locale;
-use Kodilab\LaravelI18n\Tests\Unit\Translations\TestCase;
+use Kodilab\LaravelI18n\Tests\TestCase;
 
 class BuildsLocalesTest extends TestCase
 {

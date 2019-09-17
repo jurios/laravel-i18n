@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Kodilab\LaravelI18n\Tests\Unit;
+namespace Kodilab\LaravelI18n\Tests\Unit\i18n;
 
 
 use Kodilab\LaravelI18n\i18n\i18n;
-use Kodilab\LaravelI18n\Tests\Unit\Translations\TestCase;
+use Kodilab\LaravelI18n\Tests\TestCase;
 
 class I18nTest extends TestCase
 {

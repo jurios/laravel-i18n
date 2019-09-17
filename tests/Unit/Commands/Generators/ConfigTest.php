@@ -4,10 +4,13 @@
 namespace Kodilab\LaravelI18n\Tests\Unit\Commands\Generators;
 
 
-use Kodilab\LaravelI18n\Tests\Unit\Translations\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Kodilab\LaravelI18n\Tests\TestCase;
 
 class ConfigTest extends TestCase
 {
+    use WithFaker;
+
     protected function tearDown(): void
     {
         $this->filesystem->delete(config_path('i18n.php'));
