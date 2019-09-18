@@ -1,11 +1,12 @@
 <?php
 
-namespace Kodilab\LaravelI18n;
+namespace Kodilab\LaravelI18n\i18n;
 
 
 use Illuminate\Console\OutputStyle;
 use Illuminate\Filesystem\Filesystem;
-use Kodilab\LaravelI18n\Translations\Translation;
+use Kodilab\LaravelI18n\i18n\Translations\Translation;
+use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 
 class Linguist
 {
@@ -36,15 +37,15 @@ class Linguist
      *      'text' => 'translation (text)'
      * ]
      *
-     * @return array
+     * @return TranslationCollection
      */
     public function texts()
     {
-        $result = [];
+        $result = new TranslationCollection();
 
         foreach ($this->getAllTranslatableStringFromFiles() as $file => $occurrences) {
             foreach ($occurrences as $occurrence) {
-                $result[$occurrence] = new Translation($occurrence, $occurrence);
+                $result->add(new Translation($occurrence, $occurrence));
             }
         }
 

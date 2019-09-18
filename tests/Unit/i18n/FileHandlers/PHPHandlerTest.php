@@ -47,15 +47,15 @@ class PHPHandlerTest extends TestCase
     {
         $multilevel_array = require $this->file;
 
-        $translations = [];
+        $collection = new TranslationCollection();
         foreach (Arr::dot($multilevel_array, $this->filename . '.') as $path => $translation) {
             if (is_string($translation)) {
-                $translations[] = new Translation($path, $translation);
+                $collection->add(new Translation($path, $translation));
             }
         }
 
         $this->assertEquals(
-            new TranslationCollection($translations),
+            $collection,
             $this->handler->getTranslations()
         );
     }

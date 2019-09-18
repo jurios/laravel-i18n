@@ -7,6 +7,8 @@ use Illuminate\Encryption\Encrypter;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
+use Kodilab\LaravelI18n\i18n\Translations\Translation;
+use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\Models\Locale;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -50,7 +52,12 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
         $this->artisan('migrate')->run();
 
-        $this->fallback_locale = factory(Locale::class)->create(['enabled' => true, 'fallback' => true]);
+        $this->fallback_locale = factory(Locale::class)->create([
+            'iso' => 'en',
+            'region' => null,
+            'enabled' => true,
+            'fallback' => true
+        ]);
     }
 
     protected function getPackageProviders($app)
@@ -105,5 +112,25 @@ class TestCase extends \Orchestra\Testbench\TestCase
         if(is_dir($this->resources_path)) {
             $this->filesystem->deleteDirectory($this->resources_path);
         }
+    }
+
+    /**
+     * Save the translations into a file in JSON format
+     *
+     * @param string $path
+     * @param TranslationCollection $translations
+     */
+    protected function printTranslationsToJSON(string $path, TranslationCollection $translations)
+    {
+        $content = [];
+
+        /** @var Translation $translation */
+        foreach ($translations as $translation) {
+            $content[$translation->getPath()] = $translation->getTranslation();
+        }
+
+        $json = json_encode($content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        file_put_contents($path, $json);
     }
 }

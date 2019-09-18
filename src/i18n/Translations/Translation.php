@@ -11,12 +11,12 @@ class Translation implements Arrayable
     /**
      * @var string
      */
-    protected $path;
+    public $path;
 
     /**
      * @var string
      */
-    protected $translation;
+    public $translation;
 
     public function __construct(string $path, string $translation = '')
     {

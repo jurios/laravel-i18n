@@ -59,24 +59,4 @@ class JSONHandlerTest extends TestCase
             $this->handler->getTranslations()
         );
     }
-
-    /**
-     * Save the translations into a file in JSON format
-     *
-     * @param string $path
-     * @param TranslationCollection $translations
-     */
-    private function printTranslationsToJSON(string $path, TranslationCollection $translations)
-    {
-        $content = [];
-
-        /** @var Translation $translation */
-        foreach ($translations as $translation) {
-            $content[$translation->getPath()] = $translation->getTranslation();
-        }
-
-        $json = json_encode($content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
-        file_put_contents($path, $json);
-    }
 }

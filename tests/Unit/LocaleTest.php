@@ -4,6 +4,7 @@
 namespace Kodilab\LaravelI18n\Tests\Unit;
 
 
+use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
 use Kodilab\LaravelI18n\Translations\Collection;
@@ -20,7 +21,7 @@ class LocaleTest extends TestCase
 
     public function test_locale_translation_will_returns_the_translations_collection()
     {
-        $this->assertEquals(Collection::class, get_class($this->fallback_locale->translations));
+        $this->assertEquals(TranslationCollection::class, get_class($this->fallback_locale->translations));
     }
 
     public function test_getLocale_returns_the_locale_which_name_is_equal()
