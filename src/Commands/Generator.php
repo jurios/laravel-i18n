@@ -32,8 +32,6 @@ class Generator extends Command
      * Execute the console command.
      *
      * @return mixed
-     *
-     * @throws \Kodilab\LaravelI18n\Exceptions\MissingLocaleException
      */
     public function handle()
     {

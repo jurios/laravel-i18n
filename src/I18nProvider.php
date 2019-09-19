@@ -8,6 +8,9 @@ use Illuminate\Support\ServiceProvider;
 use Kodilab\LaravelI18n\Commands\Editor;
 use Kodilab\LaravelI18n\Commands\Generator;
 use Kodilab\LaravelI18n\Commands\Generators\Config;
+use Kodilab\LaravelI18n\Commands\Generators\Factories;
+use Kodilab\LaravelI18n\Commands\Generators\Fallback;
+use Kodilab\LaravelI18n\Commands\Generators\Migrations;
 use Kodilab\LaravelI18n\Commands\Generators\ModelTranslation;
 use Kodilab\LaravelI18n\Commands\Install;
 use Kodilab\LaravelI18n\Commands\Sync;
@@ -42,10 +45,13 @@ class I18nProvider extends ServiceProvider
         $this->commands([
             Install::class,
             Sync::class,
-            Editor::class,
+            Generator::class,
             ModelTranslation::class,
             Config::class,
-            Generator::class
+            Migrations::class,
+            Fallback::class,
+            Factories::class,
+            Editor::class,
         ]);
     }
 
