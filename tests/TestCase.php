@@ -54,11 +54,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
         $this->artisan('migrate')->run();
 
-        $this->fallback_locale = factory(Locale::class)->create([
-            'iso' => i18n::getISO(config('app.fallback_locale')),
-            'region' => i18n::getRegion(config('app.fallback_locale')),
-            'enabled' => true
-        ]);
+        $this->artisan('i18n:generate', ['resource' => 'fallback']);
+        $this->fallback_locale = Locale::getFallbackLocale();
     }
 
     protected function tearDown(): void
