@@ -5,7 +5,7 @@ namespace Kodilab\LaravelI18n\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
-use Kodilab\LaravelI18n\i18n\Translations\TranslationManager;
+use Kodilab\LaravelI18n\i18n\Sync\LocaleSync;
 use Kodilab\LaravelI18n\i18n\Linguist;
 use Kodilab\LaravelI18n\Models\Locale;
 
@@ -56,7 +56,7 @@ class Sync extends Command
 
         /** @var Locale $locale */
         foreach (Locale::all() as $locale) {
-            $translator = new TranslationManager($locale);
+            $translator = new LocaleSync($locale);
             $translator->sync($paths);
         }
     }
@@ -89,7 +89,7 @@ class Sync extends Command
 
         /** @var Locale $locale */
         foreach (Locale::all() as $locale) {
-            $translations = (new TranslationManager($locale))->php();
+            $translations = (new LocaleSync($locale))->php();
             $result = $result->merge($translations);
         }
 

@@ -1,17 +1,19 @@
 <?php
 
 
-namespace Kodilab\LaravelI18n\i18n\Translations;
+namespace Kodilab\LaravelI18n\i18n\Sync;
 
 
 use Illuminate\Filesystem\Filesystem;
 use Kodilab\LaravelI18n\i18n\FileHandlers\JSONHandler;
 use Kodilab\LaravelI18n\i18n\FileHandlers\PHPHandler;
+use Kodilab\LaravelI18n\i18n\Translations\Translation;
+use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\Models\Locale;
 use Symfony\Component\Finder\SplFileInfo;
 
 
-class TranslationManager
+class LocaleSync
 {
     /**
      * @var Locale

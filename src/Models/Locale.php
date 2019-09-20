@@ -8,8 +8,7 @@ use Kodilab\LaravelFilters\Traits\Filterable;
 use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
 use Kodilab\LaravelI18n\i18n\i18n;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
-use Kodilab\LaravelI18n\i18n\Translations\TranslationManager;
-use Kodilab\LaravelI18n\Translations\Translator;
+use Kodilab\LaravelI18n\i18n\Sync\LocaleSync;
 
 class Locale extends Model
 {
@@ -144,7 +143,7 @@ class Locale extends Model
      */
     public function getTranslationsAttribute()
     {
-        $translator = new TranslationManager($this);
+        $translator = new LocaleSync($this);
 
         return $translator->json();
     }
@@ -158,7 +157,7 @@ class Locale extends Model
      */
     public function translation(string $original)
     {
-        $translator = new TranslationManager($this);
+        $translator = new LocaleSync($this);
 
         return $translator->find($original);
     }
