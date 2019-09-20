@@ -34,7 +34,6 @@ class Createi18nLocalesTable extends Migration
             $table->string('tz')->nullable(true)->default(null);
 
             $table->boolean('enabled')->nullable(false)->default(false);
-            $table->boolean('fallback')->nullable(false)->default(false);
 
             $table->timestamps();
         });

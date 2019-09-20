@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n\Tests;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
+use Kodilab\LaravelI18n\i18n\i18n;
 use Kodilab\LaravelI18n\i18n\Translations\Translation;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\Models\Locale;
@@ -54,10 +55,9 @@ class TestCase extends \Orchestra\Testbench\TestCase
         $this->artisan('migrate')->run();
 
         $this->fallback_locale = factory(Locale::class)->create([
-            'iso' => 'en',
-            'region' => null,
-            'enabled' => true,
-            'fallback' => true
+            'iso' => i18n::getISO(config('app.fallback_locale')),
+            'region' => i18n::getRegion(config('app.fallback_locale')),
+            'enabled' => true
         ]);
     }
 

@@ -7,7 +7,6 @@ namespace Kodilab\LaravelI18n\Tests\Unit;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
-use Kodilab\LaravelI18n\Translations\Collection;
 
 class LocaleTest extends TestCase
 {

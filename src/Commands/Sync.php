@@ -23,7 +23,7 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $description = 'Syncronize laravel translations found in php files with fallback language translations on the database';
+    protected $description = 'Synchronize laravel translatable texts found in the project';
 
     /** @var Linguist */
     protected $linguist;

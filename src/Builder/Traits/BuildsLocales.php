@@ -6,6 +6,7 @@ namespace Kodilab\LaravelI18n\Builder\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Kodilab\LaravelI18n\Exceptions\LocaleAlreadyExists;
+use Kodilab\LaravelI18n\i18n\i18n;
 use Kodilab\LaravelI18n\Support\Arr;
 
 trait BuildsLocales
@@ -19,14 +20,10 @@ trait BuildsLocales
      * Creates a locale
      *
      * @param array $data
-     * @return mixed
+     * @throws LocaleAlreadyExists
      */
     public static function createLocale(array $data = [])
     {
-        if (Arr::get($data, 'fallback', false)) {
-            $previous_fallback = DB::table(self::getLocaleTable())->where('fallback', true)->get()->first();
-        }
-
         $existing_locale = DB::table(self::getLocaleTable())
             ->where('iso', Arr::get($data, 'iso', null))
             ->where('region', Arr::get($data, 'region', null))
@@ -37,10 +34,6 @@ trait BuildsLocales
         }
 
         DB::table(self::getLocaleTable())->insert($data);
-
-        if (isset($previous_fallback)) {
-            DB::table(self::getLocaleTable())->where('id', $previous_fallback->id)->update(['fallback' => false]);
-        }
     }
 
     /**
@@ -56,7 +49,7 @@ trait BuildsLocales
         $locale = DB::table(config('i18n.tables.locales', 'locales'))
             ->where('iso', $iso)->where('region', $region)->get()->first();
 
-        if ($locale->fallback) {
+        if (i18n::generateName($locale->iso, $locale->region) === config('app.fallback_locale')) {
             throw new \RuntimeException('Fallback locale can not be removed');
         }
 

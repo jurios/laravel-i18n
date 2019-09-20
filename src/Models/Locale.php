@@ -30,14 +30,12 @@ class Locale extends Model
         'currency_symbol_position',
         'carbon_locale',
         'tz',
-        'fallback',
         'enabled'
     ];
 
     protected $casts = [
         'dialect_of_id' => 'integer',
         'enabled' => 'boolean',
-        'fallback' => 'boolean',
         'currency_number_decimals' => 'integer'
     ];
 
@@ -83,7 +81,7 @@ class Locale extends Model
 
     public function isFallback()
     {
-        return $this->fallback;
+        return $this->name === config('app.fallback_locale');
     }
 
     /**
@@ -94,8 +92,12 @@ class Locale extends Model
      */
     public static function getFallbackLocale()
     {
+        $fallback_locale_setting = config('app.fallback_locale');
+
         /** @var Locale $fallback_locale */
-        $fallback_locale = self::where('fallback', true)->first();
+        $fallback_locale = self::where('iso', i18n::getISO($fallback_locale_setting))
+            ->where('region', i18n::getRegion($fallback_locale_setting))
+            ->first();
 
         if (is_null($fallback_locale)) {
             throw new MissingFallbackLocaleException('Fallback locale not found.');
