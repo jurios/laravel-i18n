@@ -23,7 +23,7 @@ class LocaleTest extends TestCase
         $this->assertEquals(TranslationCollection::class, get_class($this->fallback_locale->translations));
     }
 
-    public function test_getLocale_returns_the_locale_which_name_is_equal()
+    public function test_getLocale_returns_the_locale_which_reference_is_equal()
     {
         $locale = factory(Locale::class)->create();
 
@@ -47,7 +47,7 @@ class LocaleTest extends TestCase
         $this->assertTrue(Locale::getFallbackLocale()->is(Locale::getLocaleOrFallback('')));
     }
 
-    public function test_locale_with_same_name_can_not_be_persisted()
+    public function test_locale_with_same_reference_can_not_be_persisted()
     {
         $this->expectException(\Exception::class);
 
@@ -56,7 +56,7 @@ class LocaleTest extends TestCase
         factory(Locale::class)->create(['language' => $locale->language, 'region' => $locale->region]);
     }
 
-    public function test_locale_with_same_name_and_empty_region_can_not_be_persisted()
+    public function test_locale_with_same_language_and_region_null_can_not_be_persisted()
     {
         $this->expectException(\Exception::class);
 
@@ -65,7 +65,7 @@ class LocaleTest extends TestCase
         factory(Locale::class)->create(['language' => $locale->language, 'region' => null]);
     }
 
-    public function test_locale_with_same_name_and_different_region_can_be_persisted()
+    public function test_locale_with_same_language_and_different_region_can_be_persisted()
     {
         $locale = factory(Locale::class)->create(['region' => null]);
 

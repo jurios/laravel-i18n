@@ -39,17 +39,17 @@ trait BuildsLocales
     /**
      * Removes a locale
      *
-     * @param string $name
+     * @param string $reference
      */
-    public static function removeLocale(string $name)
+    public static function removeLocale(string $reference)
     {
-        $language = explode("_", $name)[0];
-        $region = isset(($splitted = explode("_", $name))[1]) ? $splitted[1] : null;
+        $language = explode("_", $reference)[0];
+        $region = isset(($splitted = explode("_", $reference))[1]) ? $splitted[1] : null;
 
         $locale = DB::table(config('i18n.tables.locales', 'locales'))
             ->where('language', $language)->where('region', $region)->get()->first();
 
-        if (i18n::generateName($locale->language, $locale->region) === config('app.fallback_locale')) {
+        if (i18n::generateReference($locale->language, $locale->region) === config('app.fallback_locale')) {
             throw new \RuntimeException('Fallback locale can not be removed');
         }
 

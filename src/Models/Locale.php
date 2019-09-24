@@ -75,7 +75,7 @@ class Locale extends Model
      */
     public function getReferenceAttribute()
     {
-        return i18n::generateName($this->language, $this->region);
+        return i18n::generateReference($this->language, $this->region);
     }
 
     public function isFallback()
@@ -106,29 +106,29 @@ class Locale extends Model
     }
 
     /**
-     * Returns a locale by name. If it does not exist, then null is returned.
+     * Returns a locale by reference. If it does not exist, then null is returned.
      *
-     * @param string $name
+     * @param string $reference
      * @return mixed
      */
-    public static function getLocale(string $name)
+    public static function getLocale(string $reference)
     {
-        $language = explode("_", $name)[0];
-        $region = isset(($splitted = explode("_", $name))[1]) ? $splitted[1] : null;
+        $language = explode("_", $reference)[0];
+        $region = isset(($splitted = explode("_", $reference))[1]) ? $splitted[1] : null;
 
         return self::where('language', $language)->where('region', $region)->first();
     }
 
     /**
-     * Returns a locale by name. If it does not exist, then fallback locale is returned
+     * Returns a locale by reference. If it does not exist, then fallback locale is returned
      *
-     * @param string $name
+     * @param string $reference
      * @return Locale
      * @throws MissingFallbackLocaleException
      */
-    public static function getLocaleOrFallback(string $name)
+    public static function getLocaleOrFallback(string $reference)
     {
-        if (!is_null($locale = self::getLocale($name))) {
+        if (!is_null($locale = self::getLocale($reference))) {
             return $locale;
         }
 

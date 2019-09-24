@@ -7,13 +7,13 @@ namespace Kodilab\LaravelI18n\i18n;
 class i18n
 {
     /**
-     * Generate the locale name based on language and region attributes
+     * Generate the locale reference based on language and region attributes
      *
      * @param string $language
      * @param string|null $region
      * @return string
      */
-    public static function generateName(string $language, string $region = null)
+    public static function generateReference(string $language, string $region = null)
     {
         $language = mb_strtolower(trim($language));
         $region = !is_null($region) ? mb_strtoupper(trim($region)) : null;
@@ -22,39 +22,45 @@ class i18n
     }
 
     /**
-     * Returns the language from a locale name
+     * Returns the language from a locale reference
      *
-     * @param string $name
+     * @param string $reference
      * @return mixed
      */
-    public static function getLanguage(string $name)
+    public static function getLanguage(string $reference)
     {
-        if (!self::isNameValid($name)) {
-            throw new \InvalidArgumentException('Name ' . $name . ' is not a valid locale name');
+        if (!self::isReferenceValid($reference)) {
+            throw new \InvalidArgumentException('Name ' . $reference . ' is not a valid locale reference');
         }
 
-        return explode('_', $name)[0];
+        return explode('_', $reference)[0];
     }
 
-    public static function getRegion(string $name)
+    /**
+     * Returns the region from the locale reference or null
+     *
+     * @param string $reference
+     * @return |null
+     */
+    public static function getRegion(string $reference)
     {
-        if (!self::isNameValid($name)) {
-            throw new \InvalidArgumentException('Name ' . $name . ' is not a valid locale name');
+        if (!self::isReferenceValid($reference)) {
+            throw new \InvalidArgumentException('Name ' . $reference . ' is not a valid locale reference');
         }
 
-        $exploded = explode('_', $name);
+        $exploded = explode('_', $reference);
 
         return isset($exploded[1]) ? $exploded[1] : null;
     }
 
     /**
-     * Returns whether a name is valid
+     * Returns whether a reference is valid
      *
-     * @param string $name
+     * @param string $reference
      * @return bool
      */
-    public static function isNameValid(string $name)
+    public static function isReferenceValid(string $reference)
     {
-        return (bool)preg_match('/^[a-z]{2,3}(_[A-Z]{2,3})?$/', $name);
+        return (bool)preg_match('/^[a-z]{2,3}(_[A-Z]{2,3})?$/', $reference);
     }
 }

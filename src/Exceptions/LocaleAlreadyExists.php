@@ -10,8 +10,8 @@ class LocaleAlreadyExists extends \Exception
 {
     public function __construct(string $language, string $region, $code = 0, Throwable $previous = null)
     {
-        $name = i18n::generateName($language, $region);
+        $reference = i18n::generateReference($language, $region);
 
-        parent::__construct("Locale '{$name}' already exists.", $code, $previous);
+        parent::__construct("Locale '{$reference}' already exists.", $code, $previous);
     }
 }
