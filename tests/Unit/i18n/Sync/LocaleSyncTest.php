@@ -13,7 +13,7 @@ use Kodilab\LaravelI18n\i18n\Sync\LocaleSync;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
 
-class TranslationManagerTest extends TestCase
+class LocaleSyncTest extends TestCase
 {
     use WithFaker;
 
