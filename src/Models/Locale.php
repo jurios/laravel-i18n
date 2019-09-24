@@ -18,7 +18,7 @@ class Locale extends Model
     protected $table;
 
     protected $fillable = [
-        'iso',
+        'language',
         'region',
         'description',
         'laravel_locale',
@@ -44,10 +44,10 @@ class Locale extends Model
 
         self::saving(function (Locale $model) {
 
-            $model->iso = strtolower($model->iso);
+            $model->language = strtolower($model->language);
             $model->region = !is_null($model->region) ? strtoupper($model->region) : null;
-            $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->iso;
-            $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->iso;
+            $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->language;
+            $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->language;
 
             if ($model->isFallback()) {
                 $model->enabled = true;
@@ -75,7 +75,7 @@ class Locale extends Model
      */
     public function getNameAttribute()
     {
-        return i18n::generateName($this->iso, $this->region);
+        return i18n::generateName($this->language, $this->region);
     }
 
     public function isFallback()
@@ -94,7 +94,7 @@ class Locale extends Model
         $fallback_locale_setting = config('app.fallback_locale');
 
         /** @var Locale $fallback_locale */
-        $fallback_locale = self::where('iso', i18n::getISO($fallback_locale_setting))
+        $fallback_locale = self::where('language', i18n::getLanguage($fallback_locale_setting))
             ->where('region', i18n::getRegion($fallback_locale_setting))
             ->first();
 
@@ -113,10 +113,10 @@ class Locale extends Model
      */
     public static function getLocale(string $name)
     {
-        $iso = explode("_", $name)[0];
+        $language = explode("_", $name)[0];
         $region = isset(($splitted = explode("_", $name))[1]) ? $splitted[1] : null;
 
-        return self::where('iso', $iso)->where('region', $region)->first();
+        return self::where('language', $language)->where('region', $region)->first();
     }
 
     /**

@@ -16,9 +16,9 @@ class Createi18nLocalesTable extends Migration
         Schema::create(config('i18n.tables.locales', 'locales'), function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('iso')->nullable(false);
+            $table->string('language')->nullable(false);
             $table->string('region')->nullable(true);
-            $table->index(['iso', 'region']);
+            $table->index(['language', 'region']);
 
             $table->text('description')->nullable(true)->default(null);
 

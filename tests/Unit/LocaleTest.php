@@ -53,7 +53,7 @@ class LocaleTest extends TestCase
 
         $locale = factory(Locale::class)->create();
 
-        factory(Locale::class)->create(['iso' => $locale->iso, 'region' => $locale->region]);
+        factory(Locale::class)->create(['language' => $locale->language, 'region' => $locale->region]);
     }
 
     public function test_locale_with_same_name_and_empty_region_can_not_be_persisted()
@@ -62,14 +62,14 @@ class LocaleTest extends TestCase
 
         $locale = factory(Locale::class)->create(['region' => null]);
 
-        factory(Locale::class)->create(['iso' => $locale->iso, 'region' => null]);
+        factory(Locale::class)->create(['language' => $locale->language, 'region' => null]);
     }
 
     public function test_locale_with_same_name_and_different_region_can_be_persisted()
     {
         $locale = factory(Locale::class)->create(['region' => null]);
 
-        $locale2 = factory(Locale::class)->create(['iso' => $locale->iso]);
+        $locale2 = factory(Locale::class)->create(['language' => $locale->language]);
 
         $this->assertEquals($locale2->id, Locale::getLocale($locale2->name)->id);
     }

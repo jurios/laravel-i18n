@@ -25,12 +25,12 @@ trait BuildsLocales
     public static function createLocale(array $data = [])
     {
         $existing_locale = DB::table(self::getLocaleTable())
-            ->where('iso', Arr::get($data, 'iso', null))
+            ->where('language', Arr::get($data, 'language', null))
             ->where('region', Arr::get($data, 'region', null))
             ->get()->first();
 
         if (!is_null($existing_locale)) {
-            throw new LocaleAlreadyExists($existing_locale->iso, $existing_locale->region);
+            throw new LocaleAlreadyExists($existing_locale->language, $existing_locale->region);
         }
 
         DB::table(self::getLocaleTable())->insert($data);
@@ -43,13 +43,13 @@ trait BuildsLocales
      */
     public static function removeLocale(string $name)
     {
-        $iso = explode("_", $name)[0];
+        $language = explode("_", $name)[0];
         $region = isset(($splitted = explode("_", $name))[1]) ? $splitted[1] : null;
 
         $locale = DB::table(config('i18n.tables.locales', 'locales'))
-            ->where('iso', $iso)->where('region', $region)->get()->first();
+            ->where('language', $language)->where('region', $region)->get()->first();
 
-        if (i18n::generateName($locale->iso, $locale->region) === config('app.fallback_locale')) {
+        if (i18n::generateName($locale->language, $locale->region) === config('app.fallback_locale')) {
             throw new \RuntimeException('Fallback locale can not be removed');
         }
 

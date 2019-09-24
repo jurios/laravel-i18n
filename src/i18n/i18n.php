@@ -7,27 +7,27 @@ namespace Kodilab\LaravelI18n\i18n;
 class i18n
 {
     /**
-     * Generate the locale name based on iso and region attributes
+     * Generate the locale name based on language and region attributes
      *
-     * @param string $iso
+     * @param string $language
      * @param string|null $region
      * @return string
      */
-    public static function generateName(string $iso, string $region = null)
+    public static function generateName(string $language, string $region = null)
     {
-        $iso = mb_strtolower(trim($iso));
+        $language = mb_strtolower(trim($language));
         $region = !is_null($region) ? mb_strtoupper(trim($region)) : null;
 
-        return is_null($region) ? $iso : "{$iso}_{$region}";
+        return is_null($region) ? $language : "{$language}_{$region}";
     }
 
     /**
-     * Returns the iso from a locale name
+     * Returns the language from a locale name
      *
      * @param string $name
      * @return mixed
      */
-    public static function getISO(string $name)
+    public static function getLanguage(string $name)
     {
         if (!self::isNameValid($name)) {
             throw new \InvalidArgumentException('Name ' . $name . ' is not a valid locale name');

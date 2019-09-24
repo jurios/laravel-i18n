@@ -30,7 +30,7 @@
                                 ISO 639-1
                             </label>
                             <div class="h3">
-                                {{$locale->iso }}
+                                {{$locale->language }}
                             </div>
                         </div>
 

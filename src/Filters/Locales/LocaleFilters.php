@@ -15,7 +15,7 @@ class LocaleFilters extends QueryFilters
             return;
         }
 
-        $this->query->where('iso', 'like', '%' . $value . '%');
+        $this->query->where('language', 'like', '%' . $value . '%');
     }
 
     public function status(string $value = null)

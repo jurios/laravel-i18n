@@ -28,7 +28,7 @@ class LocaleController extends I18nController
     public function store(\Illuminate\Http\Request $request)
     {
         $locale = \Kodilab\LaravelI18n\Models\Locale::create([
-            'iso' => $request->input('iso'),
+            'language' => $request->input('language'),
             'region' => $request->input('region'),
             'description' => $request->input('description'),
             'enabled' => (bool)$request->input('enabled'),
@@ -57,7 +57,7 @@ class LocaleController extends I18nController
     public function update(\Illuminate\Http\Request $request, \Kodilab\LaravelI18n\Models\Locale $locale)
     {
         $locale->update([
-            'iso' => $request->input('iso'),
+            'language' => $request->input('language'),
             'region' => $request->input('region'),
             'description' => $request->input('description'),
             'enabled' => (bool)$request->input('enabled'),

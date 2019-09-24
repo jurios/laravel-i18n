@@ -93,7 +93,7 @@
     @foreach($locales as $locale)
         <tr>
             <td>
-                {{ $locale->iso }}
+                {{ $locale->language }}
                 @if($locale->created_by_sync)
                     <i class="fa fa-exclamation-triangle text-warning"
                        title="This locale has been created by sync with default values. Please, check it over."></i>

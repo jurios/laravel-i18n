@@ -20,7 +20,7 @@ class BuildsLocalesTest extends TestCase
 
         $this->assertNotNull(
             DB::table(config('i18n.tables.locales', 'locales'))
-                ->where('iso', $data->iso)->where('region', $data->region)->get()->first()
+                ->where('language', $data->language)->where('region', $data->region)->get()->first()
         );
     }
 

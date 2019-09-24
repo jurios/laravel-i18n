@@ -22,16 +22,16 @@
                             <div class="col-md-2">
 
                                 <div class="form-group">
-                                    <label for="input_iso">
+                                    <label for="input_language">
                                         ISO 639-1
                                         <small class="text-muted">e.g 'en'</small>
                                     </label>
-                                    <input id="input_iso" name="iso" type="text"
-                                           class="form-control {{ $errors->has('iso') ? 'is-invalid' : '' }}"
-                                           value="{{ old('iso', $locale->iso) }}">
-                                    @if($errors->has('iso'))
+                                    <input id="input_language" name="language" type="text"
+                                           class="form-control {{ $errors->has('language') ? 'is-invalid' : '' }}"
+                                           value="{{ old('language', $locale->language) }}">
+                                    @if($errors->has('language'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('iso') }}
+                                            {{ $errors->first('language') }}
                                         </div>
                                     @endif
                                 </div>
