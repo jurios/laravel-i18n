@@ -56,8 +56,8 @@ class Locale extends Model
         });
 
         self::creating(function (Locale $model) {
-            if (!is_null(Locale::getLocale($model->name))) {
-                throw new \Exception('Locale ' . $model->name . 'already exists.');
+            if (!is_null(Locale::getLocale($model->reference))) {
+                throw new \Exception('Locale ' . $model->reference . 'already exists.');
             }
         });
     }
@@ -69,18 +69,18 @@ class Locale extends Model
     }
 
     /**
-     * Name attribute
+     * Reference attribute
      *
      * @return string
      */
-    public function getNameAttribute()
+    public function getReferenceAttribute()
     {
         return i18n::generateName($this->language, $this->region);
     }
 
     public function isFallback()
     {
-        return $this->name === config('app.fallback_locale');
+        return $this->reference === config('app.fallback_locale');
     }
 
     /**

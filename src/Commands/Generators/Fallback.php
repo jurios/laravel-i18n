@@ -66,7 +66,7 @@ class Fallback extends Command
                 'fallback' => true
             ]);
 
-            $this->output->success('Fallback locale created: ' . $fallback_locale->name);
+            $this->output->success('Fallback locale created: ' . $fallback_locale->reference);
         }
 
     }

@@ -27,13 +27,13 @@ class LocaleTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        $result = Locale::getLocale($locale->name);
+        $result = Locale::getLocale($locale->reference);
 
         $this->assertEquals($locale->id, $result->id);
 
         $locale = factory(Locale::class)->create(['region' => null]);
 
-        $result = Locale::getLocale($locale->name);
+        $result = Locale::getLocale($locale->reference);
 
         $this->assertEquals($locale->id, $result->id);
     }
@@ -42,7 +42,7 @@ class LocaleTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        $this->assertEquals(Locale::getLocale($locale->name), Locale::getLocaleOrFallback($locale->name));
+        $this->assertEquals(Locale::getLocale($locale->reference), Locale::getLocaleOrFallback($locale->reference));
 
         $this->assertTrue(Locale::getFallbackLocale()->is(Locale::getLocaleOrFallback('')));
     }
@@ -71,6 +71,6 @@ class LocaleTest extends TestCase
 
         $locale2 = factory(Locale::class)->create(['language' => $locale->language]);
 
-        $this->assertEquals($locale2->id, Locale::getLocale($locale2->name)->id);
+        $this->assertEquals($locale2->id, Locale::getLocale($locale2->reference)->id);
     }
 }

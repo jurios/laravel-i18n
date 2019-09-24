@@ -32,7 +32,7 @@ class TranslationManager
     public function __construct(Locale $locale)
     {
         $this->locale = $locale;
-        $this->translation_path = resource_path('lang/' . $this->locale->name . '.json');
+        $this->translation_path = resource_path('lang/' . $this->locale->reference . '.json');
         $this->refresh();
     }
 

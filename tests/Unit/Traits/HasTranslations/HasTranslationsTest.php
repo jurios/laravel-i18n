@@ -76,7 +76,7 @@ class HasTranslationsTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        $this->app['config']->set('app.locale', $locale->name);
+        $this->app['config']->set('app.locale', $locale->reference);
 
         $value = $this->faker->paragraph;
 

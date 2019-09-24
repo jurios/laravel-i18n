@@ -43,7 +43,7 @@ class LocaleController extends I18nController
         ]);
         $request->session()->flash('status', [
             'level' => 'success',
-            'message' => "Locale <b>" . $locale->name . "</b> created"
+            'message' => "Locale <b>" . $locale->reference . "</b> created"
         ]);
 
         return redirect()->route('i18n.locales.show', compact('locale'));
@@ -72,7 +72,7 @@ class LocaleController extends I18nController
         ]);
         $request->session()->flash('status', [
             'level' => 'success',
-            'message' => "Locale <b>" . $locale->name . "</b> updated"
+            'message' => "Locale <b>" . $locale->reference . "</b> updated"
         ]);
 
         return redirect()->route('i18n.locales.show', compact('locale'));
@@ -85,7 +85,7 @@ class LocaleController extends I18nController
             $locale->delete();
             $request->session()->flash('status', [
                 'level' => 'success',
-                'message' => "Locale <b>" . $locale->name . "</b> deleted"
+                'message' => "Locale <b>" . $locale->reference . "</b> deleted"
             ]);
         }
 

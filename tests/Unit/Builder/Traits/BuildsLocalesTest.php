@@ -39,7 +39,7 @@ class BuildsLocalesTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        i18nBuilder::removeLocale($locale->name);
+        i18nBuilder::removeLocale($locale->reference);
 
         $this->assertNull(DB::table(config('i18n.tables.locales', 'locales'))->find($locale->id));
     }
@@ -48,6 +48,6 @@ class BuildsLocalesTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        i18nBuilder::removeLocale(Locale::getFallbackLocale()->name);
+        i18nBuilder::removeLocale(Locale::getFallbackLocale()->reference);
     }
 }

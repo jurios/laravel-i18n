@@ -26,9 +26,9 @@ class SyncTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        $this->assertFalse($this->filesystem->exists(resource_path('lang/' . $locale->name . '.json')));
+        $this->assertFalse($this->filesystem->exists(resource_path('lang/' . $locale->reference . '.json')));
         $this->artisan('i18n:sync')->run();
-        $this->assertTrue($this->filesystem->exists(resource_path('lang/' . $locale->name . '.json')));
+        $this->assertTrue($this->filesystem->exists(resource_path('lang/' . $locale->reference . '.json')));
 
     }
 
@@ -36,7 +36,7 @@ class SyncTest extends TestCase
     {
         $this->artisan('i18n:sync')->run();
 
-        $translations = (new JSONHandler(resource_path('lang/' . $this->fallback_locale->name . '.json')))->getTranslations();
+        $translations = (new JSONHandler(resource_path('lang/' . $this->fallback_locale->reference . '.json')))->getTranslations();
 
         $empty = false;
 
@@ -55,7 +55,7 @@ class SyncTest extends TestCase
         $locale = factory(Locale::class)->create();
         $this->artisan('i18n:sync')->run();
 
-        $translations = (new JSONHandler(resource_path('lang/' . $locale->name . '.json')))->getTranslations();
+        $translations = (new JSONHandler(resource_path('lang/' . $locale->reference . '.json')))->getTranslations();
 
         $empty = true;
 
@@ -74,7 +74,7 @@ class SyncTest extends TestCase
         // Generate fallback locale JSON file
         $this->artisan('i18n:sync')->run();
 
-        $translations = (new JSONHandler(resource_path('lang/' . $this->fallback_locale->name . '.json')))->getTranslations();
+        $translations = (new JSONHandler(resource_path('lang/' . $this->fallback_locale->reference . '.json')))->getTranslations();
 
         /** @var Translation $accepted_validation */
         $accepted_validation = $translations->where('path', 'validation.accepted')->first();
@@ -84,12 +84,12 @@ class SyncTest extends TestCase
         $path = $accepted_validation->getPath();
         $translation = $this->faker->paragraph;
 
-        (new JSONHandler(resource_path('lang/' . $locale->name . '.json')))->save(new TranslationCollection([new Translation($path, $translation)]));
+        (new JSONHandler(resource_path('lang/' . $locale->reference . '.json')))->save(new TranslationCollection([new Translation($path, $translation)]));
 
         $this->artisan('i18n:sync')->run();
 
         /** @var Translation $persisted_translation */
-        $persisted_translation = (new JSONHandler(resource_path('lang/' . $locale->name . '.json')))
+        $persisted_translation = (new JSONHandler(resource_path('lang/' . $locale->reference . '.json')))
             ->getTranslations()
             ->where('path', $path)->first();
 
@@ -103,11 +103,11 @@ class SyncTest extends TestCase
         $path = $this->faker->word;
         $translation = $this->faker->paragraph;
 
-        (new JSONHandler(resource_path('lang/' . $locale->name . '.json')))->save(new TranslationCollection([new Translation($path, $translation)]));
+        (new JSONHandler(resource_path('lang/' . $locale->reference . '.json')))->save(new TranslationCollection([new Translation($path, $translation)]));
 
         $this->artisan('i18n:sync')->run();
 
-        $this->assertTrue((new JSONHandler(resource_path('lang/' . $locale->name . '.json')))
+        $this->assertTrue((new JSONHandler(resource_path('lang/' . $locale->reference . '.json')))
             ->getTranslations()
             ->where('path', $path)->isEmpty()
         );

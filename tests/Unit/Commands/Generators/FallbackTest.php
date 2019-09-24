@@ -31,10 +31,10 @@ class FallbackTest extends TestCase
     {
         $data = factory(Locale::class)->make();
 
-        $this->app['config']->set('app.fallback_locale', $data->name);
+        $this->app['config']->set('app.fallback_locale', $data->reference);
 
         $this->artisan('i18n:fallback')->run();
 
-        $this->assertEquals($data->name, Locale::getFallbackLocale()->name);
+        $this->assertEquals($data->reference, Locale::getFallbackLocale()->reference);
     }
 }

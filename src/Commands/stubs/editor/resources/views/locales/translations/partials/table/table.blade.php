@@ -6,7 +6,7 @@
 
 @section('table-title-' . $id)
     {{ __(':locale translations', [
-        'locale' => $locale->name
+        'locale' => $locale->reference
     ]) }}
 @endsection
 

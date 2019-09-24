@@ -11,7 +11,7 @@
                 @unless($locale->isFallback())
                     <a class="locale-destroy-button btn btn-danger" href="javascript:;"
                         data-locale-id="{{ $locale->id }}"
-                        data-locale-name="{{ $locale->name }}"
+                        data-locale-name="{{ $locale->reference }}"
                         data-locale-description="{{ $locale->description }}">
                         {{ __('Destroy') }}
                     </a>

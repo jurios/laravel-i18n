@@ -41,7 +41,7 @@ class TranslationManagerTest extends TestCase
         $this->artisan('i18n:sync')->run();
 
         $this->manager = new TranslationManager($this->locale);
-        $this->handler = new JSONHandler(resource_path('lang/' . $this->locale->name . '.json'));
+        $this->handler = new JSONHandler(resource_path('lang/' . $this->locale->reference . '.json'));
     }
 
     public function test_translations_should_return_the_JSON_translations()

@@ -50,9 +50,9 @@ class LocaleSync
     {
         $this->locale = $locale;
         $this->filesystem = new Filesystem();
-        $this->php_directory = resource_path('lang/' . $this->locale->name);
+        $this->php_directory = resource_path('lang/' . $this->locale->reference);
 
-        $this->json_path = resource_path('lang/' . $this->locale->name . '.json');
+        $this->json_path = resource_path('lang/' . $this->locale->reference . '.json');
         $this->php_paths = $this->getPHPFiles($this->php_directory);
     }
 
