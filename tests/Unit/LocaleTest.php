@@ -13,14 +13,6 @@ class LocaleTest extends TestCase
 {
     use WithFaker;
 
-    public function test_fallback_locale_can_not_be_desabled()
-    {
-        $this->fallback_locale->enabled = false;
-        $this->fallback_locale->save();
-
-        $this->assertTrue($this->fallback_locale->enabled);
-    }
-
     public function test_locale_translation_will_returns_the_translations_collection()
     {
         $this->assertEquals(TranslationCollection::class, get_class($this->fallback_locale->translations));

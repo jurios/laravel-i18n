@@ -56,13 +56,6 @@
                             <label>
                                 {{ __('Status') }}
                             </label>
-                            <div class="h3">
-                                @if($locale->enabled)
-                                    <span class="badge badge-success">{{ __('Enabled') }}</span>
-                                @else
-                                    <span class="badge badge-danger">{{ __('Disabled') }}</span>
-                                @endif
-                            </div>
                         </div>
 
                     </div>

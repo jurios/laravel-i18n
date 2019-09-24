@@ -20,7 +20,6 @@ $factory->define(\Kodilab\LaravelI18n\Models\Locale::class, function (Faker $fak
         'currency_symbol' => $faker->currencyCode,
         'currency_symbol_position' => 'after',
         'carbon_locale' => $language,
-        'tz' => $faker->timezone,
-        'enabled' => $faker->boolean
+        'tz' => $faker->timezone
     ];
 });

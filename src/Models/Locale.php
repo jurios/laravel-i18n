@@ -30,12 +30,9 @@ class Locale extends Model
         'currency_symbol_position',
         'carbon_locale',
         'tz',
-        'enabled'
     ];
 
     protected $casts = [
-        'dialect_of_id' => 'integer',
-        'enabled' => 'boolean',
         'currency_number_decimals' => 'integer'
     ];
 
@@ -49,10 +46,6 @@ class Locale extends Model
             $model->region = !is_null($model->region) ? strtoupper($model->region) : null;
             $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->language;
             $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->language;
-
-            if ($model->isFallback()) {
-                $model->enabled = true;
-            }
 
         });
 

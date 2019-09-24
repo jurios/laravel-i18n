@@ -42,20 +42,6 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="form-group">
-                <label class="form-label">{{ __('Status:') }}</label>
-                <select class="form-control" name="status">
-                    <option value="" {{ is_null(getQueryString('status', null)) ? 'selected' : '' }}>
-                        {{ __('All') }}
-                    </option>
-                    <option value="enabled" {{ getQueryString('status') === 'enabled' ? 'selected' : '' }}>
-                        {{ __('Enabled') }}
-                    </option>
-                    <option value="disabled" {{ getQueryString('status') === 'disabled' ? 'selected' : '' }}>
-                        {{ __('Disabled') }}
-                    </option>
-                </select>
-            </div>
         </div>
 
         <div class="col-lg-4">
@@ -84,7 +70,6 @@
         <th>Description</th>
         <th>Fallback</th>
         <th width="30%" class="text-center">Translation progress</th>
-        <th>Enabled</th>
         <th>Actions</th>
     </tr>
 @endsection
@@ -118,17 +103,6 @@
 
             </td>
 
-            <td class="text-center">
-                @if($locale->enabled)
-                    <span class="badge badge-success">
-                        Enabled
-                    </span>
-                @else
-                    <span class="badge badge-danger">
-                        Disabled
-                    </span>
-                @endif
-            </td>
             <td class="table--actions">
                 <a href="{{ route('i18n.locales.show', compact('locale')) }}">See</a>
                 <a href="{{ route('i18n.locales.edit', compact('locale')) }}">Edit</a>

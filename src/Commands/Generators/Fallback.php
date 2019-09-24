@@ -65,8 +65,6 @@ class Fallback extends Command
                 'currency_symbol_position' => 'before',
                 'carbon_locale' => config('app.fallback_locale'),
                 'tz' => null,
-                'enabled' => true,
-                'fallback' => true
             ]);
 
             $this->output->success('Fallback locale created: ' . $fallback_locale->reference);

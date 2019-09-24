@@ -18,15 +18,6 @@ class LocaleFilters extends QueryFilters
         $this->query->where('language', 'like', '%' . $value . '%');
     }
 
-    public function status(string $value = null)
-    {
-        if (is_null($value)) {
-            return;
-        }
-
-        $this->query->where('enabled', $value === 'enabled' ? true : false);
-    }
-
     public function translations(string $value = null)
     {
         if (is_null($value)) {

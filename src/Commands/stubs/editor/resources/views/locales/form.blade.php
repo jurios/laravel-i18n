@@ -74,39 +74,7 @@
 
                             </div>
                             <div class="col-md-2">
-
-                                <div class="form-group">
-                                    <label for="input_enabled">
-                                        {{ __('Status') }}
-                                    </label>
-                                    <select id="input_enabled" name="enabled" class="form-control"
-                                        @if($locale->isFallback())
-                                            title="{{ __('Locale status can not be changed because this is the fallback locale.')}}"
-                                        @endif
-                                        {{ $locale->isFallback() ? 'disabled' : '' }}>
-
-                                        <option value="1"
-                                            {{ old('enabled', $locale->enabled) === true ? 'selected' : '' }}>
-                                            {{ __('Enabled') }}
-                                        </option>
-
-                                        @unless($locale->isFallback())
-                                            <option value="0"
-                                                {{ old('enabled', $locale->enabled) === false ? 'selected' : '' }}>
-                                                {{ __('Disabled') }}
-                                            </option>
-                                        @endunless
-
-                                     </select>
-                                    @if($errors->has('enabled'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('enabled') }}
-                                        </div>
-                                    @endif
-                                </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>

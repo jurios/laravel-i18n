@@ -76,7 +76,7 @@ abstract class SetLocale
      */
     private function setLocale(Locale $locale)
     {
-        $locale->enabled ? App::setLocale($locale->reference) : App::setLocale(Locale::getFallbackLocale()->reference);
+        $locale->exists ? App::setLocale($locale->reference) : App::setLocale(Locale::getFallbackLocale()->reference);
     }
 
     /**
