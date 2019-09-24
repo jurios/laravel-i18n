@@ -19,4 +19,11 @@ class InstallTest extends TestCase
 
         $this->assertNotNull(Locale::getFallbackLocale());
     }
+
+    public function test_install_with_no_publish_migrations_option_should_not_publish_migrations()
+    {
+        $this->artisan('i18n:install --publish-migrations=false');
+
+        $this->assertEquals(0, count($this->filesystem->files(database_path('migrations'))));
+    }
 }

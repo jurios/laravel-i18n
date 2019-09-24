@@ -3,8 +3,7 @@
 namespace Kodilab\LaravelI18n\Commands;
 
 use Illuminate\Console\Command;
-use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
-use Kodilab\LaravelI18n\Models\Locale;
+use Illuminate\Filesystem\Filesystem;
 
 class Install extends Command
 {
@@ -13,7 +12,8 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'i18n:install';
+    protected $signature = 'i18n:install
+                            {--publish-migrations= : true|false Publish migrations before migrate }';
 
     /**
      * The console command description.
@@ -40,7 +40,11 @@ class Install extends Command
     public function handle()
     {
         $this->output->title('Installing laravel-i18n');
-        $this->publishMigrations();
+
+        if (is_null($this->option('publish-migrations')) || $this->option('publish-migrations') === 'true') {
+            $this->publishMigrations();
+        }
+
         $this->generateDefaultFallbackLocale();
     }
 
