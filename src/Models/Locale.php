@@ -23,9 +23,9 @@ class Locale extends Model
         'name',
         'description',
         'laravel_locale',
-        'currency_number_decimals',
-        'currency_decimals_punctuation',
-        'currency_thousands_separator',
+        'decimals',
+        'decimals_punctuation',
+        'thousands_separator',
         'currency_symbol',
         'currency_symbol_position',
         'carbon_locale',
@@ -33,7 +33,7 @@ class Locale extends Model
     ];
 
     protected $casts = [
-        'currency_number_decimals' => 'integer'
+        'decimals' => 'integer'
     ];
 
     protected static function boot()

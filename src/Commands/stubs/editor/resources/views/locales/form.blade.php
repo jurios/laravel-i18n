@@ -195,15 +195,15 @@
                             <div class="col-md-4">
 
                                 <div class="form-group">
-                                    <label for="input_currency_number_decimals">
+                                    <label for="input_decimals">
                                         Number of decimals
                                     </label>
-                                    <input type="text" id="input_currency_number_decimals" name="currency_number_decimals"
-                                           class="change-status form-control {{ $errors->has('currency_number_decimals') ? 'is-invalid' : '' }}"
-                                           value="{{ old('currency_number_decimals', $locale->currency_number_decimals) }}">
-                                    @if($errors->has('currency_number_decimals'))
+                                    <input type="text" id="input_decimals" name="decimals"
+                                           class="change-status form-control {{ $errors->has('decimals') ? 'is-invalid' : '' }}"
+                                           value="{{ old('decimals', $locale->decimals) }}">
+                                    @if($errors->has('decimals'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('currency_number_decimals') }}
+                                            {{ $errors->first('decimals') }}
                                         </div>
                                     @endif
                                 </div>
@@ -213,15 +213,15 @@
                             <div class="col-md-4">
 
                                 <div class="form-group">
-                                    <label for="input_currency_decimals_punctuation">
+                                    <label for="input_decimals_punctuation">
                                         Decimal punctuation
                                     </label>
-                                    <input type="text" id="input_currency_decimals_punctuation" name="currency_decimals_punctuation"
-                                           class="change-status form-control {{ $errors->has('currency_decimals_punctuation') ? 'is-invalid' : '' }}"
-                                           value="{{ old('currency_decimals_punctuation', $locale->currency_decimals_punctuation) }}">
-                                    @if($errors->has('currency_decimals_punctuation'))
+                                    <input type="text" id="input_decimals_punctuation" name="decimals_punctuation"
+                                           class="change-status form-control {{ $errors->has('decimals_punctuation') ? 'is-invalid' : '' }}"
+                                           value="{{ old('decimals_punctuation', $locale->decimals_punctuation) }}">
+                                    @if($errors->has('decimals_punctuation'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('currency_decimals_punctuation') }}
+                                            {{ $errors->first('decimals_punctuation') }}
                                         </div>
                                     @endif
                                 </div>
@@ -231,15 +231,15 @@
                             <div class="col-md-4">
 
                                 <div class="form-group">
-                                    <label for="input_currency_thousands_separator">
+                                    <label for="input_thousands_separator">
                                         Thousands separator
                                     </label>
-                                    <input type="text" id="input_currency_thousands_separator" name="currency_thousands_separator"
-                                           class="change-status form-control {{ $errors->has('currency_thousands_separator') ? 'is-invalid' : '' }}"
-                                           value="{{ old('currency_thousands_separator', $locale->currency_thousands_separator) }}">
-                                    @if($errors->has('currency_thousands_separator'))
+                                    <input type="text" id="input_thousands_separator" name="thousands_separator"
+                                           class="change-status form-control {{ $errors->has('thousands_separator') ? 'is-invalid' : '' }}"
+                                           value="{{ old('thousands_separator', $locale->thousands_separator) }}">
+                                    @if($errors->has('thousands_separator'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('currency_thousands_separator') }}
+                                            {{ $errors->first('thousands_separator') }}
                                         </div>
                                     @endif
                                 </div>
@@ -283,9 +283,9 @@
                                         </option>
 
                                     </select>
-                                    @if($errors->has('currency_decimals_punctuation'))
+                                    @if($errors->has('decimals_punctuation'))
                                         <div class="invalid-feedback">
-                                            {{ $errors->first('currency_decimals_punctuation') }}
+                                            {{ $errors->first('decimals_punctuation') }}
                                         </div>
                                     @endif
                                 </div>
@@ -346,9 +346,9 @@
 
         function update_currency_status()
         {
-            decimals = document.querySelector('#input_currency_number_decimals').value;
-            dec_point = document.querySelector('#input_currency_decimals_punctuation').value;
-            thousands_sep = document.querySelector('#input_currency_thousands_separator').value;
+            decimals = document.querySelector('#input_decimals').value;
+            dec_point = document.querySelector('#input_decimals_punctuation').value;
+            thousands_sep = document.querySelector('#input_thousands_separator').value;
             currency_symbol = document.querySelector('#input_currency_symbol').value;
             symbol_position = document.querySelector('#input_currency_symbol_position').value;
 

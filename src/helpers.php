@@ -38,9 +38,9 @@ if (!function_exists('currency')) {
 
         $result = $result . number_format(
             $value,
-            !is_null($locale->currency_number_decimals) ? $locale->currency_number_decimals : 0,
-            !is_null($locale->currency_decimals_punctuation) ? $locale->currency_decimals_punctuation : '',
-            !is_null($locale->currency_thousands_separator) ? $locale->currency_thousands_separator : ''
+            !is_null($locale->decimals) ? $locale->decimals : 0,
+            !is_null($locale->decimals_punctuation) ? $locale->decimals_punctuation : '',
+            !is_null($locale->thousands_separator) ? $locale->thousands_separator : ''
         );
 
         if ($show_symbol && $locale->currency_symbol_position === 'after') {
