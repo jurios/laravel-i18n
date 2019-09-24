@@ -9,7 +9,10 @@ $factory->define(\Kodilab\LaravelI18n\Models\Locale::class, function (Faker $fak
     return [
         'language' => $language,
         'region' => $faker->unique()->countryCode,
+
+        'name' => $faker->word,
         'description' => $faker->text,
+
         'laravel_locale' => $language,
         'currency_number_decimals' => 2,
         'currency_decimals_punctuation' => '.',

@@ -20,6 +20,7 @@ class Locale extends Model
     protected $fillable = [
         'language',
         'region',
+        'name',
         'description',
         'laravel_locale',
         'currency_number_decimals',
@@ -76,6 +77,16 @@ class Locale extends Model
     public function getReferenceAttribute()
     {
         return i18n::generateReference($this->language, $this->region);
+    }
+
+    /**
+     * Returns the locale name. If it is null, then reference is returned
+     *
+     * @return mixed
+     */
+    public function getNameAttribute()
+    {
+        return is_null($this->attributes['name']) ? $this->reference : $this->attributes['name'];
     }
 
     public function isFallback()

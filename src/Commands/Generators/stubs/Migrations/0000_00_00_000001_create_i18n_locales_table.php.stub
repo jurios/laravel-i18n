@@ -20,6 +20,7 @@ class Createi18nLocalesTable extends Migration
             $table->string('region')->nullable(true);
             $table->index(['language', 'region']);
 
+            $table->string('name')->nullable(true)->default(null);
             $table->text('description')->nullable(true)->default(null);
 
             $table->string('laravel_locale')->nullable(true)->default(null);
