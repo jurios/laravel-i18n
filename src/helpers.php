@@ -19,11 +19,9 @@ if (!function_exists('filledQueryString')) {
     }
 }
 
-if (!function_exists('currency')) {
-    function currency(float $value, bool $show_symbol = true, \Kodilab\LaravelI18n\Models\Locale $locale = null)
+if (!function_exists('__number')) {
+    function __number(float $value, \Kodilab\LaravelI18n\Models\Locale $locale = null)
     {
-        $result = "";
-
         if (is_null($locale)) {
             $locale = \Kodilab\LaravelI18n\Models\Locale::getLocale(config('app.locale'));
 
@@ -32,21 +30,36 @@ if (!function_exists('currency')) {
             }
         }
 
-        if ($show_symbol && $locale->currency_symbol_position === 'before') {
-            $result = $locale->currency_symbol . ' ';
-        }
-
-        $result = $result . number_format(
+        return number_format(
             $value,
             !is_null($locale->decimals) ? $locale->decimals : 0,
             !is_null($locale->decimals_punctuation) ? $locale->decimals_punctuation : '',
             !is_null($locale->thousands_separator) ? $locale->thousands_separator : ''
         );
+    }
+}
 
-        if ($show_symbol && $locale->currency_symbol_position === 'after') {
-            $result = $result . ' ' . $locale->currency_symbol;
+if (!function_exists('__price')) {
+    function __price(float $value, \Kodilab\LaravelI18n\Models\Locale $locale = null)
+    {
+        if (is_null($locale)) {
+            $locale = \Kodilab\LaravelI18n\Models\Locale::getLocale(config('app.locale'));
+
+            if (is_null($locale)) {
+                $locale = \Kodilab\LaravelI18n\Models\Locale::getFallbackLocale();
+            }
         }
 
-        return $result;
+        $value = __number($value, $locale);
+
+        if (is_null($locale->currency_symbol)) {
+            return $value;
+        }
+
+        if ($locale->currency_symbol_position === 'before') {
+            return $locale->currency_symbol . ' ' . $value;
+        }
+
+        return $value . ' ' . $locale->currency_symbol;
     }
 }
