@@ -59,10 +59,10 @@ class Translatable extends Command
 
     private function generateModelTranslation(string $class, string $path)
     {
-        $this->generateModelTranslationMigrationFor($class, $path);
+        $this->generateModelTranslationMigrationFor($class);
     }
 
-    private function generateModelTranslationMigrationFor(string $class, string $path)
+    private function generateModelTranslationMigrationFor(string $class)
     {
         try {
 
