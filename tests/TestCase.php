@@ -54,7 +54,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
         $this->artisan('migrate')->run();
 
-        $this->artisan('i18n:generate', ['resource' => 'fallback']);
+        $this->artisan('i18n:fallback');
         $this->fallback_locale = Locale::getFallbackLocale();
     }
 

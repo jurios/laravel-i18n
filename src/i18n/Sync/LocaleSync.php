@@ -116,7 +116,7 @@ class LocaleSync
         /** @var string $path */
         foreach ($paths as $path) {
             if ($this->json()->where('path', $path)->isEmpty()) {
-                $value = '';
+                $value = $this->locale->isFallback() ? $path : '';
 
                 if ($this->php()->where('path', $path)->where('translation', '<>', '')->isNotEmpty()) {
                     $value = $this->php()->where('path', $path)->where('translation', '<>', '')->first()->translation;

@@ -25,13 +25,6 @@ class Config extends Command
     protected $description = 'Generates a new i18n config file';
 
     /**
-     * Indicates whether the command should be shown in the Artisan command list.
-     *
-     * @var bool
-     */
-    protected $hidden = true;
-
-    /**
      * Path where the config is placed once its generated
      *
      * @var string

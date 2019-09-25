@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Kodilab\LaravelI18n\Discover\ModelDiscover;
 
-class ModelTranslation extends Command
+class Translatable extends Command
 {
     use DetectsApplicationNamespace;
 
@@ -19,7 +19,7 @@ class ModelTranslation extends Command
      *
      * @var string
      */
-    protected $signature = 'i18n:modeltranslation';
+    protected $signature = 'i18n:translatable';
 
     /**
      * The console command description.
@@ -27,13 +27,6 @@ class ModelTranslation extends Command
      * @var string
      */
     protected $description = 'Generates a new model translation';
-
-    /**
-     * Indicates whether the command should be shown in the Artisan command list.
-     *
-     * @var bool
-     */
-    protected $hidden = true;
 
     /** @var ModelDiscover */
     protected $discover;
@@ -62,7 +55,6 @@ class ModelTranslation extends Command
         );
 
         $this->generateModelTranslation($class, dirname($files[$class]));
-
     }
 
     private function generateModelTranslation(string $class, string $path)

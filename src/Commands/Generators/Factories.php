@@ -26,13 +26,6 @@ class Factories extends Command
     protected $description = 'Generates i18n factory files';
 
     /**
-     * Indicates whether the command should be shown in the Artisan command list.
-     *
-     * @var bool
-     */
-    protected $hidden = true;
-
-    /**
      * Path where the config is placed once its generated
      *
      * @var string

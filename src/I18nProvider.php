@@ -11,7 +11,7 @@ use Kodilab\LaravelI18n\Commands\Generators\Config;
 use Kodilab\LaravelI18n\Commands\Generators\Factories;
 use Kodilab\LaravelI18n\Commands\Generators\Fallback;
 use Kodilab\LaravelI18n\Commands\Generators\Migrations;
-use Kodilab\LaravelI18n\Commands\Generators\ModelTranslation;
+use Kodilab\LaravelI18n\Commands\Generators\Translatable;
 use Kodilab\LaravelI18n\Commands\Install;
 use Kodilab\LaravelI18n\Commands\Sync;
 use Kodilab\LaravelI18n\i18n\Linguist;
@@ -45,8 +45,7 @@ class I18nProvider extends ServiceProvider
         $this->commands([
             Install::class,
             Sync::class,
-            Generator::class,
-            ModelTranslation::class,
+            Translatable::class,
             Config::class,
             Migrations::class,
             Fallback::class,

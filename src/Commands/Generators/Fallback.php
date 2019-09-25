@@ -27,13 +27,6 @@ class Fallback extends Command
     protected $description = 'Generates the fallback locale if it does not exists';
 
     /**
-     * Indicates whether the command should be shown in the Artisan command list.
-     *
-     * @var bool
-     */
-    protected $hidden = true;
-
-    /**
      * Execute the console command.
      *
      * @return mixed

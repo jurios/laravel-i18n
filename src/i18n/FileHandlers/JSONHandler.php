@@ -33,7 +33,7 @@ class JSONHandler extends FileHandler implements ReadTranslations, WriteTranslat
 
     public function save(TranslationCollection $translations)
     {
-        $json = json_encode($translations->toRaw(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $json = json_encode($translations->sortBy('path')->toRaw(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         file_put_contents($this->path, $json);
     }

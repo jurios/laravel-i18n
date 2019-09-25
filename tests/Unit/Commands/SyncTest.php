@@ -34,6 +34,8 @@ class SyncTest extends TestCase
 
     public function test_sync_fallback_locale_should_not_has_empty_translations()
     {
+        file_put_contents(resource_path('views/' . __FUNCTION__ . '.blade.php'), "{{t('" . $this->faker->paragraph  . "')}}");
+
         $this->artisan('i18n:sync')->run();
 
         $translations = (new JSONHandler(resource_path('lang/' . $this->fallback_locale->reference . '.json')))->getTranslations();
@@ -48,6 +50,8 @@ class SyncTest extends TestCase
         }
 
         $this->assertFalse($empty);
+
+        $this->filesystem->delete(resource_path('views/' . __FUNCTION__ . '.blade.php'));
     }
 
     public function test_sync_no_fallback_locale_should_generate_empty_translations()
@@ -67,6 +71,21 @@ class SyncTest extends TestCase
         }
 
         $this->assertTrue($empty);
+    }
+
+    public function test_sync_should_import_paths_from_the_php_files_even_if_the_locale_does_not_exists()
+    {
+        //Transfer fallback to new locale and remove 'en' locale as there are 'en' php translation files
+        $locale = factory(Locale::class)->create();
+        Locale::getFallbackLocale()->delete();
+        $this->app['config']->set('app.fallback_locale', $locale->reference);
+
+
+        $this->artisan('i18n:sync')->run();
+
+        $translations = (new JSONHandler(resource_path('lang/' . $locale->reference . '.json')))->getTranslations();
+
+        $this->assertFalse($translations->where('path', 'validation.accepted')->isEmpty());
     }
 
     public function test_sync_should_keep_indexed_translations()

@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Kodilab\LaravelI18n\i18n\i18n;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\i18n\Sync\LocaleSync;
 use Kodilab\LaravelI18n\i18n\Linguist;
@@ -88,7 +89,18 @@ class Sync extends Command
         $result = new TranslationCollection();
 
         /** @var Locale $locale */
-        foreach (Locale::all() as $locale) {
+        foreach ($this->filesystem->directories(resource_path('lang')) as $directory) {
+            $reference = basename($directory);
+
+            $language = i18n::getLanguage($reference);
+            $region = i18n::getRegion($reference);
+
+
+            $locale = Locale::where('language', $language)->where('region', $region)->get()->first();
+            if (is_null($locale)) {
+                $locale = new Locale(['language' => $language, 'region' => $region]);
+            }
+
             $translations = (new LocaleSync($locale))->php();
             $result = $result->merge($translations);
         }

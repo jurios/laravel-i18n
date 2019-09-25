@@ -45,7 +45,19 @@ class Install extends Command
             $this->publishMigrations();
         }
 
+        $this->output->title('Migrating database');
+
+        if (config('app.env') !== 'testing') {
+            $this->call('migrate');
+        }
+        $this->output->success('Migrations applied successfully');
+
         $this->generateDefaultFallbackLocale();
+
+        $this->output->title('Start sync process');
+        $this->call('i18n:sync');
+        $this->output->success('Sync completed');
+
     }
 
     /**
@@ -53,7 +65,7 @@ class Install extends Command
      */
     private function publishMigrations()
     {
-        $this->call('i18n:generate', ['resource' => 'migrations']);
+        $this->call('i18n:migrations');
     }
 
     /**
@@ -61,6 +73,6 @@ class Install extends Command
      */
     private function generateDefaultFallbackLocale()
     {
-        $this->call('i18n:generate', ['resource' => 'fallback']);
+        $this->call('i18n:fallback');
     }
 }
