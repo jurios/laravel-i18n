@@ -85,7 +85,6 @@
                 @endif
             </td>
             <td>{{ $locale->region }}</td>
-            <td>{{ $locale->description }}</td>
             <td>
                 @if($locale->isFallback())
                     <span class="badge badge-primary">fallback</span>

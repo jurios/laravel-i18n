@@ -21,7 +21,6 @@ class Createi18nLocalesTable extends Migration
             $table->index(['language', 'region']);
 
             $table->string('name')->nullable(true)->default(null);
-            $table->text('description')->nullable(true)->default(null);
 
             $table->boolean('fallback')->nullable(false)->default(false);
 

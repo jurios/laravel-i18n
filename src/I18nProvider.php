@@ -9,7 +9,7 @@ use Kodilab\LaravelI18n\Commands\Editor;
 use Kodilab\LaravelI18n\Commands\Generator;
 use Kodilab\LaravelI18n\Commands\Generators\Config;
 use Kodilab\LaravelI18n\Commands\Generators\Factories;
-use Kodilab\LaravelI18n\Commands\Generators\Fallback;
+use Kodilab\LaravelI18n\Commands\Generators\Locale;
 use Kodilab\LaravelI18n\Commands\Generators\Migrations;
 use Kodilab\LaravelI18n\Commands\Generators\Translatable;
 use Kodilab\LaravelI18n\Commands\Install;
@@ -48,7 +48,7 @@ class I18nProvider extends ServiceProvider
             Translatable::class,
             Config::class,
             Migrations::class,
-            Fallback::class,
+            Locale::class,
             Factories::class,
             Editor::class,
         ]);

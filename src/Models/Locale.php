@@ -21,7 +21,6 @@ class Locale extends Model
         'language',
         'region',
         'name',
-        'description',
         'fallback',
         'laravel_locale',
         'decimals',

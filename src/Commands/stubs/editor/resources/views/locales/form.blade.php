@@ -57,21 +57,6 @@
                             </div>
                             <div class="col-md-6">
 
-                                <div class="form-group">
-                                    <label for="input_description">
-                                        Short Description
-                                        <small class="text-muted">e.g 'English from US'</small>
-                                    </label>
-                                    <input id="input_description" name="description" type="text"
-                                           class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}"
-                                           value="{{ old('description', $locale->description) }}">
-                                    @if($errors->has('description'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('description') }}
-                                        </div>
-                                    @endif
-                                </div>
-
                             </div>
                             <div class="col-md-2">
                             </div>

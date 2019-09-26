@@ -11,7 +11,6 @@ $factory->define(\Kodilab\LaravelI18n\Models\Locale::class, function (Faker $fak
         'region' => $faker->unique()->countryCode,
 
         'name' => $faker->word,
-        'description' => $faker->text,
 
         'fallback' => false,
 

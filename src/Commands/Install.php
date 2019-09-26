@@ -3,7 +3,6 @@
 namespace Kodilab\LaravelI18n\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
 
 class Install extends Command
 {
@@ -13,7 +12,8 @@ class Install extends Command
      * @var string
      */
     protected $signature = 'i18n:install
-                            {--publish-migrations= : true|false Publish migrations before migrate }';
+                            {--publish-migrations= : true|false Publish migrations before migrate }
+                            {--fallback= : Fallback locale reference }';
 
     /**
      * The console command description.
@@ -41,7 +41,7 @@ class Install extends Command
     {
         $this->output->title('Installing laravel-i18n');
 
-        if (is_null($this->option('publish-migrations')) || $this->option('publish-migrations') === 'true') {
+        if (is_null($this->option('publish-migrations')) || $this->option('publish-migrations')) {
             $this->publishMigrations();
         }
 
@@ -52,7 +52,7 @@ class Install extends Command
         }
         $this->output->success('Migrations applied successfully');
 
-        $this->generateDefaultFallbackLocale();
+        $this->generateFallbackLocale();
 
         $this->output->title('Start sync process');
         $this->call('i18n:sync');
@@ -71,8 +71,18 @@ class Install extends Command
     /**
      * Generates default fallback locale command
      */
-    private function generateDefaultFallbackLocale()
+    private function generateFallbackLocale()
     {
-        $this->call('i18n:fallback');
+        $this->output->title('Generating fallback locale');
+
+        if (is_null($reference = $this->option('fallback'))) {
+            $reference = $this->ask('Fallback locale reference?(ex: en, en_GB', null);
+        }
+
+        $this->call('make:locale', [
+            '--reference' => $reference,
+            '--fallback' => true,
+            '--hide-title' => true
+        ]);
     }
 }
