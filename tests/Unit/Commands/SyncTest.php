@@ -32,28 +32,6 @@ class SyncTest extends TestCase
 
     }
 
-    public function test_sync_fallback_locale_should_not_has_empty_translations()
-    {
-        file_put_contents(resource_path('views/' . __FUNCTION__ . '.blade.php'), "{{t('" . $this->faker->paragraph  . "')}}");
-
-        $this->artisan('i18n:sync')->run();
-
-        $translations = (new JSONHandler(resource_path('lang/' . $this->fallback_locale->reference . '.json')))->getTranslations();
-
-        $empty = false;
-
-        /** @var Translation $translation */
-        foreach ($translations as $translation) {
-            if ($translation->isEmpty()) {
-                $empty = true;
-            }
-        }
-
-        $this->assertFalse($empty);
-
-        $this->filesystem->delete(resource_path('views/' . __FUNCTION__ . '.blade.php'));
-    }
-
     public function test_sync_no_fallback_locale_should_generate_empty_translations()
     {
         $locale = factory(Locale::class)->create();

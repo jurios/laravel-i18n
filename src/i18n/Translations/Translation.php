@@ -18,7 +18,7 @@ class Translation implements Arrayable
      */
     public $translation;
 
-    public function __construct(string $path, string $translation = '')
+    public function __construct(string $path, string $translation = null)
     {
         $this->path = $path;
         $this->translation = $translation;
@@ -31,7 +31,7 @@ class Translation implements Arrayable
      */
     public function isEmpty(): bool
     {
-        return $this->translation === '';
+        return is_null($this->translation);
     }
 
     /**
@@ -47,9 +47,9 @@ class Translation implements Arrayable
     /**
      * Returns the translation
      *
-     * @return string
+     * @return string|null
      */
-    public function getTranslation(): string
+    public function getTranslation()
     {
         return $this->translation;
     }
