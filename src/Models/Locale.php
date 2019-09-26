@@ -22,6 +22,7 @@ class Locale extends Model
         'region',
         'name',
         'description',
+        'fallback',
         'laravel_locale',
         'decimals',
         'decimals_punctuation',
@@ -33,7 +34,8 @@ class Locale extends Model
     ];
 
     protected $casts = [
-        'decimals' => 'integer'
+        'decimals' => 'integer',
+        'fallback' => 'bool'
     ];
 
     protected static function boot()
@@ -84,7 +86,7 @@ class Locale extends Model
 
     public function isFallback()
     {
-        return $this->reference === config('app.fallback_locale');
+        return $this->fallback;
     }
 
     /**
@@ -95,12 +97,8 @@ class Locale extends Model
      */
     public static function getFallbackLocale()
     {
-        $fallback_locale_setting = config('app.fallback_locale');
-
         /** @var Locale $fallback_locale */
-        $fallback_locale = self::where('language', i18n::getLanguage($fallback_locale_setting))
-            ->where('region', i18n::getRegion($fallback_locale_setting))
-            ->first();
+        $fallback_locale = self::where('fallback', true)->get()->first();
 
         if (is_null($fallback_locale)) {
             throw new MissingFallbackLocaleException('Fallback locale not found.');

@@ -23,6 +23,8 @@ class Createi18nLocalesTable extends Migration
             $table->string('name')->nullable(true)->default(null);
             $table->text('description')->nullable(true)->default(null);
 
+            $table->boolean('fallback')->nullable(false)->default(false);
+
             $table->string('laravel_locale')->nullable(true)->default(null);
             $table->string('carbon_locale')->nullable(true)->default(null);
             $table->string('tz')->nullable(true)->default(null);

@@ -20,20 +20,37 @@ trait BuildsLocales
      * Creates a locale
      *
      * @param array $data
-     * @throws LocaleAlreadyExists
+     * @throws \Exception
      */
     public static function createLocale(array $data = [])
     {
-        $existing_locale = DB::table(self::getLocaleTable())
-            ->where('language', Arr::get($data, 'language', null))
-            ->where('region', Arr::get($data, 'region', null))
-            ->get()->first();
+        DB::beginTransaction();
 
-        if (!is_null($existing_locale)) {
-            throw new LocaleAlreadyExists($existing_locale->language, $existing_locale->region);
+        try {
+            if (isset($data['fallback']) && $data['fallback'] === true) {
+                DB::table(self::getLocaleTable())->where('fallback', true)->update([
+                    'fallback' => false
+                ]);
+            }
+
+            $existing_locale = DB::table(self::getLocaleTable())
+                ->where('language', Arr::get($data, 'language', null))
+                ->where('region', Arr::get($data, 'region', null))
+                ->get()->first();
+
+            if (!is_null($existing_locale)) {
+                throw new LocaleAlreadyExists($existing_locale->language, $existing_locale->region);
+            }
+
+            DB::table(self::getLocaleTable())->insert($data);
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            throw $exception;
         }
 
-        DB::table(self::getLocaleTable())->insert($data);
+        DB::commit();
     }
 
     /**
@@ -43,13 +60,13 @@ trait BuildsLocales
      */
     public static function removeLocale(string $reference)
     {
-        $language = explode("_", $reference)[0];
-        $region = isset(($splitted = explode("_", $reference))[1]) ? $splitted[1] : null;
+        $language = i18n::getLanguage($reference);
+        $region = i18n::getRegion($reference);
 
         $locale = DB::table(config('i18n.tables.locales', 'locales'))
             ->where('language', $language)->where('region', $region)->get()->first();
 
-        if (i18n::generateReference($locale->language, $locale->region) === config('app.fallback_locale')) {
+        if ($locale->fallback) {
             throw new \RuntimeException('Fallback locale can not be removed');
         }
 

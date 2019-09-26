@@ -35,6 +35,30 @@ class BuildsLocalesTest extends TestCase
         i18nBuilder::createLocale($data->toArray());
     }
 
+    public function test_createLocale_should_remove_fallback_flag_to_previous_fallback_locale_if_the_new_locale_fallback_is_true()
+    {
+        $locale = Locale::getFallbackLocale();
+
+        $data = factory(Locale::class)->make(['fallback' => true]);
+
+        i18nBuilder::createLocale($data->toArray());
+
+        $this->assertFalse(Locale::find($locale->id)->fallback);
+    }
+
+    public function test_createLocale_should_keep_the_fallback_flag_if_the_new_locale_can_not_be_saved()
+    {
+        $locale = Locale::getFallbackLocale();
+
+        $data = factory(Locale::class)->make(['fallback' => true, 'language' => null]);
+
+        try {
+            i18nBuilder::createLocale($data->toArray());
+        } catch (\Exception $e) {}
+
+        $this->assertTrue(Locale::find($locale->id)->fallback);
+    }
+
     public function test_removeLocale_should_remove_a_locale()
     {
         $locale = factory(Locale::class)->create();

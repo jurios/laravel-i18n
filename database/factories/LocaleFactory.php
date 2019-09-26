@@ -13,6 +13,8 @@ $factory->define(\Kodilab\LaravelI18n\Models\Locale::class, function (Faker $fak
         'name' => $faker->word,
         'description' => $faker->text,
 
+        'fallback' => false,
+
         'laravel_locale' => $language,
         'carbon_locale' => $language,
         'tz' => $faker->timezone,
