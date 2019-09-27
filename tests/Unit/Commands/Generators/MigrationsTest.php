@@ -12,33 +12,14 @@ class MigrationsTest extends TestCase
 {
     use WithFaker;
 
-    public function test_generates_migration_file()
+    public function test_migrations_generates_migration_file()
     {
-        $files = $this->filesystem->files(__DIR__ . '/../../../../src/Commands/Generators/stubs/Migrations');
+        $this->artisan('i18n:migrations', [
+            '--filename' => 'test.php'
+        ])->run();
 
-        $this->artisan('i18n:migrations')->run();
+        $this->assertTrue($this->filesystem->exists(database_path('migrations/test.php')));
 
-        $this->assertEquals(
-            count($files),
-            count($this->filesystem->files(database_path('migrations')))
-        );
-    }
-
-    public function test_config_generates_a_replace_config_file_if_force_flag()
-    {
-        $this->artisan('i18n:migrations')->run();
-
-        /** @var SplFileInfo $migration */
-        $migration = $this->filesystem->files(database_path('migrations'))[0];
-
-        $content = $this->faker->paragraph;
-
-        file_put_contents($migration->getRealPath(), $content);
-
-        $this->assertEquals($content, file_get_contents($migration->getRealPath()));
-
-        $this->artisan('i18n:migrations', ['--force' => true])->run();
-
-        $this->assertNotEquals($content, file_get_contents($migration->getRealPath()));
+        $this->filesystem->delete(database_path('migrations/test.php'));
     }
 }

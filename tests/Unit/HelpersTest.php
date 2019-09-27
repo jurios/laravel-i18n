@@ -7,10 +7,11 @@ namespace Kodilab\LaravelI18n\Tests\Unit;
 use Illuminate\Foundation\Testing\WithFaker;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
+use Kodilab\LaravelI18n\Tests\Traits\MigratePackage;
 
 class HelpersTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, MigratePackage;
 
     public function test_helper_number_should_return_localized_value()
     {

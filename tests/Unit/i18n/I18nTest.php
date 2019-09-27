@@ -9,10 +9,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Kodilab\LaravelI18n\i18n\i18n;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
+use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
 
 class I18nTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, InstallPackage;
 
     /**
      * @var i18n

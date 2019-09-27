@@ -11,10 +11,11 @@ use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationManager;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
+use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
 
 class TranslationManagerTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, InstallPackage;
 
     /**
      * @var Locale

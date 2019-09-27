@@ -16,7 +16,7 @@ class Migrations extends Command
      * @var string
      */
     protected $signature = 'i18n:migrations
-                            {--force : Replace the config file if it exists}';
+                            {--filename= : Name of the generated migration}';
 
     /**
      * The console command description.
@@ -43,6 +43,12 @@ class Migrations extends Command
      * @var Filesystem
      */
     protected $filesystem;
+
+    /**
+     * Index in order to create migrations with different timestamps
+     * @var int
+     */
+    protected $index = 0;
 
     public function __construct()
     {
@@ -82,9 +88,21 @@ class Migrations extends Command
 
                 $this->filesystem->copy(
                     $migration->getRealPath(),
-                    $this->to . '/'.date('Y_m_d_His', time() + $index). '_' . $name
+                    $this->to . '/' . $this->generateFilename($name)
                 );
             }
         }
+    }
+
+    private function generateFilename(string $name)
+    {
+        if (!is_null($filename = $this->option('filename'))) {
+            return $filename;
+        }
+
+        $filename = date('Y_m_d_His', time() + $this->index). '_' . $name;
+        $this->index++;
+
+        return $filename;
     }
 }

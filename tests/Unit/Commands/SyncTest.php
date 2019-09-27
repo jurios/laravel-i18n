@@ -10,13 +10,15 @@ use Kodilab\LaravelI18n\i18n\Translations\Translation;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
+use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
 
 class SyncTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, InstallPackage;
 
     public function test_sync_will_create_a_fallback_locale_json_file()
     {
+        $this->removePublishedTranslations();
         $locale = Locale::getFallbackLocale();
 
         $this->assertFalse($this->filesystem->exists(resource_path("lang/{$locale->reference}.json")));

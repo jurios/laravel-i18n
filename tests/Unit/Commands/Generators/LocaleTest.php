@@ -7,11 +7,13 @@ namespace Kodilab\LaravelI18n\Tests\Unit\Commands\Generators;
 use Illuminate\Foundation\Testing\WithFaker;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
+use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
 use Symfony\Component\Finder\SplFileInfo;
 
 class LocaleTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker,
+        InstallPackage;
 
     public function test_generates_a_locale()
     {

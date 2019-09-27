@@ -8,10 +8,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
+use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
 
 class LocaleTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, InstallPackage;
 
     public function test_locale_translation_will_returns_the_translations_collection()
     {

@@ -47,9 +47,8 @@ class Install extends Command
 
         $this->output->title('Migrating database');
 
-        if (config('app.env') !== 'testing') {
-            $this->call('migrate');
-        }
+        $this->call('migrate');
+
         $this->output->success('Migrations applied successfully');
 
         $this->generateFallbackLocale();

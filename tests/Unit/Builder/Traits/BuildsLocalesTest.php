@@ -9,9 +9,12 @@ use Kodilab\LaravelI18n\Builder\i18nBuilder;
 use Kodilab\LaravelI18n\Exceptions\LocaleAlreadyExists;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
+use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
 
 class BuildsLocalesTest extends TestCase
 {
+    use InstallPackage;
+
     public function test_createLocale_creates_a_locale()
     {
         $data = factory(Locale::class)->make();

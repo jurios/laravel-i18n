@@ -12,10 +12,11 @@ use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\i18n\Sync\LocaleSync;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
+use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
 
 class LocaleSyncTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, InstallPackage;
 
     /** @var Locale */
     protected $locale;

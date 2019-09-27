@@ -6,12 +6,13 @@ namespace Kodilab\LaravelI18n\Tests\Unit\Models\Translation;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Kodilab\LaravelI18n\Models\Locale;
+use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
 use Kodilab\LaravelI18n\Tests\Unit\Traits\HasTranslations\Fixtures\Models\TranslatableModel;
 use Kodilab\LaravelI18n\Tests\TestCase;
 
 class HasTranslationsTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, InstallPackage;
 
     /** @var TranslatableModel */
     protected $model;
