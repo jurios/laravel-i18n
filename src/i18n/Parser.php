@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Kodilab\LaravelI18n\i18n\Translations\Translation;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 
-class Linguist
+class Parser
 {
     protected $filesystem;
 
@@ -18,17 +18,25 @@ class Linguist
     protected $output;
 
     /**
+     * Translation function names
+     * @var array
+     */
+    protected $functions;
+
+    /**
      * Linguist constructor.
      *
      * @param Filesystem $filesystem
      * @param array $paths
-     * @param OutputStyle|null $output
+     * @param array $functions
      */
-    public function __construct(Filesystem $filesystem, array $paths)
+    public function __construct(array $paths, array $functions = ['__', 't'])
     {
-        $this->filesystem = $filesystem;
+        $this->filesystem = new Filesystem();
 
         $this->paths = $paths;
+
+        $this->functions = $functions;
     }
 
     /**
@@ -43,23 +51,21 @@ class Linguist
     {
         $result = new TranslationCollection();
 
-        foreach ($this->getAllTranslatableStringFromFiles() as $file => $occurrences) {
-            foreach ($occurrences as $occurrence) {
-                $result->add(new Translation($occurrence, $occurrence));
-            }
+        foreach ($this->getTranslatableTexts() as $md5 => $text) {
+                $result->add(new Translation($text, $text));
         }
 
         return $result;
     }
 
     /**
-     * Look for translation call and extract the text in *.php files in $this->paths directories. It returns a array like this:
+     * Returns the texts which uses the translation methods. In order to avoid duplicates, the index is de md5 of the text
      *
      * [
-     *      /path/to/file => [
-     *          0 => text1,
-     *          1 => text2
-     *          * => text*
+     *      [
+     *          md5(text1) => text1,
+     *          md5(text2) => text2
+     *          ...
      *      ]
      * ]
      *
@@ -67,7 +73,7 @@ class Linguist
      *
      * @return array
      */
-    private function getAllTranslatableStringFromFiles()
+    private function getTranslatableTexts()
     {
         /*
          * This pattern is derived from Barryvdh\TranslationManager by Barry vd. Heuvel <barryvdh@gmail.com>
@@ -75,13 +81,11 @@ class Linguist
          * https://github.com/barryvdh/laravel-translation-manager/blob/master/src/Manager.php
          */
 
-        $functions = ['t', '__'];
-
         $pattern =
             // See https://regex101.com/r/jS5fX0/4
             '[^\w]'. // Must not start with any alphanum or _
             '(?<!->)'. // Must not start with ->
-            '('.implode('|', $functions).')'.// Must start with one of the functions
+            '('.implode('|', $this->functions).')'.// Must start with one of the functions
             "\(".// Match opening parentheses
             "[\'\"]".// Match " or '
             '('.// Start a new group to match:
@@ -96,9 +100,10 @@ class Linguist
         /** @var \Symfony\Component\Finder\SplFileInfo $file */
         foreach ($this->filesystem->allFiles($this->paths) as $file) {
 
-            if (preg_match_all("/$pattern/siU", $file->getContents(), $matches))
-            {
-                $allMatches[$file->getRelativePathname()] = $matches[2];
+            if (preg_match_all("/$pattern/siU", $file->getContents(), $matches)) {
+                foreach ($matches[2] as $text) {
+                    $allMatches[md5($text)] = $text;
+                }
             }
         }
 
@@ -122,13 +127,11 @@ class Linguist
          * https://github.com/barryvdh/laravel-translation-manager/blob/master/src/Manager.php
          */
 
-        $functions = ['t'];
-
         $pattern =
             // See https://regex101.com/r/jS5fX0/4
             '[^\w]'. // Must not start with any alphanum or _
             '(?<!->)'. // Must not start with ->
-            '('.implode('|', $functions).')'.// Must start with one of the functions
+            '('.implode('|', $this->functions).')'.// Must start with one of the functions
             "\(".// Match opening parentheses
             "[\$]".// Match $
             '('.// Start a new group to match:

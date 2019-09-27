@@ -7,7 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Kodilab\LaravelI18n\i18n\i18n;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\i18n\Sync\LocaleSync;
-use Kodilab\LaravelI18n\i18n\Linguist;
+use Kodilab\LaravelI18n\i18n\Parser;
 use Kodilab\LaravelI18n\Models\Locale;
 
 class Sync extends Command
@@ -26,7 +26,7 @@ class Sync extends Command
      */
     protected $description = 'Synchronize laravel translatable texts found in the project';
 
-    /** @var Linguist */
+    /** @var Parser */
     protected $linguist;
 
     /** @var Filesystem */
@@ -37,10 +37,11 @@ class Sync extends Command
      *
      * @return void
      */
-    public function __construct(Linguist $linguist)
+    public function __construct()
     {
         parent::__construct();
-        $this->linguist = $linguist;
+
+        $this->linguist = new Parser(array_merge(config('view.paths'), [app_path()]));
         $this->filesystem = new Filesystem();
     }
 

@@ -14,7 +14,7 @@ use Kodilab\LaravelI18n\Commands\Generators\Migrations;
 use Kodilab\LaravelI18n\Commands\Generators\Translatable;
 use Kodilab\LaravelI18n\Commands\Install;
 use Kodilab\LaravelI18n\Commands\Sync;
-use Kodilab\LaravelI18n\i18n\Linguist;
+use Kodilab\LaravelI18n\i18n\Parser;
 
 class I18nProvider extends ServiceProvider
 {
@@ -66,12 +66,5 @@ class I18nProvider extends ServiceProvider
         $this->mergeConfigFrom(
             $configPath, 'i18n'
         );
-
-        $this->app->bind(Linguist::class, function () {
-            return new Linguist(
-                new Filesystem,
-                array_merge($this->app['config']['view.paths'], [$this->app['path']])
-            );
-        });
     }
 }
