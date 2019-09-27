@@ -30,18 +30,8 @@ class I18nProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(\Illuminate\Routing\Router $router)
+    public function boot()
     {
-        $config_path = __DIR__ . '/../config/config.php';
-        $factories_path = __DIR__ . '/../database/factories';
-        $views_path = __DIR__ . '/../resources/views';
-
-        $this->publishes([
-            $factories_path => database_path('factories')
-        ], 'laravel-i18n-config');
-
-        $this->loadViewsFrom($views_path, 'i18n');
-
         $this->commands([
             Install::class,
             Sync::class,
@@ -50,7 +40,6 @@ class I18nProvider extends ServiceProvider
             Migrations::class,
             Locale::class,
             Factories::class,
-            Editor::class,
         ]);
     }
 
@@ -61,10 +50,6 @@ class I18nProvider extends ServiceProvider
      */
     public function register()
     {
-        $configPath = __DIR__ . '/../config/config.php';
-
-        $this->mergeConfigFrom(
-            $configPath, 'i18n'
-        );
+        //
     }
 }

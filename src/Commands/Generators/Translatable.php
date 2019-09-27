@@ -83,7 +83,7 @@ class Translatable extends Command
                 '{{table}}'                 => $instance->getTable()
             ];
 
-            $content = file_get_contents(__DIR__ . '/stubs/ModelTranslation/migration.php.stub');
+            $content = file_get_contents(__DIR__ . '/stubs/Translatable/migration.php.stub');
 
             foreach ($replacements as $replacement => $value) {
                 $content = str_replace($replacement, $value, $content);
