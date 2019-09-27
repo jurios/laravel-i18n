@@ -17,9 +17,11 @@ class SyncTest extends TestCase
 
     public function test_sync_will_create_a_fallback_locale_json_file()
     {
-        $this->assertFalse($this->filesystem->exists(resource_path('lang/en.json')));
+        $locale = Locale::getFallbackLocale();
+
+        $this->assertFalse($this->filesystem->exists(resource_path("lang/{$locale->reference}.json")));
         $this->artisan('i18n:sync')->run();
-        $this->assertTrue($this->filesystem->exists(resource_path('lang/en.json')));
+        $this->assertTrue($this->filesystem->exists(resource_path("lang/{$locale->reference}.json")));
     }
 
     public function test_sync_will_create_other_locales_json_files()

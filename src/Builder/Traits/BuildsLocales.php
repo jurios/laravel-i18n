@@ -24,6 +24,10 @@ trait BuildsLocales
      */
     public static function createLocale(array $data = [])
     {
+        //TODO: Find out a clean way to set default attributes
+        $data['laravel_locale'] = isset($data['laravel_locale']) ?
+            $data['laravel_locale'] : i18n::generateReference($data['language'], isset($data['region']) ? $data['region'] : null);
+
         DB::beginTransaction();
 
         try {

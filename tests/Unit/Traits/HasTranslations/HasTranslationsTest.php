@@ -76,7 +76,7 @@ class HasTranslationsTest extends TestCase
     {
         $locale = factory(Locale::class)->create();
 
-        $this->app['config']->set('app.locale', $locale->reference);
+        app('i18n')->setLocale($locale);
 
         $value = $this->faker->paragraph;
 
@@ -85,6 +85,29 @@ class HasTranslationsTest extends TestCase
         ]);
 
         $this->assertEquals($value, $this->model->field);
+    }
+
+    public function test_dynamically_translated_attributes_should_return_the_locale_setting_translation()
+    {
+        //TODO: Add service provider into the application configuration file
+        $i18n = app('i18n');
+
+        $translations = [
+            $this->locale->reference => $this->faker->unique()->paragraph,
+            $this->app['i18n']->getLocale()->reference => $this->faker->unique()->paragraph
+        ];
+
+        $this->model->setTranslatedAttribute(
+            $this->app['i18n']->getLocale(), 'field', $translations[$this->app['i18n']->getLocale()->reference]
+        );
+
+        $this->model->setTranslatedAttribute(
+            $this->locale, 'field', $translations[$this->locale->reference]
+        );
+
+        $this->assertEquals($translations[$this->app['i18n']->getLocale()->reference], $this->model->field);
+        $this->app['i18n']->setLocale($this->locale);
+        $this->assertEquals($translations[$this->locale->reference], $this->model->field);
     }
 
     public function test_isTranslated_should_return_whether_it_has_been_translated_or_not()

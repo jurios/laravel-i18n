@@ -76,7 +76,7 @@ abstract class SetLocale
      */
     private function setLocale(Locale $locale)
     {
-        $locale->exists ? App::setLocale($locale->reference) : App::setLocale(Locale::getFallbackLocale()->reference);
+        app('i18n')->setLocale($locale);
     }
 
     /**
@@ -86,12 +86,6 @@ abstract class SetLocale
      */
     private function setTimezone(string $timezone = null)
     {
-        $timezone = is_null($timezone) ? config('app.timezone', 'UTC') : $timezone;
-
-        date_default_timezone_set($timezone);
-
-        config([
-            'app.timezone' => $timezone,
-        ]);
+        app('i18n')->setTimezone($timezone);
     }
 }

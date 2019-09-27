@@ -13,7 +13,7 @@ trait HasTranslations
     public function __get($name)
     {
         if ($this->isTranslatableAttribute($name)) {
-            return $this->getTranslatedAttribute(Locale::getLocaleOrFallback(config('app.locale')), $name);
+            return $this->getTranslatedAttribute(app('i18n')->getLocale(), $name);
         }
 
         return parent::__get($name);
@@ -49,7 +49,8 @@ trait HasTranslations
      */
     public function setTranslatedAttributes(Locale $locale, array $translation)
     {
-        $this->translations()->sync([$locale->id => $translation]);
+        $this->translations()->sync([$locale->id => $translation], false);
+        $this->refresh();
     }
 
     public function isTranslated(Locale $locale, string $attribute)

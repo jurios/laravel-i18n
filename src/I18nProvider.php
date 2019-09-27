@@ -14,6 +14,7 @@ use Kodilab\LaravelI18n\Commands\Generators\Migrations;
 use Kodilab\LaravelI18n\Commands\Generators\Translatable;
 use Kodilab\LaravelI18n\Commands\Install;
 use Kodilab\LaravelI18n\Commands\Sync;
+use Kodilab\LaravelI18n\i18n\i18n;
 
 class I18nProvider extends ServiceProvider
 {
@@ -49,6 +50,8 @@ class I18nProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton('i18n', function ($app) {
+            return new i18n($this->app['config']);
+        });
     }
 }

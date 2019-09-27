@@ -45,14 +45,14 @@ class Locale extends Model
 
             $model->language = strtolower($model->language);
             $model->region = !is_null($model->region) ? strtoupper($model->region) : null;
-            $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->language;
-            $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->language;
+            $model->carbon_locale = !is_null($model->carbon_locale) ? $model->carbon_locale : $model->language;
+            $model->laravel_locale = !is_null($model->laravel_locale) ? $model->laravel_locale : $model->reference;
 
         });
 
         self::creating(function (Locale $model) {
             if (!is_null(Locale::getLocale($model->reference))) {
-                throw new \Exception('Locale ' . $model->reference . 'already exists.');
+                throw new \Exception('Locale ' . $model->reference . ' already exists.');
             }
         });
     }
