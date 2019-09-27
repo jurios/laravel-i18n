@@ -44,30 +44,31 @@ class LocaleSync
     /**
      * @var string[]
      */
-    protected $php_paths;
+    protected $php_files;
 
     public function __construct(Locale $locale)
     {
         $this->locale = $locale;
         $this->filesystem = new Filesystem();
-        $this->php_directory = resource_path('lang/' . $this->locale->reference);
 
+        $this->php_directory = resource_path('lang/' . $this->locale->reference);
         $this->json_path = resource_path('lang/' . $this->locale->reference . '.json');
-        $this->php_paths = $this->getPHPFiles($this->php_directory);
+
+        $this->php_files = $this->getPHPFiles($this->php_directory);
     }
 
     /**
-     * Returns the PHP file paths placed in the path
+     * Returns the PHP file paths placed in the directory
      *
-     * @param string $path
+     * @param string $directory
      * @return array
      */
-    private function getPHPFiles(string $path)
+    private function getPHPFiles(string $directory)
     {
         $php_files = [];
 
-        if (is_dir($path)) {
-            $php_files = array_filter($this->filesystem->files($path), function (SplFileInfo $file) {
+        if (is_dir($directory)) {
+            $php_files = array_filter($this->filesystem->files($directory), function (SplFileInfo $file) {
                 return $file->getExtension() === 'php';
             });
         }
@@ -82,7 +83,7 @@ class LocaleSync
         $result = new TranslationCollection();
 
         /** @var string $file */
-        foreach ($this->php_paths as $file) {
+        foreach ($this->php_files as $file) {
             $translations = (new PHPHandler($file))->getTranslations();
 
             /** @var Translation $translation */
@@ -115,7 +116,7 @@ class LocaleSync
 
         /** @var string $path */
         foreach ($paths as $path) {
-            if ($this->json()->where('path', $path)->isEmpty()) {
+            if ($this->json()->where('path', $path)->isEmpty() || $this->json()->where('path', $path)->first()->isEmpty()) {
                 $value = null;
 
                 if ($this->php()->where('path', $path)->where('translation', '<>', '')->isNotEmpty()) {

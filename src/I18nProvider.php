@@ -14,7 +14,6 @@ use Kodilab\LaravelI18n\Commands\Generators\Migrations;
 use Kodilab\LaravelI18n\Commands\Generators\Translatable;
 use Kodilab\LaravelI18n\Commands\Install;
 use Kodilab\LaravelI18n\Commands\Sync;
-use Kodilab\LaravelI18n\i18n\Parser;
 
 class I18nProvider extends ServiceProvider
 {
