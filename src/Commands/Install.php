@@ -89,8 +89,7 @@ class Install extends Command
 
         $this->call('make:locale', [
             '--reference' => $reference,
-            '--fallback' => true,
-            '--hide-title' => true
+            '--fallback' => true
         ]);
     }
 

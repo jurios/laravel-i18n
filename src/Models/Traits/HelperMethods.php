@@ -83,7 +83,7 @@ trait HelperMethods
     }
 
     /**
-     * Get the fallback locale. It does not exits, then an exception is sent.
+     * Get the fallback locale. If it does not exits, then an exception is sent.
      *
      * @return Locale
      * @throws MissingFallbackLocaleException

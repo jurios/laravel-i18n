@@ -22,7 +22,7 @@ trait HasTranslations
     /**
      * @return BelongsToMany
      */
-    public function translations()
+    protected function translations()
     {
         return $this->belongsToMany(
             Locale::class, $this->getTranslationsTableName(), $this->getTranslatablePrimaryKey()
@@ -53,6 +53,13 @@ trait HasTranslations
         $this->refresh();
     }
 
+    /**
+     * Returns whether an attribute is translated for a given locale
+     *
+     * @param Locale $locale
+     * @param string $attribute
+     * @return bool
+     */
     public function isTranslated(Locale $locale, string $attribute)
     {
         if ($this->isTranslatableAttribute($attribute)) {

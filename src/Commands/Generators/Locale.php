@@ -26,8 +26,7 @@ class Locale extends Command
                             {--decimals-punctuation= : Decimals when show localized float values}
                             {--thousands-separator= : Thousands separator when show localized values}
                             {--currency-symbol= : Currency symbol when show localized currency value}
-                            {--currency_symbol_position= : Currency symbol position when show a localized currency value (after|before)}
-                            {--hide-title= : Hide the command title}';
+                            {--currency_symbol_position= : Currency symbol position when show a localized currency value (after|before)}';
 
     /**
      * The console command description.
@@ -43,9 +42,7 @@ class Locale extends Command
      */
     public function handle()
     {
-        if ($this->option('hide-title') !== true) {
-            $this->output->title('Generating i18n locale');
-        }
+        $this->output->title('Generating i18n locale');
 
         try {
             i18nBuilder::createLocale([

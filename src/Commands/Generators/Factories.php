@@ -15,8 +15,7 @@ class Factories extends Command
      *
      * @var string
      */
-    protected $signature = 'i18n:factories
-                            {--force : Replace the config file if it exists}';
+    protected $signature = 'locale:factory';
 
     /**
      * The console command description.
