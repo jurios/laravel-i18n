@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+use Kodilab\LaravelI18n\Facades\i18n;
+
+class Createi18nFallbackLocale extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        DB::table(config('i18n.tables.locales', 'locales'))->insert([
+            'language' => i18n::getLanguage(config('app.fallback_locale')),
+            'region' => i18n::getRegion(config('app.fallback_locale')),
+            'name' => config('app.fallback_locale'),
+            'fallback' => true,
+            'laravel_locale' => config('app.fallback_locale'),
+            'carbon_locale' => config('app.fallback_locale'),
+            'tz' => config('app.timezone'),
+            'decimals' => 2,
+            'decimals_punctuation' => '.',
+            'thousands_separator' => null,
+            'currency_symbol' => null,
+            'currency_symbol_position' => 'after'
+        ]);
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        DB::table(config('i18n.tables.locales', 'locales'))->where('fallback', true)->delete();
+    }
+}

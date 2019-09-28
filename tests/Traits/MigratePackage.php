@@ -20,6 +20,13 @@ trait MigratePackage
             $this->artisan('i18n:migrations');
         }
 
+        /*
+         * Change the fallback locale to a random one.
+         * The fallback locale generated during the migration won't be 'en' and the future sync process calls
+         * will be faster
+         */
+        $this->app['config']->set('app.fallback_locale', $this->faker->languageCode);
+
         $this->artisan('migrate');
     }
 
@@ -41,8 +48,8 @@ trait MigratePackage
 
         $migrations = array_filter(
             $this->filesystem->files(database_path('migrations')), function (SplFileInfo $file) {
-            return $file->getExtension() === 'php';
-        }
+                return $file->getExtension() === 'php';
+            }
         );
 
         $migrations = array_map(function (SplFileInfo $item) {

@@ -116,16 +116,20 @@ class LocaleSync
 
         /** @var string $path */
         foreach ($paths as $path) {
-            if ($this->json()->where('path', $path)->isEmpty() || $this->json()->where('path', $path)->first()->isEmpty()) {
+            $json_occurrences = $this->json()->where('path', $path);
+
+            if ($json_occurrences->isEmpty() || $json_occurrences->first()->isEmpty()) {
                 $value = null;
 
-                if ($this->php()->where('path', $path)->where('translation', '<>', '')->isNotEmpty()) {
-                    $value = $this->php()->where('path', $path)->where('translation', '<>', '')->first()->translation;
+                $php_occurrences = $this->php()->where('path', $path)->where('translation', '<>', '');
+
+                if ($php_occurrences->isNotEmpty()) {
+                    $value = $php_occurrences->first()->translation;
                 }
 
                 $translation = new Translation($path, $value);
             } else {
-                $translation = $this->json()->where('path', $path)->first();
+                $translation = $json_occurrences->first();
             }
 
             $result->add($translation);
