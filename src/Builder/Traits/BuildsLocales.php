@@ -6,7 +6,7 @@ namespace Kodilab\LaravelI18n\Builder\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Kodilab\LaravelI18n\Exceptions\LocaleAlreadyExists;
-use Kodilab\LaravelI18n\i18n\i18n;
+use Kodilab\LaravelI18n\Facades\i18n;
 use Kodilab\LaravelI18n\Support\Arr;
 
 trait BuildsLocales

@@ -6,7 +6,7 @@ namespace Kodilab\LaravelI18n\Commands\Generators;
 
 use Illuminate\Console\Command;
 use Kodilab\LaravelI18n\Builder\i18nBuilder;
-use Kodilab\LaravelI18n\i18n\i18n;
+use Kodilab\LaravelI18n\Facades\i18n;
 
 class Locale extends Command
 {

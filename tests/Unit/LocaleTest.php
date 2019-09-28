@@ -14,11 +14,6 @@ class LocaleTest extends TestCase
 {
     use WithFaker, InstallPackage;
 
-    public function test_locale_translation_will_returns_the_translations_collection()
-    {
-        $this->assertEquals(TranslationCollection::class, get_class($this->fallback_locale->translations));
-    }
-
     public function test_getLocale_returns_the_locale_which_reference_is_equal()
     {
         $locale = factory(Locale::class)->create();

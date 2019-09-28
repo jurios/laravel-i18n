@@ -3,17 +3,12 @@
 namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use Kodilab\LaravelFilters\Traits\Filterable;
-use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
-use Kodilab\LaravelI18n\i18n\i18n;
-use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
-use Kodilab\LaravelI18n\i18n\Sync\LocaleSync;
+use Kodilab\LaravelI18n\Models\Traits\HelperMethods;
 
 class Locale extends Model
 {
 
-    use Filterable;
+    use HelperMethods;
 
     protected $table;
 
@@ -70,7 +65,7 @@ class Locale extends Model
      */
     public function getReferenceAttribute()
     {
-        return i18n::generateReference($this->language, $this->region);
+        return Locale::generateReference($this->language, $this->region);
     }
 
     /**
@@ -83,120 +78,13 @@ class Locale extends Model
         return is_null($this->attributes['name']) ? $this->reference : $this->attributes['name'];
     }
 
+    /**
+     * Returns whether the locale is the default fallback locale
+     *
+     * @return mixed
+     */
     public function isFallback()
     {
         return $this->fallback;
-    }
-
-    /**
-     * Get the fallback locale. It does not exits, then an exception is sent.
-     *
-     * @return Locale
-     * @throws MissingFallbackLocaleException
-     */
-    public static function getFallbackLocale()
-    {
-        /** @var Locale $fallback_locale */
-        $fallback_locale = self::where('fallback', true)->get()->first();
-
-        if (is_null($fallback_locale)) {
-            throw new MissingFallbackLocaleException('Fallback locale not found.');
-        }
-
-        return $fallback_locale;
-    }
-
-    /**
-     * Returns a locale by reference. If it does not exist, then null is returned.
-     *
-     * @param string $reference
-     * @return mixed
-     */
-    public static function getLocale(string $reference)
-    {
-        $language = explode("_", $reference)[0];
-        $region = isset(($splitted = explode("_", $reference))[1]) ? $splitted[1] : null;
-
-        return self::where('language', $language)->where('region', $region)->first();
-    }
-
-    /**
-     * Returns a locale by reference. If it does not exist, then fallback locale is returned
-     *
-     * @param string $reference
-     * @return Locale
-     * @throws MissingFallbackLocaleException
-     */
-    public static function getLocaleOrFallback(string $reference)
-    {
-        if (!is_null($locale = self::getLocale($reference))) {
-            return $locale;
-        }
-
-        return self::getFallbackLocale();
-    }
-
-    /**
-     * Returns the translation collection of the locale
-     *
-     * @return TranslationCollection
-     * @throws MissingFallbackLocaleException
-     */
-    public function getTranslationsAttribute()
-    {
-        $translator = new LocaleSync($this);
-
-        return $translator->json();
-    }
-
-    /**
-     * Find a translation by original text
-     *
-     * @param string $original
-     * @return mixed
-     * @throws MissingFallbackLocaleException
-     */
-    public function translation(string $original)
-    {
-        $translator = new LocaleSync($this);
-
-        return $translator->find($original);
-    }
-
-    /**
-     * Updates a translation
-     *
-     * @param string $original
-     * @param string $translation
-     * @throws MissingFallbackLocaleException
-     */
-    public function updateTranslation(string $original, string $translation)
-    {
-        $translator = new Translator($this);
-
-        $translator->update($original, $translation);
-    }
-
-    public function getPercentageAttribute()
-    {
-        $translator = new Translator($this);
-
-        return $translator->percentage;
-    }
-
-    public function getTranslatedAttribute()
-    {
-        $translator = new Translator($this);
-
-        $result = new Collection();
-
-        foreach ($translator->translations as $translation)
-        {
-            if (!$translation->isEmpty()) {
-                $result->put($translation->original, $translation);
-            }
-        }
-
-        return $result;
     }
 }

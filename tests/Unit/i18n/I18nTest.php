@@ -6,7 +6,8 @@ namespace Kodilab\LaravelI18n\Tests\Unit\i18n;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithFaker;
-use Kodilab\LaravelI18n\i18n\i18n;
+use Kodilab\LaravelI18n\Facades\i18n;
+use Kodilab\LaravelI18n\i18n\i18NManager;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
 use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
@@ -16,7 +17,7 @@ class I18nTest extends TestCase
     use WithFaker, InstallPackage;
 
     /**
-     * @var i18n
+     * @var i18NManager
      */
     protected $i18n;
 

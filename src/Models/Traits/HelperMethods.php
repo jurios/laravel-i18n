@@ -1,86 +1,14 @@
 <?php
 
 
-namespace Kodilab\LaravelI18n\i18n;
+namespace Kodilab\LaravelI18n\Models\Traits;
 
 
-use Carbon\Carbon;
-use Illuminate\Config\Repository as Config;
-use Illuminate\Support\Facades\App;
+use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
 use Kodilab\LaravelI18n\Models\Locale;
 
-class i18n
+trait HelperMethods
 {
-    /**
-     * @var Config
-     */
-    protected $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-
-        $fallback_locale = Locale::getFallbackLocale();
-
-        $this->setFallbackLocale($fallback_locale);
-        $this->setLocale(Locale::getLocaleOrFallback($this->config->get('app.locale')));
-    }
-
-    /**
-     * Set the locale setting
-     *
-     * @param Locale $locale
-     */
-    public function setLocale(Locale $locale)
-    {
-        if ($locale->exists) {
-            App::setLocale($locale->laravel_locale);
-            Carbon::setLocale($locale->carbon_locale);
-        }
-    }
-
-    /**
-     * Set the fallback locale setting
-     *
-     * @param Locale $locale
-     */
-    public function setFallbackLocale(Locale $locale)
-    {
-        if ($locale->exists) {
-            app('config')->set('app.fallback_locale', $locale->reference);
-        }
-    }
-
-    /**
-     * Set the timezone setting
-     *
-     * @param string $timezone
-     */
-    public function setTimezone(string $timezone)
-    {
-        if (self::isTimezoneValid($timezone)) {
-            app('config')->set('app.timezone', $timezone);
-            date_default_timezone_set($timezone);
-        }
-    }
-
-    /**
-     * Returns the loaded locale
-     *
-     */
-    public function getLocale()
-    {
-        return Locale::getLocale(config('app.locale'));
-    }
-
-    /**
-     * Returns the loaded fallback locale
-     */
-    public function getFallbackLocale()
-    {
-        return Locale::getLocale(config('app.fallback_locale'));
-    }
-
     /**
      * Generate the locale reference based on language and region attributes
      *
@@ -115,7 +43,7 @@ class i18n
      * Returns the region from the locale reference or null
      *
      * @param string $reference
-     * @return |null
+     * @return string|null
      */
     public static function getRegion(string $reference)
     {
@@ -152,5 +80,53 @@ class i18n
         });
 
         return count($occurrence) > 0;
+    }
+
+    /**
+     * Get the fallback locale. It does not exits, then an exception is sent.
+     *
+     * @return Locale
+     * @throws MissingFallbackLocaleException
+     */
+    public static function getFallbackLocale()
+    {
+        /** @var Locale $fallback_locale */
+        $fallback_locale = self::where('fallback', true)->get()->first();
+
+        if (is_null($fallback_locale)) {
+            throw new MissingFallbackLocaleException('Fallback locale not found.');
+        }
+
+        return $fallback_locale;
+    }
+
+    /**
+     * Returns a locale by reference. If it does not exist, then null is returned.
+     *
+     * @param string $reference
+     * @return mixed
+     */
+    public static function getLocale(string $reference)
+    {
+        $language = explode("_", $reference)[0];
+        $region = isset(($splitted = explode("_", $reference))[1]) ? $splitted[1] : null;
+
+        return self::where('language', $language)->where('region', $region)->first();
+    }
+
+    /**
+     * Returns a locale by reference. If it does not exist, then fallback locale is returned
+     *
+     * @param string $reference
+     * @return Locale
+     * @throws MissingFallbackLocaleException
+     */
+    public static function getLocaleOrFallback(string $reference)
+    {
+        if (!is_null($locale = self::getLocale($reference))) {
+            return $locale;
+        }
+
+        return self::getFallbackLocale();
     }
 }
