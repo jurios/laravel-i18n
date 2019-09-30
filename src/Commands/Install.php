@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\DetectsApplicationNamespace;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Kodilab\LaravelI18n\Providers\i18nServiceProvider;
 
@@ -48,6 +49,7 @@ class Install extends Command
 
         $this->call('migrate');
 
+        $this->checkMigrationApplied();
         $this->output->success('Migrations applied successfully');
 
         $this->output->title('Start sync process');
@@ -87,5 +89,15 @@ class Install extends Command
             "{$namespace}\\Providers\EventServiceProvider::class,".$eol."        ". i18nServiceProvider::class ."::class,".$eol,
             $appConfig
         ));
+    }
+
+    protected function checkMigrationApplied()
+    {
+        if (!Schema::hasTable(config('i18n.tables.locales', 'locales'))) {
+            $this->output->error("\"".config('i18n.tables.locales', 'locales') . "\" table not found. " .
+                "Did you published the migrations with \"php artisan i18n:migrations\"?");
+
+            exit(-1);
+        }
     }
 }

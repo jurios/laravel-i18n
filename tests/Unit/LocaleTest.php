@@ -5,6 +5,7 @@ namespace Kodilab\LaravelI18n\Tests\Unit;
 
 
 use Illuminate\Foundation\Testing\WithFaker;
+use Kodilab\LaravelI18n\Builder\i18nBuilder;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
 use Kodilab\LaravelI18n\Models\Locale;
 use Kodilab\LaravelI18n\Tests\TestCase;
@@ -90,5 +91,37 @@ class LocaleTest extends TestCase
         $locale->update(['name' => null]);
 
         $this->assertEquals($locale->reference, $locale->name);
+    }
+
+    public function test_create_should_remove_the_fallback_flag_from_previous_fallback_locale_if_the_new_locale_fallback_is_true()
+    {
+        $locale = Locale::getFallbackLocale();
+
+        $new_locale = factory(Locale::class)->create(['fallback' => true]);
+
+        $this->assertFalse(Locale::find($locale->id)->fallback);
+        $this->assertTrue(Locale::find($new_locale->id)->fallback);
+    }
+
+    public function test_create_should_keep_the_fallback_flag_if_the_new_locale_can_not_be_saved()
+    {
+        $fallback_locale = Locale::getFallbackLocale();
+
+        $locale = factory(Locale::class)->make(['fallback' => true, 'language' => null]);
+
+        try {
+            $locale->save();
+        } catch (\Exception $e) {}
+
+        $this->assertTrue(Locale::find($fallback_locale->id)->fallback);
+    }
+
+    public function test_delete_should_not_remove_a_fallback_locale()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $fallback_locale = Locale::getFallbackLocale();
+
+        $fallback_locale->delete();
     }
 }

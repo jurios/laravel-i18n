@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Kodilab\LaravelI18n\Commands\Generators;
+namespace Kodilab\LaravelI18n\Commands\Locales;
 
 
 use Illuminate\Console\Command;
-use Kodilab\LaravelI18n\Builder\i18nBuilder;
 use Kodilab\LaravelI18n\Facades\i18n;
+use Kodilab\LaravelI18n\Models\Locale;
 
-class Locale extends Command
+class CreateLocale extends Command
 {
     /**
      * The name and signature of the console command.
@@ -16,7 +16,7 @@ class Locale extends Command
      * @var string
      */
     protected $signature = 'make:locale
-                            {--reference= : Locale reference}
+                            {reference : Locale reference}
                             {--name= : Locale name}
                             {--fallback= : (true|false) Set the locale as fallback locale}
                             {--laravel-locale= : Laravel locale setting value}
@@ -45,9 +45,9 @@ class Locale extends Command
         $this->output->title('Generating i18n locale');
 
         try {
-            i18nBuilder::createLocale([
-                'language' => i18n::getLanguage($this->option('reference')),
-                'region' => i18n::getRegion($this->option(('reference'))),
+            $locale = Locale::create([
+                'language' => i18n::getLanguage($this->argument('reference')),
+                'region' => i18n::getRegion($this->argument(('reference'))),
                 'name' => $this->option('name'),
                 'fallback' => $this->option('fallback')?: false,
                 'laravel_locale' => $this->option('laravel-locale'),
@@ -61,7 +61,7 @@ class Locale extends Command
                     $this->option('currency_symbol_position') : 'after',
             ]);
 
-            $this->output->success('Fallback locale created: ' . $this->option('reference'));
+            $this->output->success('Fallback locale created: ' . $locale->reference);
 
         } catch (\Exception $exception) {
             $this->output->error('Locale can not be created: ' . $exception->getMessage());

@@ -10,7 +10,7 @@ use Kodilab\LaravelI18n\Tests\TestCase;
 use Kodilab\LaravelI18n\Tests\Traits\InstallPackage;
 use Symfony\Component\Finder\SplFileInfo;
 
-class LocaleTest extends TestCase
+class CreateLocaleTest extends TestCase
 {
     use WithFaker,
         InstallPackage;
@@ -20,7 +20,7 @@ class LocaleTest extends TestCase
         $locale = factory(Locale::class)->make();
 
         $this->artisan('make:locale', [
-            '--reference' => $locale->reference
+            'reference' => $locale->reference
         ])->run();
 
         $this->assertNotNull(Locale::getLocale($locale->reference));
@@ -31,7 +31,7 @@ class LocaleTest extends TestCase
         $locale = factory(Locale::class)->make();
 
         $this->artisan('make:locale', [
-            '--reference' => $locale->reference,
+            'reference' => $locale->reference,
             '--fallback' => true
         ])->run();
 

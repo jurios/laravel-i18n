@@ -3,6 +3,7 @@
 namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Kodilab\LaravelI18n\Models\Traits\HelperMethods;
 
 class Locale extends Model
@@ -38,7 +39,7 @@ class Locale extends Model
 
         self::saving(function (Locale $model) {
 
-            $model->language = strtolower($model->language);
+            $model->language = !is_null($model->language) ? strtolower($model->language): null;
             $model->region = !is_null($model->region) ? strtoupper($model->region) : null;
             $model->carbon_locale = !is_null($model->carbon_locale) ? $model->carbon_locale : $model->language;
             $model->laravel_locale = !is_null($model->laravel_locale) ? $model->laravel_locale : $model->reference;
@@ -46,8 +47,16 @@ class Locale extends Model
         });
 
         self::creating(function (Locale $model) {
-            if (!is_null(Locale::getLocale($model->reference))) {
-                throw new \Exception('Locale ' . $model->reference . ' already exists.');
+            if (!is_null($model->language)) {
+                if (!is_null(Locale::getLocale($model->reference))) {
+                    throw new \Exception('Locale ' . $model->reference . ' already exists.');
+                }
+            }
+        });
+
+        self::deleting(function (Locale $locale) {
+            if ($locale->isFallback()) {
+                throw new \InvalidArgumentException('Fallback locale can not be removed');
             }
         });
     }
@@ -56,6 +65,25 @@ class Locale extends Model
     {
         parent::__construct($attributes);
         $this->table = config('i18n.tables.locales','locales');
+    }
+
+    public function save(array $options = [])
+    {
+        DB::beginTransaction();
+
+        try {
+            if ($this->fallback === true) {
+                Locale::where('fallback', true)->update(['fallback' => false]);
+            }
+            $result = parent::save($options);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        DB::commit();
+
+        return $result;
     }
 
     /**
