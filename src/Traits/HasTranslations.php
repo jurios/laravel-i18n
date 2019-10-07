@@ -99,7 +99,7 @@ trait HasTranslations
             return $this->getCustomTranslationTableName();
         }
 
-        return $translation_table_name = Str::snake(class_basename($this) . 'Translations');
+        return $translation_table_name = Str::singular($this->getTable()) . '_translations';
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Kodilab\LaravelI18n\Tests;
 
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Kodilab\LaravelI18n\i18n\Translations\Translation;
 use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
@@ -15,6 +16,7 @@ use Kodilab\LaravelI18n\Tests\Traits\MigratePackage;
 class TestCase extends \Orchestra\Testbench\TestCase
 {
     use LaravelOperations;
+    use RefreshDatabase;
 
     /** @var Filesystem */
     protected $filesystem;
@@ -70,6 +72,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
         if (isset($uses[InstallPackage::class])) {
             $this->installPackageSetUp();
         }
+
+        return $uses;
     }
 
     protected function tearDown(): void

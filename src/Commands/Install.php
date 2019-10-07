@@ -49,7 +49,9 @@ class Install extends Command
 
         $this->call('migrate');
 
-        $this->checkMigrationApplied();
+        if (!$this->checkMigrationApplied()) {
+            return -1;
+        }
         $this->output->success('Migrations applied successfully');
 
         $this->output->title('Start sync process');
@@ -97,7 +99,9 @@ class Install extends Command
             $this->output->error("\"".config('i18n.tables.locales', 'locales') . "\" table not found. " .
                 "Did you published the migrations with \"php artisan i18n:migrations\"?");
 
-            exit(-1);
+            return false;
         }
+
+        return true;
     }
 }

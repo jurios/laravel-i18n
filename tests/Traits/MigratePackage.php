@@ -27,6 +27,7 @@ trait MigratePackage
          */
         $this->app['config']->set('app.fallback_locale', $this->faker->languageCode);
 
+        $this->loadLaravelMigrations();
         $this->artisan('migrate');
     }
 

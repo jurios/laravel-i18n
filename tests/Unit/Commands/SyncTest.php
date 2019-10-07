@@ -58,12 +58,13 @@ class SyncTest extends TestCase
     public function test_sync_should_import_paths_from_the_php_files_even_if_the_locale_does_not_exists()
     {
         $locale = factory(Locale::class)->create([
-            'language' => 'de'
+            'language' => 'de',
+            'fallback' => true
         ]);
 
         //Remove 'en' locale in case it exists as we have php translation files for the 'en' locale in the laravel instance
         //out of the box.
-        if ($en_locale = Locale::getLocale('en') !== null) {
+        if (($en_locale = Locale::getLocale('en')) !== null) {
             $en_locale->delete();
         }
 

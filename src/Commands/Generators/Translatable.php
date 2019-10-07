@@ -66,14 +66,10 @@ class Translatable extends Command
     {
         try {
 
-            /** @var \ReflectionClass $reflection */
-            $reflection = new \ReflectionClass($class);
-
             /** @var Model $instance */
             $instance = new $class();
 
-            $translation_class_name = $this->discover->guessModelTranslationClassName($class);
-            $translation_table_name = Str::snake(Str::pluralStudly($translation_class_name));
+            $translation_table_name = Str::singular($instance->getTable()) . '_translations';
             $migration_file_name = 'create_' . $translation_table_name .'_table';
             $migration_class_name = ucfirst(Str::camel($migration_file_name));
 

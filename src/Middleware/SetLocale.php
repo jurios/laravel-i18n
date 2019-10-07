@@ -5,7 +5,6 @@ namespace Kodilab\LaravelI18n\Middleware;
 
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Kodilab\LaravelI18n\Models\Locale;
 
 abstract class SetLocale
