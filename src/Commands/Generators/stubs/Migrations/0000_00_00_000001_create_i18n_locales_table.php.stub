@@ -1,0 +1,50 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class Createi18nLocalesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create(config('i18n.tables.locales', 'locales'), function (Blueprint $table) {
+            $table->bigIncrements('id');
+
+            $table->string('language')->nullable(false);
+            $table->string('region')->nullable(true);
+            $table->index(['language', 'region']);
+
+            $table->string('name')->nullable(true)->default(null);
+
+            $table->boolean('fallback')->nullable(false)->default(false);
+
+            $table->string('laravel_locale')->nullable(true)->default(null);
+            $table->string('carbon_locale')->nullable(true)->default(null);
+            $table->string('tz')->nullable(true)->default(null);
+
+            $table->unsignedInteger('decimals')->nullable(true)->default(null);
+            $table->char('decimals_punctuation')->nullable(true)->default(null);
+            $table->char('thousands_separator')->nullable(true)->default(null);
+            $table->string('currency_symbol')->nullable(true)->default(null);
+            $table->enum('currency_symbol_position', ['after', 'before'])->nullable(false)->default('after');
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists(config('i18n.tables.locales', 'locales'));
+    }
+}

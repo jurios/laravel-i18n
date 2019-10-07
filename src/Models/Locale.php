@@ -3,39 +3,34 @@
 namespace Kodilab\LaravelI18n\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use Kodilab\LaravelFilters\Traits\Filterable;
-use Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException;
-use Kodilab\LaravelI18n\Translations\Translator;
+use Illuminate\Support\Facades\DB;
+use Kodilab\LaravelI18n\Models\Traits\HelperMethods;
 
 class Locale extends Model
 {
 
-    use Filterable;
+    use HelperMethods;
 
     protected $table;
 
     protected $fillable = [
-        'iso',
+        'language',
         'region',
-        'description',
+        'name',
+        'fallback',
         'laravel_locale',
-        'currency_number_decimals',
-        'currency_decimals_punctuation',
-        'currency_thousands_separator',
+        'decimals',
+        'decimals_punctuation',
+        'thousands_separator',
         'currency_symbol',
         'currency_symbol_position',
         'carbon_locale',
         'tz',
-        'fallback',
-        'enabled'
     ];
 
     protected $casts = [
-        'dialect_of_id' => 'integer',
-        'enabled' => 'boolean',
-        'fallback' => 'boolean',
-        'currency_number_decimals' => 'integer'
+        'decimals' => 'integer',
+        'fallback' => 'bool'
     ];
 
     protected static function boot()
@@ -44,20 +39,24 @@ class Locale extends Model
 
         self::saving(function (Locale $model) {
 
-            $model->iso = strtolower($model->iso);
+            $model->language = !is_null($model->language) ? strtolower($model->language): null;
             $model->region = !is_null($model->region) ? strtoupper($model->region) : null;
-            $model->carbon_locale = !is_null($model->carbon_locale) ? strtolower($model->carbon_locale) : $model->iso;
-            $model->laravel_locale = !is_null($model->laravel_locale) ? strtolower($model->laravel_locale) : $model->iso;
-
-            if ($model->isFallback()) {
-                $model->enabled = true;
-            }
+            $model->carbon_locale = !is_null($model->carbon_locale) ? $model->carbon_locale : $model->language;
+            $model->laravel_locale = !is_null($model->laravel_locale) ? $model->laravel_locale : $model->reference;
 
         });
 
         self::creating(function (Locale $model) {
-            if (!is_null(Locale::getLocale($model->reference))) {
-                throw new \Exception('Locale ' . $model->reference . 'already exists.');
+            if (!is_null($model->language)) {
+                if (!is_null(Locale::getLocale($model->reference))) {
+                    throw new \Exception('Locale ' . $model->reference . ' already exists.');
+                }
+            }
+        });
+
+        self::deleting(function (Locale $locale) {
+            if ($locale->isFallback()) {
+                throw new \InvalidArgumentException('Fallback locale can not be removed');
             }
         });
     }
@@ -65,104 +64,55 @@ class Locale extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->table = config('i18n.tables.locale', 'i18n_locales');
+        $this->table = config('i18n.tables.locales','locales');
     }
 
-    public function getReferenceAttribute()
+    public function save(array $options = [])
     {
-        if (!is_null($this->region)) {
-            return $this->iso . '_' . $this->region;
+        DB::beginTransaction();
+
+        try {
+            if ($this->fallback === true) {
+                Locale::where('fallback', true)->update(['fallback' => false]);
+            }
+            $result = parent::save($options);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
 
-        return $this->iso;
+        DB::commit();
+
+        return $result;
     }
 
+    /**
+     * Reference attribute
+     *
+     * @return string
+     */
+    public function getReferenceAttribute()
+    {
+        return Locale::generateReference($this->language, $this->region);
+    }
+
+    /**
+     * Returns the locale name. If it is null, then reference is returned
+     *
+     * @return mixed
+     */
+    public function getNameAttribute()
+    {
+        return is_null($this->attributes['name']) ? $this->reference : $this->attributes['name'];
+    }
+
+    /**
+     * Returns whether the locale is the default fallback locale
+     *
+     * @return mixed
+     */
     public function isFallback()
     {
         return $this->fallback;
-    }
-
-    public static function getFallbackLocale()
-    {
-        /** @var Locale $fallback_locale */
-        $fallback_locale = self::where('fallback', true)->first();
-
-        if (is_null($fallback_locale)) {
-            throw new MissingFallbackLocaleException('Fallback locale not found.');
-        }
-
-        return $fallback_locale;
-    }
-
-    public static function getLocale(string $reference)
-    {
-        $iso = explode("_", $reference)[0];
-        $region = isset(($splitted = explode("_", $reference))[1]) ? $splitted[1] : null;
-
-        return self::where('iso', $iso)->where('region', $region)->first();
-    }
-
-    /**
-     * Returns the translation collection of the locale
-     *
-     * @return \Illuminate\Support\Collection
-     * @throws MissingFallbackLocaleException
-     */
-    public function getTranslationsAttribute()
-    {
-        $translator = new Translator($this);
-
-        return $translator->translations;
-    }
-
-    /**
-     * Find a translation by original text
-     *
-     * @param string $original
-     * @return mixed
-     * @throws MissingFallbackLocaleException
-     */
-    public function translation(string $original)
-    {
-        $translator = new Translator($this);
-
-        return $translator->find($original);
-    }
-
-    /**
-     * Updates a translation
-     *
-     * @param string $original
-     * @param string $translation
-     * @throws MissingFallbackLocaleException
-     */
-    public function updateTranslation(string $original, string $translation)
-    {
-        $translator = new Translator($this);
-
-        $translator->update($original, $translation);
-    }
-
-    public function getPercentageAttribute()
-    {
-        $translator = new Translator($this);
-
-        return $translator->percentage;
-    }
-
-    public function getTranslatedAttribute()
-    {
-        $translator = new Translator($this);
-
-        $result = new Collection();
-
-        foreach ($translator->translations as $translation)
-        {
-            if (!$translation->isEmpty()) {
-                $result->put($translation->original, $translation);
-            }
-        }
-
-        return $result;
     }
 }

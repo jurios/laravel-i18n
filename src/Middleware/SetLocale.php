@@ -5,7 +5,6 @@ namespace Kodilab\LaravelI18n\Middleware;
 
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Kodilab\LaravelI18n\Models\Locale;
 
 abstract class SetLocale
@@ -21,11 +20,9 @@ abstract class SetLocale
     protected $locale;
 
     /**
-     * SetLocale constructor.
+     * @var string
      */
-    public function __construct()
-    {
-    }
+    protected $timezone;
 
     /**
      * Handle an incoming request.
@@ -39,47 +36,55 @@ abstract class SetLocale
     {
         $this->request = $request;
 
-        $this->locale = $this->getLocale();
+        $this->locale = $this->locale();
+        $this->timezone = $this->timezone($this->locale);
 
         $this->setLocale($this->locale);
-        $this->setTimezone($this->locale);
+        $this->setTimezone($this->timezone);
 
         return $next($request);
     }
 
     /**
-     * Set locale into the runtime configuration
-     *
-     * @param Locale $locale
-     */
-    protected function setLocale(Locale $locale)
-    {
-        App::setLocale($locale->reference);
-    }
-
-    /**
-     * Set the timezone into the runtime configuration
-     *
-     * @param Locale $locale
-     */
-    protected function setTimezone(Locale $locale)
-    {
-        date_default_timezone_set(!is_null($locale->tz) ? $locale->tz : config('app.timezone'));
-
-        config([
-            'app.timezone' => !is_null($locale->tz) ? $locale->tz : config('app.timezone'),
-        ]);
-    }
-
-    /**
-     * Method that will return the locale that is going to be used for that request
+     * Returns the locale to be used by Laravel
      *
      * @return Locale
      * @throws \Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException
      */
-    protected function getLocale()
+    protected function locale()
     {
         return Locale::getFallbackLocale();
     }
 
+    /**
+     * Returns the timezone to be used by Laravel
+     *
+     * @param Locale $locale
+     * @return string|null
+     */
+    protected function timezone(Locale $locale)
+    {
+        return $locale->tz;
+    }
+
+    /**
+     * Change Laravel locale
+     *
+     * @param Locale $locale
+     * @throws \Kodilab\LaravelI18n\Exceptions\MissingFallbackLocaleException
+     */
+    private function setLocale(Locale $locale)
+    {
+        app('i18n')->setLocale($locale);
+    }
+
+    /**
+     * Chnage Laravel timezone
+     *
+     * @param string|null $timezone
+     */
+    private function setTimezone(string $timezone = null)
+    {
+        app('i18n')->setTimezone($timezone);
+    }
 }

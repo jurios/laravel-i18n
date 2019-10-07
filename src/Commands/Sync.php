@@ -4,15 +4,11 @@ namespace Kodilab\LaravelI18n\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Kodilab\LaravelI18n\Linguist;
+use Kodilab\LaravelI18n\Facades\i18n;
+use Kodilab\LaravelI18n\i18n\Translations\TranslationCollection;
+use Kodilab\LaravelI18n\i18n\Sync\LocaleSync;
+use Kodilab\LaravelI18n\i18n\Parser;
 use Kodilab\LaravelI18n\Models\Locale;
-use Kodilab\LaravelI18n\Translations\ArrayTranslations\ArrayTranslations;
-use Kodilab\LaravelI18n\Translations\ArrayTranslations\ArrayTranslationCollector;
-use Kodilab\LaravelI18n\Translations\ArrayTranslations\ArrayTranslator;
-use Kodilab\LaravelI18n\Translations\Synchronizer;
-use Kodilab\LaravelI18n\Translations\Translation;
-use Kodilab\LaravelI18n\Translations\TranslationsManager;
-use Kodilab\LaravelI18n\Translations\Translator;
 
 class Sync extends Command
 {
@@ -28,9 +24,9 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $description = 'Syncronize laravel translations found in php files with fallback language translations on the database';
+    protected $description = 'Synchronize laravel translatable texts found in the project';
 
-    /** @var Linguist */
+    /** @var Parser */
     protected $linguist;
 
     /** @var Filesystem */
@@ -41,10 +37,11 @@ class Sync extends Command
      *
      * @return void
      */
-    public function __construct(Linguist $linguist)
+    public function __construct()
     {
         parent::__construct();
-        $this->linguist = $linguist;
+
+        $this->linguist = new Parser(array_merge(config('view.paths'), [app_path()]));
         $this->filesystem = new Filesystem();
     }
 
@@ -57,33 +54,58 @@ class Sync extends Command
      */
     public function handle()
     {
-        $originals = $this->getOriginals();
+        $paths = $this->getPaths();
 
         /** @var Locale $locale */
         foreach (Locale::all() as $locale) {
-            $translator = new Translator($locale);
-
-            $translator->sync($originals);
+            $translator = new LocaleSync($locale);
+            $translator->sync($paths);
         }
     }
 
-    private function getOriginals()
+    /**
+     * Returns the paths to be synchronized
+     * @return array
+     */
+    private function getPaths()
     {
-        $originals = [];
+        /** @var TranslationCollection $parsed_translations */
         $parsed_translations = $this->linguist->texts();
 
+        /** @var TranslationCollection $php_translations */
+        $php_translations = $this->getTranslationsFromPHPFiles();
+
+        $translations = (new TranslationCollection($parsed_translations))->merge($php_translations);
+
+        return $translations->pluck('path')->toArray();
+    }
+
+    /**
+     * Get the php translations paths from all locales
+     *
+     * @return TranslationCollection
+     */
+    private function getTranslationsFromPHPFiles()
+    {
+        $result = new TranslationCollection();
+
         /** @var Locale $locale */
-        foreach (Locale::all() as $locale) {
-            $array_translations = (new ArrayTranslator($locale))->translations;
+        foreach ($this->filesystem->directories(resource_path('lang')) as $directory) {
+            $reference = basename($directory);
 
-            $translations = array_merge($parsed_translations, $array_translations->all());
+            $language = i18n::getLanguage($reference);
+            $region = i18n::getRegion($reference);
 
-            /** @var Translation $translation */
-            foreach ($translations as $translation) {
-                $originals[$translation->original] = $translation->original;
+
+            $locale = Locale::where('language', $language)->where('region', $region)->get()->first();
+            if (is_null($locale)) {
+                $locale = new Locale(['language' => $language, 'region' => $region]);
             }
+
+            $translations = (new LocaleSync($locale))->php();
+            $result = $result->merge($translations);
         }
 
-        return array_keys($originals);
+        return $result;
     }
 }
