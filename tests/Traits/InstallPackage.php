@@ -4,12 +4,11 @@
 namespace Kodilab\LaravelI18n\Tests\Traits;
 
 
-use Illuminate\Foundation\Testing\WithFaker;
 use Kodilab\LaravelI18n\Models\Locale;
 
 trait InstallPackage
 {
-    use MigratePackage, WithFaker;
+    use MigratePackage;
 
     /**
      * Install the package
