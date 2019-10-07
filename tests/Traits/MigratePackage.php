@@ -25,7 +25,7 @@ trait MigratePackage
          * The fallback locale generated during the migration won't be 'en' and the future sync process calls
          * will be faster
          */
-        $this->app['config']->set('app.fallback_locale', $this->faker->languageCode);
+        $this->app['config']->set('app.fallback_locale', 'app');
 
         $this->loadLaravelMigrations();
         $this->artisan('migrate');
